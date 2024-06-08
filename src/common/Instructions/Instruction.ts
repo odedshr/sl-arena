@@ -1,0 +1,59 @@
+import { Message } from '../Messages/Message';
+import { ArenaName } from '../types/Arena';
+import { Direction, UnitAction } from '../types/Units';
+
+enum InstructionType {
+  arena_list_users = 'arena_list_users',
+  arena_start_game = 'arena_start_game',
+  arena_create = 'arena_create',
+  arena_join = 'arena_join',
+  arena_leave = 'arena_leave',
+  unit_command = 'unit_command',
+  arena_list_units = 'arena_list_units'
+}
+
+type CreateArenaInstruction = {
+  callback?: number;
+  type: InstructionType.arena_create;
+  arenaName: ArenaName,
+  playerName: string;
+}
+
+type JoinArenaInstruction = {
+  callback?: number;
+  type: InstructionType.arena_join;
+  arenaId: string;
+  playerName: string
+}
+
+type LeaveArenaInstruction = { callback?: number; type: InstructionType.arena_leave }
+type ListUsersInstruction = { callback?: number; type: InstructionType.arena_list_users; }
+type ListUnitsInstruction = { callback?: number; type: InstructionType.arena_list_units; }
+type StartGameInstruction = { callback?: number; type: InstructionType.arena_start_game; }
+
+type UnitCommand = { unitId: string, action: UnitAction, direction: Direction };
+type UnitInstructions = { callback?: number; type: InstructionType.unit_command, commands: UnitCommand[] };
+
+type Instruction = CreateArenaInstruction
+  | JoinArenaInstruction
+  | LeaveArenaInstruction
+  | ListUsersInstruction
+  | ListUnitsInstruction
+  | StartGameInstruction
+  | UnitInstructions;
+
+type SendMethod = (instruction: Instruction, callback?: (message: Message) => void) => void;
+
+export {
+  InstructionType,
+  Instruction,
+  CreateArenaInstruction,
+  JoinArenaInstruction,
+  LeaveArenaInstruction,
+  ListUsersInstruction,
+  ListUnitsInstruction,
+  StartGameInstruction,
+  UnitInstructions,
+  UnitCommand,
+  SendMethod
+};

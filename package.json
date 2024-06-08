@@ -1,0 +1,22 @@
+{
+  "name": "sl-arena",
+  "version": "1.0.0",
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "node dist/server/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -w --project tsconfig.server.json & tsc -w --project tsconfig.client.json &",
+    "tunnel": "lt --port 3000"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "typescript": "^5.4.5",
+    "ws": "^8.17.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.10"
+  }
+}

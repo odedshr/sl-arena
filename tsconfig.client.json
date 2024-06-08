@@ -1,0 +1,17 @@
+// tsconfig.client.json
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "es6",
+    "outDir": "./www/js",
+    "rootDir": "./src",
+    "lib": [
+      "DOM",
+      "ES6"
+    ]
+  },
+  "include": [
+    "src/client/**/*",
+    "src/common/**/*"
+  ]
+}
