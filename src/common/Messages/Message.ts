@@ -4,6 +4,7 @@ import Player from '../types/Player';
 import { ActionableUnit, Unit } from '../types/Units';
 
 enum MessageType {
+  server_status = 'server_status',
   ping = 'ping',
   arena_created = 'arena_created',
   player_joined = 'player_joined',
@@ -17,6 +18,11 @@ enum MessageType {
 
 type PingMessage = {
   type: MessageType.ping;
+}
+
+type ServerStatusMessage = {
+  type: MessageType.server_status;
+  status: 'not_connected' | 'registered';
 }
 
 
@@ -83,6 +89,7 @@ type SendMethod = (message: Message) => void
 export {
   MessageType,
   Message,
+  ServerStatusMessage,
   PingMessage,
   ArenaCreatedMessage,
   PlayerJoinedMessage,

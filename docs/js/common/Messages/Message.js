@@ -1,5 +1,6 @@
 var MessageType;
 (function (MessageType) {
+    MessageType["server_status"] = "server_status";
     MessageType["ping"] = "ping";
     MessageType["arena_created"] = "arena_created";
     MessageType["player_joined"] = "player_joined";

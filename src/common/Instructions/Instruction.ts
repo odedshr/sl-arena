@@ -3,6 +3,7 @@ import { ArenaName } from '../types/Arena';
 import { Direction, UnitAction } from '../types/Units';
 
 enum InstructionType {
+  register_server = 'register_server',
   arena_list_users = 'arena_list_users',
   arena_start_game = 'arena_start_game',
   arena_create = 'arena_create',

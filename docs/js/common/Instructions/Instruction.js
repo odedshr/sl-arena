@@ -1,5 +1,6 @@
 var InstructionType;
 (function (InstructionType) {
+    InstructionType["register_server"] = "register_server";
     InstructionType["arena_list_users"] = "arena_list_users";
     InstructionType["arena_start_game"] = "arena_start_game";
     InstructionType["arena_create"] = "arena_create";

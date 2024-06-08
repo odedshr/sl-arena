@@ -1,9 +1,9 @@
 import { drawRectangle } from './shapes.js';
 const nurseries = [
-    getImage('../../graphics/nursery/spr_boulder1.png'),
-    getImage('../../graphics/nursery/spr_boulder2.png'),
-    getImage('../../graphics/nursery/spr_boulder3.png'),
-    getImage('../../graphics/nursery/spr_boulder4.png')
+    getImage('../graphics/nursery/spr_boulder1.png'),
+    getImage('../graphics/nursery/spr_boulder2.png'),
+    getImage('../graphics/nursery/spr_boulder3.png'),
+    getImage('../graphics/nursery/spr_boulder4.png')
 ];
 const CELL_SIZE = 16;
 function drawNurseries(ctx, nurseries, colors) {

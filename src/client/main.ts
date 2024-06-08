@@ -1,5 +1,5 @@
 import { Message } from '../common/Messages/Message.js';
-import connect from './api.js';
+import connect from './shared-worker-api.js';
 
 import getControls from './controls.js';
 import inform from './inform.js';
@@ -11,13 +11,13 @@ function initInterface() {
 }
 
 async function connectToServer(url: string) {
-  const { setMessageHandler, sendInstruction, setCloseHandler } = await connect(url);
+  const { setMessageHandler, sendInstruction, setCloseHandler } = await connect();
 
   //@ts-ignore
   window.sl = getControls(sendInstruction);
   inform('Connected to server, please check `sl` namespace for new options');
 
-  setMessageHandler((event) => handle(JSON.parse(event.data) as Message, sendInstruction));
+  setMessageHandler((event) => handle((typeof (event.data) === 'string' ? JSON.parse(event.data) : event.data) as Message, sendInstruction));
 
   setCloseHandler(() => {
     console.log('Disconnected from the server');

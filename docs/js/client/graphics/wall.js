@@ -1,22 +1,22 @@
 import createGrid from '../../common/util-grid.js';
 const CELL_SIZE = 16;
 const images = {
-    0: getImage('../../graphics/walls/spr_standalone_pole.png'), // 0000 no walls around
-    1: getImage('../../graphics/walls/spr_back_front_fence_ending.png'), // 0001 north
-    10: getImage('../../graphics/walls/spr_left_front_fence_ending.png'), // 0010 east
-    11: getImage('../../graphics/walls/spr_front_fence_left_backcorner.png'), // 0011 north + east
-    100: getImage('../../graphics/walls/spr_up_front_fence_ending.png'), // 0100 south
-    101: getImage('../../graphics/walls/spr_side_fence.png'), // 0101 south + north
-    110: getImage('../../graphics/walls/spr_front_fence_left_corner.png'), // 0110 south + east
-    111: getImage('../../graphics/walls/spr_left_side_fence_three-intersection.png'), // 0111 south + east + north
-    1000: getImage('../../graphics/walls/spr_right_front_fence_ending.png'), // 1000 west
-    1001: getImage('../../graphics/walls/spr_front_fence_right_backcorner.png'), // 1001 west + north
-    1010: getImage('../../graphics/walls/spr_front_fence.png'), // 1010 west + east
-    1011: getImage('../../graphics/walls/spr_front_fence_back_three-intersection.png'), // 1011 west + east + north
-    1100: getImage('../../graphics/walls/spr_front_fence_right_corner.png'), // 1100 west + south
-    1101: getImage('../../graphics/walls/spr_right_side_fence_three-intersection.png'), // 1101 west + south + north
-    1110: getImage('../../graphics/walls/spr_front_fence_three-intersection.png'), // 1110 west + south + east
-    1111: getImage('../../graphics/walls/spr_fence_four-intersection.png'), // 1111 west + south + east + north
+    0: getImage('../graphics/walls/spr_standalone_pole.png'), // 0000 no walls around
+    1: getImage('../graphics/walls/spr_back_front_fence_ending.png'), // 0001 north
+    10: getImage('../graphics/walls/spr_left_front_fence_ending.png'), // 0010 east
+    11: getImage('../graphics/walls/spr_front_fence_left_backcorner.png'), // 0011 north + east
+    100: getImage('../graphics/walls/spr_up_front_fence_ending.png'), // 0100 south
+    101: getImage('../graphics/walls/spr_side_fence.png'), // 0101 south + north
+    110: getImage('../graphics/walls/spr_front_fence_left_corner.png'), // 0110 south + east
+    111: getImage('../graphics/walls/spr_left_side_fence_three-intersection.png'), // 0111 south + east + north
+    1000: getImage('../graphics/walls/spr_right_front_fence_ending.png'), // 1000 west
+    1001: getImage('../graphics/walls/spr_front_fence_right_backcorner.png'), // 1001 west + north
+    1010: getImage('../graphics/walls/spr_front_fence.png'), // 1010 west + east
+    1011: getImage('../graphics/walls/spr_front_fence_back_three-intersection.png'), // 1011 west + east + north
+    1100: getImage('../graphics/walls/spr_front_fence_right_corner.png'), // 1100 west + south
+    1101: getImage('../graphics/walls/spr_right_side_fence_three-intersection.png'), // 1101 west + south + north
+    1110: getImage('../graphics/walls/spr_front_fence_three-intersection.png'), // 1110 west + south + east
+    1111: getImage('../graphics/walls/spr_fence_four-intersection.png'), // 1111 west + south + east + north
 };
 function drawWalls(ctx, dimensions, walls) {
     const grid = createGrid(dimensions, walls);

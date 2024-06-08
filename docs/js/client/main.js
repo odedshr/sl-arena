@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import connect from './api.js';
+import connect from './shared-worker-api.js';
 import getControls from './controls.js';
 import inform from './inform.js';
 import handle from './messageHandler.js';
@@ -17,11 +17,11 @@ function initInterface() {
 }
 function connectToServer(url) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { setMessageHandler, sendInstruction, setCloseHandler } = yield connect(url);
+        const { setMessageHandler, sendInstruction, setCloseHandler } = yield connect();
         //@ts-ignore
         window.sl = getControls(sendInstruction);
         inform('Connected to server, please check `sl` namespace for new options');
-        setMessageHandler((event) => handle(JSON.parse(event.data), sendInstruction));
+        setMessageHandler((event) => handle((typeof (event.data) === 'string' ? JSON.parse(event.data) : event.data), sendInstruction));
         setCloseHandler(() => {
             console.log('Disconnected from the server');
             initInterface();

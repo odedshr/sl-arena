@@ -3,15 +3,17 @@ import { Message } from '../common/Messages/Message.js';
 
 type MessageHandler = (this: WebSocket, ev: MessageEvent<any>) => any;
 
+type Callback = (message: Message) => void;
+
 type ServerControls = {
   setMessageHandler: (handler: MessageHandler) => void;
   setCloseHandler: (handler: () => void) => void;
   sendInstruction: (instruction: Instruction, callback?: Callback) => void;
 }
 
-type Callback = (message: Message) => void;
 let callbackCount = 0;
 const callbacks: { [key: string]: Callback } = {};
+
 function handleCallbacks(event: MessageEvent<any>) {
   const message = JSON.parse(event.data) as Message;
   if (message.callback && callbacks[message.callback]) {

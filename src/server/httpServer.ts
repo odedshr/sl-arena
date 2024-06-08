@@ -6,7 +6,7 @@ type Response = http.ServerResponse<http.IncomingMessage> & {
   req: http.IncomingMessage;
 };
 
-const ROOT_FOLDER = 'www';
+const ROOT_FOLDER = 'docs';
 
 const mimeTypes: { [key: string]: string } = {
   '.html': 'text/html',
@@ -33,7 +33,7 @@ function startHttpServer(hostname: string, port: number): Promise<http.Server<ty
     // })
     const server = http.createServer((req, res) => {
       let filePath = `./${ROOT_FOLDER}${req.url}`;
-      if (filePath == `./ ${ROOT_FOLDER}/`) {
+      if (filePath === `./${ROOT_FOLDER}/`) {
         filePath = `./${ROOT_FOLDER}/index.html`;
       }
 

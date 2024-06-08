@@ -3,7 +3,7 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "module": "es6",
-    "outDir": "./www/js",
+    "outDir": "./docs/js",
     "rootDir": "./src",
     "lib": [
       "DOM",
