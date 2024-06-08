@@ -1,18 +1,19 @@
 import { Direction, UnitAction } from '../../common/types/Units.js';
+import getImage from './canvas-image.js';
 import { drawEllipse } from './shapes.js';
-const moveLeft = getImage('../graphics/pawn/move/spr_player_left_move.png');
-const moveRight = getImage('../graphics/pawn/move/spr_player_right_move.png');
-const moveUp = getImage('../graphics/pawn/move/spr_player_back_move.png');
-const moveDown = getImage('../graphics/pawn/move/spr_player_front_move.png');
-const attackLeft = getImage('../graphics/pawn/attack/spr_player_left_attack.png');
-const attackRight = getImage('../graphics/pawn/attack/spr_player_right_attack.png');
-const attackUp = getImage('../graphics/pawn/attack/spr_player_back_attack.png');
-const attackDown = getImage('../graphics/pawn/attack/spr_player_front_attack.png');
-const idleLeft = getImage('../graphics/pawn/idle/spr_player_left_idle.png');
-const idleRight = getImage('../graphics/pawn/idle/spr_player_right_idle.png');
-const idleUp = getImage('../graphics/pawn/idle/spr_player_back_idle.png');
-const idleDown = getImage('../graphics/pawn/idle/spr_player_front_idle.png');
-const dead = getImage('../graphics/pawn/hit/spr_player_death.png');
+const moveLeft = getImage('pawn/move/spr_player_left_move.png');
+const moveRight = getImage('pawn/move/spr_player_right_move.png');
+const moveUp = getImage('pawn/move/spr_player_back_move.png');
+const moveDown = getImage('pawn/move/spr_player_front_move.png');
+const attackLeft = getImage('pawn/attack/spr_player_left_attack.png');
+const attackRight = getImage('pawn/attack/spr_player_right_attack.png');
+const attackUp = getImage('pawn/attack/spr_player_back_attack.png');
+const attackDown = getImage('pawn/attack/spr_player_front_attack.png');
+const idleLeft = getImage('pawn/idle/spr_player_left_idle.png');
+const idleRight = getImage('pawn/idle/spr_player_right_idle.png');
+const idleUp = getImage('pawn/idle/spr_player_back_idle.png');
+const idleDown = getImage('pawn/idle/spr_player_front_idle.png');
+const dead = getImage('pawn/hit/spr_player_death.png');
 const spriteMap = {
     [UnitAction.move]: {
         [Direction.north]: moveUp,
@@ -78,10 +79,5 @@ function getFrame() {
         frameCount = 0;
     }
     return (Math.floor(frameCount++ / 100) * 100 % SEQ_LENGTH);
-}
-function getImage(src) {
-    const image = new Image();
-    image.src = src;
-    return image;
 }
 export default drawPawn;
