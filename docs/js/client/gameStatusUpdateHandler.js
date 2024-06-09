@@ -10,12 +10,12 @@ function setHandler(handler) {
     handle = handler;
 }
 function handleGameStatusUpdate(message, send) {
-    const { playerId, resources, units, status } = message;
+    const { playerId, resources, units, status, dimensions, features } = message;
     switch (status) {
         case ArenaStatus.started:
             draw(units);
             updateScoreBoard(units);
-            const commands = handle(units, playerId, resources);
+            const commands = handle(units, playerId, resources, dimensions, features);
             if (commands.length) {
                 send({
                     type: InstructionType.unit_command,

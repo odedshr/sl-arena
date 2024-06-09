@@ -1,4 +1,4 @@
-import { InstructionType, SendMethod, UnitCommand } from '../common/Instructions/Instruction.js';
+import { InstructionType, SendMethod, StatusUpdateHandler } from '../common/Instructions/Instruction.js';
 import { GameStateMessage } from '../common/Messages/Message.js';
 import { ArenaStatus } from '../common/types/Arena.js';
 import { ActionableUnit, Unit, UnitType } from '../common/types/Units.js';
@@ -7,22 +7,20 @@ import { default as defaultHandler } from '../common/ai/defaultHandler.js'
 import { getPlayerName, updateScoreBoard } from './scoreboard.js';
 import inform from './inform.js';
 
-type Handler = (units: Unit[], playerId: number, resources: number) => UnitCommand[];
+let handle: StatusUpdateHandler = defaultHandler
 
-let handle: Handler = defaultHandler
-
-function setHandler(handler: Handler) {
+function setHandler(handler: StatusUpdateHandler) {
   handle = handler;
 }
 
 function handleGameStatusUpdate(message: GameStateMessage, send: SendMethod) {
-  const { playerId, resources, units, status } = message;
+  const { playerId, resources, units, status, dimensions, features } = message;
   switch (status) {
     case ArenaStatus.started:
       draw(units);
       updateScoreBoard(units);
 
-      const commands = handle(units, playerId, resources);
+      const commands = handle(units, playerId, resources, dimensions, features);
       if (commands.length) {
         send({
           type: InstructionType.unit_command,

@@ -1,6 +1,6 @@
 import { Message } from '../Messages/Message';
-import { ArenaName } from '../types/Arena';
-import { Direction, UnitAction } from '../types/Units';
+import { ArenaName, Dimensions, Features } from '../types/Arena';
+import { Direction, Unit, UnitAction } from '../types/Units';
 
 enum InstructionType {
   register_server = 'register_server',
@@ -35,6 +35,8 @@ type StartGameInstruction = { callback?: number; type: InstructionType.arena_sta
 type UnitCommand = { unitId: string, action: UnitAction, direction: Direction };
 type UnitInstructions = { callback?: number; type: InstructionType.unit_command, commands: UnitCommand[] };
 
+type StatusUpdateHandler = (units: Unit[], playerId: number, resources: number, dimensions: Dimensions, features: Features) => UnitCommand[];
+
 type Instruction = CreateArenaInstruction
   | JoinArenaInstruction
   | LeaveArenaInstruction
@@ -56,5 +58,6 @@ export {
   StartGameInstruction,
   UnitInstructions,
   UnitCommand,
-  SendMethod
+  SendMethod,
+  StatusUpdateHandler
 };

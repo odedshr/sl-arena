@@ -1,8 +1,13 @@
 import { getRandomDirection } from '../generators.js';
+import { EdgeType } from '../types/Arena.js';
 import { Direction, UnitAction, UnitType } from '../types/Units.js';
-function handle(units, playerId, resources) {
+import createGrid from '../util-grid.js';
+import findShortestPath from './findShortestPath.js';
+const handler = (units, playerId, resources, dimensions, features) => {
+    const isLoop = features.edge === EdgeType.loop;
     const commands = [];
     const barrack = units.find(unit => unit.type === UnitType.barrack && unit.owner === playerId);
+    const grid = toBooleans(createGrid(dimensions, units.filter(unit => unit.type === UnitType.wall)));
     if (barrack && resources > 0) {
         commands.push({
             unitId: barrack.id,
@@ -11,16 +16,19 @@ function handle(units, playerId, resources) {
         });
     }
     const pawns = units.filter(unit => unit.type === UnitType.pawn && unit.owner === playerId);
-    const enemybarracks = units.filter(unit => unit.type === UnitType.barrack && unit.owner !== playerId);
-    handlePawns(pawns, playerId, enemybarracks);
+    const enemyBarracks = units.filter(unit => unit.type === UnitType.barrack && unit.owner !== playerId);
+    handlePawns(pawns, playerId, enemyBarracks, grid, isLoop);
     return commands;
+};
+function toBooleans(grid) {
+    return grid.map(row => row.map(cell => (cell !== undefined && cell.length > 0)));
 }
-function handlePawns(pawns, playerId, enemybarracks) {
+function handlePawns(pawns, playerId, enemyBarracks, terrain, isLoop) {
     const commands = {};
     for (const pawn of pawns) {
-        const closestEnemybarrack = findClosestEnemybarrack(pawn, enemybarracks);
-        if (closestEnemybarrack) {
-            pawn.direction = getDirectionToTarget(pawn, closestEnemybarrack);
+        const closestEnemyBarrack = findClosestEnemyBarrack(pawn, enemyBarracks, terrain, isLoop);
+        if (closestEnemyBarrack) {
+            pawn.direction = getDirectionToTarget(pawn, closestEnemyBarrack);
             commands[pawn.id] = {
                 unitId: pawn.id,
                 action: UnitAction.move,
@@ -56,66 +64,18 @@ function getDirectionToTarget(source, target) {
     }
     return Direction.south;
 }
-// // Utility function to check if two positions are equal
-// const arePositionsEqual = (pos1: Position, pos2: Position): boolean => {
-//   return pos1.x === pos1.x && pos1.y === pos2.y;
-// };
 // Function to find the closest enemy barrack
-const findClosestEnemybarrack = (pawn, barracks) => {
-    let closestbarrack = undefined;
-    let minDistance = Infinity;
-    for (const u of barracks) {
-        const distance = Math.abs(pawn.position.x - u.position.x) + Math.abs(pawn.position.y - u.position.y);
-        if (distance < minDistance) {
-            minDistance = distance;
-            closestbarrack = u;
+const findClosestEnemyBarrack = (pawn, barracks, grid, isLoop) => {
+    const start = pawn.position;
+    let closestBarrack = undefined;
+    let shortestDistance = Infinity;
+    for (const barrack of barracks) {
+        const distance = findShortestPath(start, barrack.position, grid, isLoop);
+        if (distance < shortestDistance) {
+            shortestDistance = distance;
+            closestBarrack = barrack;
         }
     }
-    return closestbarrack;
+    return closestBarrack;
 };
-// // Main function to handle unit commands
-// function handleTemp(units: Unit[], playerId: number): UnitCommand[] {
-//   const commands: UnitCommand[] = [];
-//   for (const unit of units) {
-//     if (unit.owner !== playerId || unit.type === 'barrack') continue;
-//     const currentPos = unit.position;
-//     let newDirection: Direction = unit.direction;
-//     let newPosition = getNewPosition(currentPos, newDirection);
-//     // Check for collisions with other units of the same player
-//     let collision = units.some(u => u.owner === playerId && arePositionsEqual(newPosition, u.position));
-//     if (collision) {
-//       // Try to find an alternative direction to avoid collision
-//       const directions: Direction[] = ['north', 'south', 'east', 'west'];
-//       for (const direction of directions) {
-//         newPosition = getNewPosition(currentPos, direction);
-//         collision = units.some(u => u.owner === playerId && arePositionsEqual(newPosition, u.position));
-//         if (!collision) {
-//           newDirection = direction;
-//           break;
-//         }
-//       }
-//     }
-//     // Check for collision with other units in general (not only same player)
-//     collision = units.some(u => arePositionsEqual(newPosition, u.position));
-//     if (collision) {
-//       // Stay in place if collision cannot be avoided
-//       commands.push({ unitId: unit.id, action: 'stay', direction: unit.direction });
-//     } else {
-//       // Move towards the closest enemy barrack if no collision
-//       const enemybarrack = findClosestEnemybarrack(unit, units);
-//       if (enemybarrack) {
-//         const xDiff = enemybarrack.position.x - currentPos.x;
-//         const yDiff = enemybarrack.position.y - currentPos.y;
-//         if (Math.abs(xDiff) > Math.abs(yDiff)) {
-//           newDirection = xDiff > 0 ? 'east' : 'west';
-//         } else {
-//           newDirection = yDiff > 0 ? 'south' : 'north';
-//         }
-//         newPosition = getNewPosition(currentPos, newDirection);
-//       }
-//       commands.push({ unitId: unit.id, action: 'move', direction: newDirection });
-//     }
-//   }
-//   return commands;
-// }
-export default handle;
+export default handler;

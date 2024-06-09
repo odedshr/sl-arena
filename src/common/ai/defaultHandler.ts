@@ -1,10 +1,15 @@
-import { UnitCommand } from '../Instructions/Instruction.js';
+import { StatusUpdateHandler, UnitCommand } from '../Instructions/Instruction.js';
 import { getRandomDirection } from '../generators.js';
-import { ActionableUnit, Direction, Position, Unit, UnitAction, UnitType } from '../types/Units.js';
+import { Dimensions, EdgeType, Features } from '../types/Arena.js';
+import { ActionableUnit, Direction, Unit, UnitAction, UnitType } from '../types/Units.js';
+import createGrid, { Grid } from '../util-grid.js';
+import findShortestPath from './findShortestPath.js';
 
-function handle(units: Unit[], playerId: number, resources: number) {
+const handler: StatusUpdateHandler = (units: Unit[], playerId: number, resources: number, dimensions: Dimensions, features: Features) => {
+  const isLoop = features.edge === EdgeType.loop;
   const commands: UnitCommand[] = [];
   const barrack = units.find(unit => unit.type === UnitType.barrack && (unit as ActionableUnit).owner === playerId) as ActionableUnit;
+  const grid = toBooleans(createGrid(dimensions, units.filter(unit => unit.type === UnitType.wall)));
 
   if (barrack && resources > 0) {
     commands.push({
@@ -15,17 +20,21 @@ function handle(units: Unit[], playerId: number, resources: number) {
   }
 
   const pawns = units.filter(unit => unit.type === UnitType.pawn && (unit as ActionableUnit).owner === playerId) as ActionableUnit[];
-  const enemybarracks = units.filter(unit => unit.type === UnitType.barrack && (unit as ActionableUnit).owner !== playerId) as ActionableUnit[];
-  handlePawns(pawns, playerId, enemybarracks);
+  const enemyBarracks = units.filter(unit => unit.type === UnitType.barrack && (unit as ActionableUnit).owner !== playerId) as ActionableUnit[];
+  handlePawns(pawns, playerId, enemyBarracks, grid, isLoop);
   return commands;
 }
 
-function handlePawns(pawns: ActionableUnit[], playerId: number, enemybarracks: ActionableUnit[]) {
+function toBooleans(grid: Grid): boolean[][] {
+  return grid.map(row => row.map(cell => (cell !== undefined && cell.length > 0)));
+}
+
+function handlePawns(pawns: ActionableUnit[], playerId: number, enemyBarracks: ActionableUnit[], terrain: boolean[][], isLoop: boolean) {
   const commands: { [unitId: string]: UnitCommand } = {};
   for (const pawn of pawns) {
-    const closestEnemybarrack = findClosestEnemybarrack(pawn, enemybarracks);
-    if (closestEnemybarrack) {
-      pawn.direction = getDirectionToTarget(pawn, closestEnemybarrack);
+    const closestEnemyBarrack = findClosestEnemyBarrack(pawn, enemyBarracks, terrain, isLoop);
+    if (closestEnemyBarrack) {
+      pawn.direction = getDirectionToTarget(pawn, closestEnemyBarrack);
       commands[pawn.id] = {
         unitId: pawn.id,
         action: UnitAction.move,
@@ -63,78 +72,22 @@ function getDirectionToTarget(source: Unit, target: Unit): Direction {
 }
 
 
-// // Utility function to check if two positions are equal
-// const arePositionsEqual = (pos1: Position, pos2: Position): boolean => {
-//   return pos1.x === pos1.x && pos1.y === pos2.y;
-// };
-
 // Function to find the closest enemy barrack
-const findClosestEnemybarrack = (pawn: ActionableUnit, barracks: Unit[]): Unit | undefined => {
-  let closestbarrack: Unit | undefined = undefined;
-  let minDistance = Infinity;
+const findClosestEnemyBarrack = (pawn: ActionableUnit, barracks: Unit[], grid: boolean[][], isLoop: boolean): Unit | undefined => {
+  const start = pawn.position;
+  let closestBarrack: Unit | undefined = undefined;
+  let shortestDistance = Infinity;
 
-  for (const u of barracks) {
-    const distance = Math.abs(pawn.position.x - u.position.x) + Math.abs(pawn.position.y - u.position.y);
-    if (distance < minDistance) {
-      minDistance = distance;
-      closestbarrack = u;
+  for (const barrack of barracks) {
+    const distance = findShortestPath(start, barrack.position, grid, isLoop);
+    if (distance < shortestDistance) {
+      shortestDistance = distance;
+      closestBarrack = barrack;
     }
   }
 
-  return closestbarrack;
+  return closestBarrack;
 };
 
-// // Main function to handle unit commands
-// function handleTemp(units: Unit[], playerId: number): UnitCommand[] {
-//   const commands: UnitCommand[] = [];
 
-//   for (const unit of units) {
-//     if (unit.owner !== playerId || unit.type === 'barrack') continue;
-
-//     const currentPos = unit.position;
-//     let newDirection: Direction = unit.direction;
-//     let newPosition = getNewPosition(currentPos, newDirection);
-
-//     // Check for collisions with other units of the same player
-//     let collision = units.some(u => u.owner === playerId && arePositionsEqual(newPosition, u.position));
-//     if (collision) {
-//       // Try to find an alternative direction to avoid collision
-//       const directions: Direction[] = ['north', 'south', 'east', 'west'];
-//       for (const direction of directions) {
-//         newPosition = getNewPosition(currentPos, direction);
-//         collision = units.some(u => u.owner === playerId && arePositionsEqual(newPosition, u.position));
-//         if (!collision) {
-//           newDirection = direction;
-//           break;
-//         }
-//       }
-//     }
-
-//     // Check for collision with other units in general (not only same player)
-//     collision = units.some(u => arePositionsEqual(newPosition, u.position));
-//     if (collision) {
-//       // Stay in place if collision cannot be avoided
-//       commands.push({ unitId: unit.id, action: 'stay', direction: unit.direction });
-//     } else {
-//       // Move towards the closest enemy barrack if no collision
-//       const enemybarrack = findClosestEnemybarrack(unit, units);
-//       if (enemybarrack) {
-//         const xDiff = enemybarrack.position.x - currentPos.x;
-//         const yDiff = enemybarrack.position.y - currentPos.y;
-
-//         if (Math.abs(xDiff) > Math.abs(yDiff)) {
-//           newDirection = xDiff > 0 ? 'east' : 'west';
-//         } else {
-//           newDirection = yDiff > 0 ? 'south' : 'north';
-//         }
-
-//         newPosition = getNewPosition(currentPos, newDirection);
-//       }
-
-//       commands.push({ unitId: unit.id, action: 'move', direction: newDirection });
-//     }
-//   }
-
-//   return commands;
-// }
-export default handle;
+export default handler;

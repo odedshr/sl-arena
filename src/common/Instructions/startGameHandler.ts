@@ -40,8 +40,8 @@ function startGame(playerId: number, send: SendMethod, callback?: number) {
 
 function aiMessageHandler(message: Message) {
   if (message.type === MessageType.game_status) {
-    const { units, playerId, resources } = message;
-    const commands = handle(units, playerId, resources);
+    const { units, playerId, resources, dimensions, features } = message;
+    const commands = handle(units, playerId, resources, dimensions, features);
     if (commands.length) {
       handleUnitCommand(
         commands,

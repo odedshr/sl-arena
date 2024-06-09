@@ -64,7 +64,9 @@ function sendUpdateToPlayers(arena) {
         status: arena.status,
         playerId: player.id,
         resources: player.resources,
-        units: [...arena.environment, ...flattenCollection(arena.players)]
+        units: [...arena.environment, ...flattenCollection(arena.players)],
+        dimensions: arena.spec.dimensions,
+        features: arena.spec.features
     }));
 }
 function handleConflicts(grid) {

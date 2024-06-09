@@ -69,6 +69,8 @@ type GameStateMessage = {
   playerId: number;
   resources: number;
   status: ArenaStatus;
+  dimensions: Dimensions,
+  features: Features,
   units: Unit[];
 }
 
@@ -82,7 +84,6 @@ type MessageUnion = PingMessage |
   GameStateMessage |
   GameStartedMessage;
 type Message = { callback?: number } & MessageUnion
-
 
 type SendMethod = (message: Message) => void
 
