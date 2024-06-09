@@ -1,8 +1,8 @@
 import { getRandomDirection } from '../generators.js';
 import { EdgeType } from '../types/Arena.js';
-import { Direction, UnitAction, UnitType } from '../types/Units.js';
+import { UnitAction, UnitType } from '../types/Units.js';
 import createGrid from '../util-grid.js';
-import findShortestPath from './findShortestPath.js';
+import { findShortestPath, getNextDirection } from './path-finder.js';
 const handler = (units, playerId, resources, dimensions, features) => {
     const isLoop = features.edge === EdgeType.loop;
     const commands = [];
@@ -28,7 +28,7 @@ function handlePawns(pawns, playerId, enemyBarracks, terrain, isLoop) {
     for (const pawn of pawns) {
         const closestEnemyBarrack = findClosestEnemyBarrack(pawn, enemyBarracks, terrain, isLoop);
         if (closestEnemyBarrack) {
-            pawn.direction = getDirectionToTarget(pawn, closestEnemyBarrack);
+            pawn.direction = getNextDirection(pawn.position, closestEnemyBarrack.position, terrain, isLoop);
             commands[pawn.id] = {
                 unitId: pawn.id,
                 action: UnitAction.move,
@@ -37,32 +37,6 @@ function handlePawns(pawns, playerId, enemyBarracks, terrain, isLoop) {
         }
     }
     return Object.values(commands);
-}
-function getDirectionToTarget(source, target) {
-    const xDiff = target.position.x - source.position.x;
-    const yDiff = target.position.y - source.position.y;
-    if (xDiff > 0) {
-        if (yDiff < 0) {
-            return Direction.northEast;
-        }
-        else if (yDiff > 0) {
-            return Direction.southEast;
-        }
-        return Direction.east;
-    }
-    else if (xDiff < 0) {
-        if (yDiff < 0) {
-            return Direction.northWest;
-        }
-        else if (yDiff > 0) {
-            return Direction.southWest;
-        }
-        return Direction.west;
-    }
-    else if (yDiff < 0) {
-        return Direction.north;
-    }
-    return Direction.south;
 }
 // Function to find the closest enemy barrack
 const findClosestEnemyBarrack = (pawn, barracks, grid, isLoop) => {

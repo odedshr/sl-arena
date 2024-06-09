@@ -1,9 +1,9 @@
 import { StatusUpdateHandler, UnitCommand } from '../Instructions/Instruction.js';
 import { getRandomDirection } from '../generators.js';
 import { Dimensions, EdgeType, Features } from '../types/Arena.js';
-import { ActionableUnit, Direction, Unit, UnitAction, UnitType } from '../types/Units.js';
+import { ActionableUnit, Unit, UnitAction, UnitType } from '../types/Units.js';
 import createGrid, { Grid } from '../util-grid.js';
-import findShortestPath from './findShortestPath.js';
+import { findShortestPath, getNextDirection } from './path-finder.js';
 
 const handler: StatusUpdateHandler = (units: Unit[], playerId: number, resources: number, dimensions: Dimensions, features: Features) => {
   const isLoop = features.edge === EdgeType.loop;
@@ -33,8 +33,10 @@ function handlePawns(pawns: ActionableUnit[], playerId: number, enemyBarracks: A
   const commands: { [unitId: string]: UnitCommand } = {};
   for (const pawn of pawns) {
     const closestEnemyBarrack = findClosestEnemyBarrack(pawn, enemyBarracks, terrain, isLoop);
+
     if (closestEnemyBarrack) {
-      pawn.direction = getDirectionToTarget(pawn, closestEnemyBarrack);
+      pawn.direction = getNextDirection(pawn.position, closestEnemyBarrack.position, terrain, isLoop);
+
       commands[pawn.id] = {
         unitId: pawn.id,
         action: UnitAction.move,
@@ -45,32 +47,6 @@ function handlePawns(pawns: ActionableUnit[], playerId: number, enemyBarracks: A
 
   return Object.values(commands);
 }
-
-function getDirectionToTarget(source: Unit, target: Unit): Direction {
-  const xDiff = target.position.x - source.position.x;
-  const yDiff = target.position.y - source.position.y;
-
-  if (xDiff > 0) {
-    if (yDiff < 0) {
-      return Direction.northEast;
-    } else if (yDiff > 0) {
-      return Direction.southEast;
-    }
-    return Direction.east;
-  } else if (xDiff < 0) {
-    if (yDiff < 0) {
-      return Direction.northWest;
-    } else if (yDiff > 0) {
-      return Direction.southWest;
-    }
-    return Direction.west;
-  } else if (yDiff < 0) {
-    return Direction.north
-  }
-
-  return Direction.south;
-}
-
 
 // Function to find the closest enemy barrack
 const findClosestEnemyBarrack = (pawn: ActionableUnit, barracks: Unit[], grid: boolean[][], isLoop: boolean): Unit | undefined => {
