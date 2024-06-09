@@ -1,8 +1,8 @@
-import { Dimensions, EdgeType } from '../../common/types/Arena';
-import { ActionableUnit, Direction, Position, UnitAction, UnitType } from '../../common/types/Units';
-import { Grid } from '../../common/util-grid';
-import getNewPosition from './getNewPosition';
-import handleDeadUnit from './handleDeadUnit';
+import { Dimensions, EdgeType } from '../../common/types/Arena.js';
+import { ActionableUnit, Direction, Position, UnitAction, UnitType } from '../../common/types/Units.js';
+import { Grid } from '../../common/util-grid.js';
+import getNewPosition from './getNewPosition.js';
+import handleDeadUnit from './handleDeadUnit.js';
 
 function handlePawnUnit(unit: ActionableUnit, grid: Grid, dimensions: Dimensions, edge: EdgeType): boolean {
   //return true of unit died (and should be removed from the arena)

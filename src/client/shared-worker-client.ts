@@ -1,8 +1,8 @@
-import { Instruction } from '../common/Instructions/Instruction';
-import { Message } from '../common/Messages/Message';
+import { Instruction } from '../common/Instructions/Instruction.js';
+import { Message, MessageType, OperationErrorMessage } from '../common/Messages/Message.js';
+import startSharedWorkerServer from './shared-worker-server.js';
 
 type MessageHandler = (ev: MessageEvent<any>) => any;
-
 type Callback = (message: Message) => void;
 
 type ServerControls = {
@@ -22,16 +22,11 @@ function handleCallbacks(event: MessageEvent<any>) {
   }
 }
 
-function handleInstruction(event: MessageEvent<any>) {
-  console.log('>>> got instruction:', event);
-}
-
-// This is a fallback for browsers that don't support SharedWorker (IE
 function noServerHandler(event: MessageEvent<any>) {
-  let worker = new SharedWorker('./js/client/shared-worker.js').port;
-  worker.addEventListener('message', handleInstruction);
-  worker.start();
-  worker.postMessage({ type: 'register_server' });
+  const message = event.data as Message;
+  if (message.type === MessageType.operation_failed && (message as OperationErrorMessage).reason) {
+    startSharedWorkerServer();
+  }
 }
 
 function connect(): Promise<ServerControls> {
@@ -53,7 +48,7 @@ function connect(): Promise<ServerControls> {
             callbacks[++callbackCount] = callback;
             instruction.callback = callbackCount;
           }
-          worker.postMessage(instruction);
+          worker.postMessage({ isInstruction: true, ...instruction });
         }
       });
     } else {

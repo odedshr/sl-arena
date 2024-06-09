@@ -1,5 +1,5 @@
-import { Dimensions, EdgeType } from '../../common/types/Arena';
-import { Direction, Position } from '../../common/types/Units';
+import { Dimensions, EdgeType } from '../../common/types/Arena.js';
+import { Direction, Position } from '../../common/types/Units.js';
 
 const positionDelta: { [key: string]: Position } = {
   [Direction.north]: { x: 0, y: -1 },

@@ -1,11 +1,10 @@
-import { Instruction, InstructionType, CreateArenaInstruction, JoinArenaInstruction, UnitInstructions, LeaveArenaInstruction, ListUsersInstruction, ListUnitsInstruction } from '../../common/Instructions/Instruction.js';
-import { Arena, ArenaStatus } from '../../common/types/Arena.js';
-import { MessageType, ArenaCreatedMessage, PlayerJoinedMessage, OperationErrorMessage, PlayerLeftMessage, PlayerListMessage, SendMethod, UnitListMessage } from '../../common/Messages/Message.js';
-import { addArena, addPlayer, getArena, getPlayerArena, setPlayerArena } from '../arena.js';
+import { Instruction, InstructionType, CreateArenaInstruction, JoinArenaInstruction, UnitInstructions, LeaveArenaInstruction, ListUsersInstruction, ListUnitsInstruction } from './Instruction.js';
+import { Arena, ArenaStatus } from '../types/Arena.js';
+import { MessageType, ArenaCreatedMessage, PlayerJoinedMessage, OperationErrorMessage, PlayerLeftMessage, PlayerListMessage, SendMethod, UnitListMessage } from '../Messages/Message.js';
+import { addArena, addPlayer, getArena, getPlayerArena, setPlayerArena } from '../arena/arena.js';
 import handleUnitCommand from './unitCommandHandler.js';
-import { colors } from '../../common/generators.js';
-import { DetailedPlayer, PlayerType } from '../../common/types/Player.js';
-import { ActionableUnit } from '../../common/types/Units.js';
+import { PlayerType } from '../types/Player.js';
+import { ActionableUnit } from '../types/Units.js';
 import broadcast from './broadcast.js';
 import startGame from './startGameHandler.js';
 

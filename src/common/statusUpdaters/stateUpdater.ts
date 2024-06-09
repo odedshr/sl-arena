@@ -1,9 +1,9 @@
-import { GameStateMessage, MessageType } from '../../common/Messages/Message.js';
-import { Arena, ArenaStatus } from '../../common/types/Arena.js';
+import { GameStateMessage, MessageType } from '../Messages/Message.js';
+import { Arena, ArenaStatus } from '../types/Arena.js';
 import { DetailedPlayer } from '../../common/types/Player.js';
-import { ActionableUnit, Unit, UnitAction, UnitType } from '../../common/types/Units.js';
+import { ActionableUnit, Unit, UnitAction, UnitType } from '../types/Units.js';
 import createGrid, { Grid } from '../../common/util-grid.js';
-import { forEachArena } from '../arena.js';
+import { forEachArena } from '../arena/arena.js';
 import handleNurseryUnit from './nurseryHandler.js';
 import handlePawnUnit from './pawnHandler.js';
 

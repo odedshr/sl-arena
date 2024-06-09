@@ -1,9 +1,9 @@
-import { SendMethod } from '../common/Messages/Message';
-import { Arena, ArenaName } from '../common/types/Arena';
-import { colors } from '../common/generators';
-import { ActionableUnit, Direction, Position, UnitAction, UnitType } from '../common/types/Units';
-import { DetailedPlayer, PlayerType } from '../common/types/Player';
-import { setupArena } from './arenaLibrary';
+import { SendMethod } from '../Messages/Message.js';
+import { Arena, ArenaName } from '../types/Arena.js';
+import { colors } from '../generators.js';
+import { ActionableUnit, Direction, Position, UnitAction, UnitType } from '../types/Units.js';
+import { DetailedPlayer, PlayerType } from '../types/Player.js';
+import { setupArena } from './arenaLibrary.js';
 
 const arenas: { [id: string]: Arena } = {}
 const playerArena: { [id: number]: string } = {};

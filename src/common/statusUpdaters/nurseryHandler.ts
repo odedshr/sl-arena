@@ -1,10 +1,10 @@
-import { Dimensions, EdgeType } from '../../common/types/Arena';
-import { DetailedPlayer } from '../../common/types/Player';
-import { ActionableUnit, Position, UnitAction, UnitType } from '../../common/types/Units';
-import { Grid } from '../../common/util-grid';
-import { addUnit } from '../arena';
-import getNewPosition from './getNewPosition';
-import handleDeadUnit from './handleDeadUnit';
+import { Dimensions, EdgeType } from '../../common/types/Arena.js';
+import { DetailedPlayer } from '../../common/types/Player.js';
+import { ActionableUnit, Position, UnitAction, UnitType } from '../../common/types/Units.js';
+import { Grid } from '../../common/util-grid.js';
+import { addUnit } from '../arena/arena.js';
+import getNewPosition from './getNewPosition.js';
+import handleDeadUnit from './handleDeadUnit.js';
 
 function handleNurseryUnit(unit: ActionableUnit, player: DetailedPlayer, grid: Grid, dimensions: Dimensions, edge: EdgeType) {
   //return true of unit died (and should be removed from the arena)

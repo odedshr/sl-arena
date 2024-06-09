@@ -18,6 +18,11 @@ function handle(message, send) {
             return inform(`player ${message.playerName} left`);
         case MessageType.player_unit_list:
             return console.log(message.units);
+        case MessageType.operation_failed:
+            if (message.reason !== 'not_connected') {
+                inform(JSON.stringify(message));
+            }
+            return;
         case MessageType.ping:
             // do nothing  
             return;

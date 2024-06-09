@@ -1,4 +1,4 @@
-import { ActionableUnit, Direction } from '../../common/types/Units';
+import { ActionableUnit, Direction } from '../../common/types/Units.js';
 
 const directionRotate = {
   [Direction.north]: Direction.northEast,

@@ -1,26 +1,41 @@
 "use strict";
 let server;
+const clients = {};
+let connectionCount = 0;
 self.addEventListener('connect', (e) => {
     const port = e.ports[0];
-    console.log('Shared worker: connection established', e);
+    const clientId = connectionCount++;
+    clients[clientId] = port;
+    // for any client trying to connect before server was initialized, send a message letting them know
     if (!server) {
-        port.postMessage({ type: 'server_status', status: 'not_connected' });
+        port.postMessage({ type: 'operation_failed', reason: 'not_connected' });
+    }
+    else {
+        server.postMessage({ type: 'client_connect', clientId });
     }
     port.addEventListener('message', (event) => {
-        const instruction = event.data;
-        console.log('Shared worker: received message', instruction.type, server);
+        const message = event.data;
         if (!server) {
-            if (instruction.type === 'register_server') {
+            if (message.type === 'register_server') {
                 server = port;
+                server.onmessageerror = () => {
+                    console.log('Shared worker: connection closed');
+                    if (port === server) {
+                        server = undefined;
+                    }
+                };
+                Object.keys(clients)
+                    .filter(id => (+id !== clientId)) // don't connect the server itself
+                    .forEach(clientId => server === null || server === void 0 ? void 0 : server.postMessage({ type: 'client_connect', clientId }));
+                return;
             }
-            return port.postMessage({ type: 'server_status', status: server ? 'registered' : 'not_connected' });
+            return port.postMessage({ type: 'operation_failed', reason: 'not_connected' });
         }
-        server.postMessage(instruction);
-    });
-    port.addEventListener('close', () => {
-        console.log('Shared worker: connection closed');
-        if (port === server) {
-            server = undefined;
+        if (message.isInstruction) {
+            server.postMessage(Object.assign({ clientId }, message));
+        }
+        else {
+            clients[message.target].postMessage(message.content);
         }
     });
     port.start();

@@ -2,14 +2,13 @@
 import { Message, MessageType, PingMessage, SendMethod } from '../common/Messages/Message.js';
 import { Instruction, InstructionType } from '../common/Instructions/Instruction.js';
 
-import updateState from './statusUpdaters/stateUpdater.js';
+import updateState from '../common/statusUpdaters/stateUpdater.js';
 import startHttpServer from './httpServer.js';
 import startWSServer from './wsServer.js';
-import handle from './instructionHandlers/instructionHandler.js';
-import { getRandomFactionId } from '../common/generators.js';
+import handle from '../common/Instructions/instructionHandler.js';
 import { INTERVAL, KEEP_ALIVE } from '../common/config.js';
 
-const users: { [userId: number]: { playerId: string, send: SendMethod, heartbeat: NodeJS.Timeout } } = {};
+const users: { [userId: number]: { send: SendMethod, heartbeat: NodeJS.Timeout } } = {};
 const hostname = 'localhost';
 const port = 3000;
 
@@ -23,7 +22,6 @@ async function setupServer(hostname: string, port: number) {
     (id: number, send: (message: string) => void) => {
       users[id] = {
         send: (message: Message) => send(JSON.stringify(message)),
-        playerId: getRandomFactionId(),
         heartbeat: setInterval(() => users[id].send({ type: MessageType.ping } as PingMessage), KEEP_ALIVE),
       };
       console.log(`New client user-${id} connected`);
@@ -34,7 +32,7 @@ async function setupServer(hostname: string, port: number) {
 
     //onDisconnect
     (id: number) => {
-      console.log(`closing connection ${users[id].playerId}`);
+      console.log(`closing connection user-${id}`);
       handle({ type: InstructionType.arena_leave }, id, users[id].send);
       clearInterval(users[id].heartbeat);
       delete users[id];

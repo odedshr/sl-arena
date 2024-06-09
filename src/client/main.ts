@@ -1,5 +1,5 @@
 import { Message } from '../common/Messages/Message.js';
-import connect from './shared-worker-api.js';
+import connect from './shared-worker-client.js';
 
 import getControls from './controls.js';
 import inform from './inform.js';

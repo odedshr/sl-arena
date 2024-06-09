@@ -1,7 +1,7 @@
-import { getRandomArenaId } from '../common/generators';
-import { Arena, ArenaName, ArenaStatus, ArenaSpec, EdgeType, ArenaInitialSetup } from '../common/types/Arena';
-import { Direction, Position, UnitAction, UnitType, WallElement } from '../common/types/Units';
-import { addUnit } from './arena';
+import { getRandomArenaId } from '../generators.js';
+import { Arena, ArenaName, ArenaStatus, ArenaSpec, EdgeType, ArenaInitialSetup } from '../types/Arena.js';
+import { Direction, Position, UnitAction, UnitType, WallElement } from '../types/Units.js';
+import { addUnit } from './arena.js';
 
 
 const specs: { [key: string]: ArenaSpec } = {

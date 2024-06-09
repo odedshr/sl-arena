@@ -1,3 +1,5 @@
+import { MessageType } from '../common/Messages/Message.js';
+import startSharedWorkerServer from './shared-worker-server.js';
 let callbackCount = 0;
 const callbacks = {};
 function handleCallbacks(event) {
@@ -7,17 +9,11 @@ function handleCallbacks(event) {
         delete callbacks[message.callback];
     }
 }
-// This is a fallback for browsers that don't support SharedWorker (IE
-function noServerHandler() {
-    const users = {};
-    let worker = new SharedWorker('./js/client/shared-worker.js').port;
-    worker.addEventListener('message', (event) => {
-        const wrappedInstruction = event.data;
-        console.log('received instruction', wrappedInstruction.content);
-        //worker.postMessage({ target: wrappedInstruction.client, content: { type: MessageType.ping } })
-    });
-    worker.start();
-    worker.postMessage({ target: 'server', content: { type: 'register_server' } });
+function noServerHandler(event) {
+    const message = event.data;
+    if (message.type === MessageType.operation_failed && message.reason) {
+        startSharedWorkerServer();
+    }
 }
 function connect() {
     callbackCount = 0;
@@ -35,7 +31,7 @@ function connect() {
                         callbacks[++callbackCount] = callback;
                         instruction.callback = callbackCount;
                     }
-                    worker.postMessage(instruction);
+                    worker.postMessage(Object.assign({ isInstruction: true }, instruction));
                 }
             });
         }

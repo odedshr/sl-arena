@@ -1,13 +1,13 @@
-import { InstructionType } from '../../common/Instructions/Instruction';
-import { GameStartedMessage, Message, MessageType, SendMethod } from '../../common/Messages/Message';
-import handle from '../../common/ai/defaultHandler';
-import { ArenaStatus } from '../../common/types/Arena';
-import Player, { PlayerType } from '../../common/types/Player';
-import { addPlayer, getPlayerArena } from '../arena';
-import { setupUnits } from '../arenaLibrary';
-import broadcast from './broadcast';
-import { sendFail } from './instructionHandler';
-import handleUnitCommand from './unitCommandHandler';
+import { InstructionType } from './Instruction.js';
+import { GameStartedMessage, Message, MessageType, SendMethod } from '../Messages/Message.js';
+import handle from '../ai/defaultHandler.js';
+import { ArenaStatus } from '../types/Arena.js';
+import Player, { PlayerType } from '../types/Player.js';
+import { addPlayer, getPlayerArena } from '../arena/arena.js';
+import { setupUnits } from '../arena/arenaLibrary.js';
+import broadcast from './broadcast.js';
+import { sendFail } from './instructionHandler.js';
+import handleUnitCommand from './unitCommandHandler.js';
 
 function startGame(playerId: number, send: SendMethod, callback?: number) {
   const arena = getPlayerArena(playerId);

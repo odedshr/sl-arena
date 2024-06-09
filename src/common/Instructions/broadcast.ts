@@ -1,6 +1,6 @@
-import { Message } from '../../common/Messages/Message';
-import { Arena } from '../../common/types/Arena';
-import { PlayerType } from '../../common/types/Player';
+import { Message } from '../Messages/Message.js';
+import { Arena } from '../types/Arena.js';
+import { PlayerType } from '../types/Player.js';
 
 function broadcast(arena: Arena, message: Message, senderId: number, callback?: number) {
   Object.values(arena.players)
