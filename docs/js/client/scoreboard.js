@@ -1,10 +1,12 @@
 import { UnitAction } from '../common/types/Units.js';
+let playerList = [];
 function initScoreBoard(players) {
     const list = document.getElementById('scoreboard');
     while (list.firstChild) {
         list.removeChild(list.firstChild);
     }
     players.forEach((player) => {
+        playerList.push(player.id);
         const listItem = document.createElement('li');
         listItem.classList.add('player-item');
         listItem.setAttribute('style', `--player-color : ${player.color}`);
@@ -21,10 +23,11 @@ function initScoreBoard(players) {
 }
 function updateScoreBoard(units) {
     const unitCountByPlayer = {};
+    playerList.forEach(id => { unitCountByPlayer[id] = 0; });
     units.forEach((unit) => {
         const actionableUnit = unit;
         const playerId = actionableUnit.owner;
-        if (playerId && actionableUnit.action !== UnitAction.dead) {
+        if (playerId !== undefined && actionableUnit.action !== UnitAction.dead) {
             unitCountByPlayer[playerId] = (unitCountByPlayer[playerId] || 0) + 1;
         }
     });

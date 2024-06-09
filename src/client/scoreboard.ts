@@ -1,6 +1,8 @@
 import Player from '../common/types/Player.js';
 import { ActionableUnit, Unit, UnitAction } from '../common/types/Units.js';
 
+let playerList: number[] = [];
+
 function initScoreBoard(players: Player[]) {
   const list = document.getElementById('scoreboard') as HTMLUListElement;
 
@@ -9,6 +11,8 @@ function initScoreBoard(players: Player[]) {
   }
 
   players.forEach((player) => {
+    playerList.push(player.id);
+
     const listItem = document.createElement('li');
     listItem.classList.add('player-item');
     listItem.setAttribute('style', `--player-color : ${player.color}`)
@@ -29,11 +33,12 @@ function initScoreBoard(players: Player[]) {
 
 function updateScoreBoard(units: Unit[]) {
   const unitCountByPlayer: { [key: number]: number } = {};
+  playerList.forEach(id => { unitCountByPlayer[id] = 0; });
 
   units.forEach((unit) => {
     const actionableUnit = unit as ActionableUnit;
     const playerId = actionableUnit.owner;
-    if (playerId && actionableUnit.action !== UnitAction.dead) {
+    if (playerId !== undefined && actionableUnit.action !== UnitAction.dead) {
       unitCountByPlayer[playerId] = (unitCountByPlayer[playerId] || 0) + 1;
     }
   });
@@ -41,7 +46,7 @@ function updateScoreBoard(units: Unit[]) {
   Object.entries(unitCountByPlayer).forEach(([playerId, unitCount]) => {
     const playerScore = document.getElementById(`player-${playerId}-score`) as HTMLDivElement;
     playerScore.innerHTML = unitCount ? `${unitCount}` : 'Dead';
-  })
+  });
 }
 
 export { initScoreBoard, updateScoreBoard };
