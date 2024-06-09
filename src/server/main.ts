@@ -4,7 +4,7 @@ import { Instruction, InstructionType } from '../common/Instructions/Instruction
 
 import updateState from '../common/statusUpdaters/stateUpdater.js';
 import startHttpServer from './httpServer.js';
-import startWSServer from './wsServer.js';
+import startWSServer from './webSocketServer.js';
 import handle from '../common/Instructions/instructionHandler.js';
 import { INTERVAL, KEEP_ALIVE } from '../common/config.js';
 

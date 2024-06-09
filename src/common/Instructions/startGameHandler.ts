@@ -19,10 +19,12 @@ function startGame(playerId: number, send: SendMethod, callback?: number) {
     return sendFail(send, InstructionType.arena_start_game, `start-game: game already started`);
   }
 
-  let playerCount = Object.keys(arena.players).length;
+  let playerIds = Object.keys(arena.players)
+  let aiPlayerCount = arena.spec.maxPlayers - playerIds.length
+  let nextPlayerId = Math.max(...playerIds.map(n => +n));
 
-  while (playerCount++ < 8) {
-    addPlayer(arena, ++playerId, `ai-${playerId}`, PlayerType.ai, aiMessageHandler);
+  while (aiPlayerCount--) {
+    addPlayer(arena, ++nextPlayerId, `ai-${nextPlayerId}`, PlayerType.ai, aiMessageHandler);
   }
 
   setupUnits(arena);
