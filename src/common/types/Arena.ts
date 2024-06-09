@@ -35,7 +35,7 @@ type ArenaSpec = {
 }
 
 type ArenaInitialSetup = {
-  nurseries: Position[],
+  barracks: Position[],
   startingResources: number,
   environment: Unit[]
 }

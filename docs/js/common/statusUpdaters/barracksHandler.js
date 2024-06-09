@@ -1,8 +1,7 @@
-import { UnitAction, UnitType } from '../../common/types/Units.js';
+import { UnitAction, UnitType } from '../types/Units.js';
 import { addUnit } from '../arena/arena.js';
 import getNewPosition from './getNewPosition.js';
-import handleDeadUnit from './handleDeadUnit.js';
-function handleNurseryUnit(unit, player, grid, dimensions, edge) {
+function handleBarrackUnit(unit, player, grid, dimensions, edge) {
     //return true of unit died (and should be removed from the arena)
     switch (unit.action) {
         case UnitAction.produce:
@@ -16,9 +15,9 @@ function handleNurseryUnit(unit, player, grid, dimensions, edge) {
             if (player.resources === 0) {
                 unit.action = UnitAction.idle;
             }
-            break;
+            return false;
         case UnitAction.dead:
-            return handleDeadUnit(unit);
+            return true;
     }
     return false;
 }
@@ -26,10 +25,10 @@ function isSamePosition(position1, position2) {
     return position1.x === position2.x && position1.y === position2.y;
 }
 // return true if unit died (and should be removed from the arena
-function isNewPositionValid(position, nurseryPosition, grid) {
+function isNewPositionValid(position, barrackPosition, grid) {
     var _a;
     return position !== null &&
-        !isSamePosition(nurseryPosition, position) &&
+        !isSamePosition(barrackPosition, position) &&
         !(((_a = grid[position.y][position.x][0]) === null || _a === void 0 ? void 0 : _a.type) === UnitType.wall);
 }
-export default handleNurseryUnit;
+export default handleBarrackUnit;

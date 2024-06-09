@@ -1,10 +1,10 @@
 import { GameStateMessage, MessageType } from '../Messages/Message.js';
 import { Arena, ArenaStatus } from '../types/Arena.js';
-import { DetailedPlayer } from '../../common/types/Player.js';
+import { DetailedPlayer, PlayerType } from '../../common/types/Player.js';
 import { ActionableUnit, Unit, UnitAction, UnitType } from '../types/Units.js';
 import createGrid, { Grid } from '../../common/util-grid.js';
 import { forEachArena } from '../arena/arena.js';
-import handleNurseryUnit from './nurseryHandler.js';
+import handleBarrackUnit from './barracksHandler.js';
 import handlePawnUnit from './pawnHandler.js';
 
 function updateState() {
@@ -17,6 +17,7 @@ function updateState() {
 
       players.forEach(player => updatePlayer(player, grid, arena));
       handleConflicts(createGrid(dimensions, units));
+      checkGameOver(arena);
 
       sendUpdateToPlayers(arena);
     }
@@ -24,25 +25,49 @@ function updateState() {
 }
 
 function updatePlayer(player: DetailedPlayer, grid: Grid, arena: Arena) {
-  if (player.name)
-    Object.values(player.units).forEach(unit => updateUnit(unit, grid, player, arena));
+  Object.values(player.units).forEach(unit => updateUnit(unit, grid, player, arena));
+  killAllUnitsIfNoBarracksRemaining(Object.values(player.units));
 }
 
-function updateUnit(unit: Unit, grid: Grid, player: DetailedPlayer, arena: Arena) {
+function hasAnyBarracksStanding(units: ActionableUnit[]) {
+  return units.some(unit => unit.type === UnitType.barrack);
+}
+
+function killAllUnitsIfNoBarracksRemaining(units: ActionableUnit[]) {
+  if (!hasAnyBarracksStanding(units)) {
+    units.forEach(unit => { unit.action = UnitAction.dead; });
+  }
+}
+
+function updateUnit(unit: ActionableUnit, grid: Grid, player: DetailedPlayer, arena: Arena) {
   if (handleUnitByType(unit, grid, player, arena)) {
     // unit died
-    delete player.units[(unit as ActionableUnit).id];
+    delete player.units[(unit).id];
   }
 }
 
-function handleUnitByType(unit: Unit, grid: Grid, player: DetailedPlayer, arena: Arena) {
+function handleUnitByType(unit: ActionableUnit, grid: Grid, player: DetailedPlayer, arena: Arena) {
   switch (unit.type) {
     case UnitType.pawn:
-      return handlePawnUnit(unit as ActionableUnit, grid, arena.spec.dimensions, arena.spec.features.edge);
-    case UnitType.nursery:
-      return handleNurseryUnit(unit as ActionableUnit, player, grid, arena.spec.dimensions, arena.spec.features.edge);
+      return handlePawnUnit(unit, grid, arena.spec.dimensions, arena.spec.features.edge);
+    case UnitType.barrack:
+      const isDead = handleBarrackUnit(unit, player, grid, arena.spec.dimensions, arena.spec.features.edge);
+      // if the barrack was destroyed, kill all other units
+      if (!isDead && (unit.action === UnitAction.dead)) {
+        Object.values(player.units).forEach(unit => { unit.action = UnitAction.dead; });
+      }
+      return isDead;
   }
   return false;
+}
+
+function checkGameOver(arena: Arena) {
+  const players = Object.values(arena.players);
+  const playersWithBarracks = players.filter(player => hasAnyBarracksStanding(Object.values(player.units)));
+
+  if (playersWithBarracks.length === 1) {
+    arena.status = ArenaStatus.finished;
+  }
 }
 
 function sendUpdateToPlayers(arena: Arena) {
@@ -59,7 +84,7 @@ function handleConflicts(grid: Grid) {
   grid.forEach(row => row.forEach(cell => {
     if (cell.length > 1) {
       cell.forEach(unit => {
-        if (unit.type === UnitType.pawn || unit.type === UnitType.nursery) {
+        if (unit.type === UnitType.pawn || unit.type === UnitType.barrack) {
           (unit as ActionableUnit).action = UnitAction.dead;
         }
       });

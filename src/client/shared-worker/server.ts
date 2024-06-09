@@ -8,8 +8,10 @@ type WrappedInstruction = Instruction & { clientId: number };
 type ConnectToServerMessage = { type: 'server_connect', clientId: number };
 
 const WORKER_URL = `${location.href.replace(/\/.*\.html/, '')}js/client/shared-worker/worker.js`;
+const SERVER_CONSOLE_STYLE = 'background-color:black;color:white;font-family:courier;width:100%;';
 
 function startSharedWorkerServer() {
+  console.log('%cThis tab will serve as your server, don\'t close it while running the game!', SERVER_CONSOLE_STYLE)
   const users: { [userId: number]: { send: SendMethod, heartbeat: NodeJS.Timeout } } = {};
 
   let worker = new SharedWorker(WORKER_URL).port;
@@ -27,7 +29,7 @@ function startSharedWorkerServer() {
         send: (content: Message) => worker.postMessage({ target: clientId, content }),
         heartbeat: setInterval(() => users[clientId].send({ type: MessageType.ping } as PingMessage), KEEP_ALIVE),
       };
-      console.log(`%cNew client user-${clientId} connected`, 'background-color:black;color:white;font-family:courier;width:100%;');
+      console.log(`%cNew client user-${clientId} connected`, SERVER_CONSOLE_STYLE);
       return;
     }
 

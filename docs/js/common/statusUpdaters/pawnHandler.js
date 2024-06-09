@@ -1,6 +1,5 @@
 import { Direction, UnitAction, UnitType } from '../../common/types/Units.js';
 import getNewPosition from './getNewPosition.js';
-import handleDeadUnit from './handleDeadUnit.js';
 function handlePawnUnit(unit, grid, dimensions, edge) {
     //return true of unit died (and should be removed from the arena)
     switch (unit.action) {
@@ -8,7 +7,7 @@ function handlePawnUnit(unit, grid, dimensions, edge) {
             handleUnitMove(unit, grid, dimensions, edge);
             break;
         case UnitAction.dead:
-            return handleDeadUnit(unit);
+            return true;
     }
     return false;
 }

@@ -51,7 +51,7 @@ function handleCommand(command: UnitCommand, player: DetailedPlayer) {
 
 const validActions: { [key: string]: UnitAction[] } = {
   [UnitType.pawn]: [UnitAction.idle, UnitAction.move, UnitAction.dead],
-  [UnitType.nursery]: [UnitAction.idle, UnitAction.produce, UnitAction.dead],
+  [UnitType.barrack]: [UnitAction.idle, UnitAction.produce, UnitAction.dead],
 }
 
 function isValidAction(action: UnitAction, unitType: UnitType): boolean {

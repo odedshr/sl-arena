@@ -1,7 +1,7 @@
 enum UnitType {
   pawn = 'pawn',
   resource = 'resource',
-  nursery = 'nursery',
+  barrack = 'barrack',
   wall = 'wall',
   water = 'water'
 };

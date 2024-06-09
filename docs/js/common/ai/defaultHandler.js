@@ -2,25 +2,25 @@ import { getRandomDirection } from '../generators.js';
 import { Direction, UnitAction, UnitType } from '../types/Units.js';
 function handle(units, playerId, resources) {
     const commands = [];
-    const nursery = units.find(unit => unit.type === UnitType.nursery && unit.owner === playerId);
-    if (nursery && resources > 0) {
+    const barrack = units.find(unit => unit.type === UnitType.barrack && unit.owner === playerId);
+    if (barrack && resources > 0) {
         commands.push({
-            unitId: nursery.id,
+            unitId: barrack.id,
             action: UnitAction.produce,
             direction: getRandomDirection()
         });
     }
     const pawns = units.filter(unit => unit.type === UnitType.pawn && unit.owner === playerId);
-    const enemyNurseries = units.filter(unit => unit.type === UnitType.nursery && unit.owner !== playerId);
-    handlePawns(pawns, playerId, enemyNurseries);
+    const enemybarracks = units.filter(unit => unit.type === UnitType.barrack && unit.owner !== playerId);
+    handlePawns(pawns, playerId, enemybarracks);
     return commands;
 }
-function handlePawns(pawns, playerId, enemyNurseries) {
+function handlePawns(pawns, playerId, enemybarracks) {
     const commands = {};
     for (const pawn of pawns) {
-        const closestEnemyNursery = findClosestEnemyNursery(pawn, enemyNurseries);
-        if (closestEnemyNursery) {
-            pawn.direction = getDirectionToTarget(pawn, closestEnemyNursery);
+        const closestEnemybarrack = findClosestEnemybarrack(pawn, enemybarracks);
+        if (closestEnemybarrack) {
+            pawn.direction = getDirectionToTarget(pawn, closestEnemybarrack);
             commands[pawn.id] = {
                 unitId: pawn.id,
                 action: UnitAction.move,
@@ -60,24 +60,24 @@ function getDirectionToTarget(source, target) {
 // const arePositionsEqual = (pos1: Position, pos2: Position): boolean => {
 //   return pos1.x === pos1.x && pos1.y === pos2.y;
 // };
-// Function to find the closest enemy nursery
-const findClosestEnemyNursery = (pawn, nurseries) => {
-    let closestNursery = undefined;
+// Function to find the closest enemy barrack
+const findClosestEnemybarrack = (pawn, barracks) => {
+    let closestbarrack = undefined;
     let minDistance = Infinity;
-    for (const u of nurseries) {
+    for (const u of barracks) {
         const distance = Math.abs(pawn.position.x - u.position.x) + Math.abs(pawn.position.y - u.position.y);
         if (distance < minDistance) {
             minDistance = distance;
-            closestNursery = u;
+            closestbarrack = u;
         }
     }
-    return closestNursery;
+    return closestbarrack;
 };
 // // Main function to handle unit commands
 // function handleTemp(units: Unit[], playerId: number): UnitCommand[] {
 //   const commands: UnitCommand[] = [];
 //   for (const unit of units) {
-//     if (unit.owner !== playerId || unit.type === 'nursery') continue;
+//     if (unit.owner !== playerId || unit.type === 'barrack') continue;
 //     const currentPos = unit.position;
 //     let newDirection: Direction = unit.direction;
 //     let newPosition = getNewPosition(currentPos, newDirection);
@@ -101,11 +101,11 @@ const findClosestEnemyNursery = (pawn, nurseries) => {
 //       // Stay in place if collision cannot be avoided
 //       commands.push({ unitId: unit.id, action: 'stay', direction: unit.direction });
 //     } else {
-//       // Move towards the closest enemy nursery if no collision
-//       const enemyNursery = findClosestEnemyNursery(unit, units);
-//       if (enemyNursery) {
-//         const xDiff = enemyNursery.position.x - currentPos.x;
-//         const yDiff = enemyNursery.position.y - currentPos.y;
+//       // Move towards the closest enemy barrack if no collision
+//       const enemybarrack = findClosestEnemybarrack(unit, units);
+//       if (enemybarrack) {
+//         const xDiff = enemybarrack.position.x - currentPos.x;
+//         const yDiff = enemybarrack.position.y - currentPos.y;
 //         if (Math.abs(xDiff) > Math.abs(yDiff)) {
 //           newDirection = xDiff > 0 ? 'east' : 'west';
 //         } else {

@@ -2,7 +2,7 @@ var UnitType;
 (function (UnitType) {
     UnitType["pawn"] = "pawn";
     UnitType["resource"] = "resource";
-    UnitType["nursery"] = "nursery";
+    UnitType["barrack"] = "barrack";
     UnitType["wall"] = "wall";
     UnitType["water"] = "water";
 })(UnitType || (UnitType = {}));

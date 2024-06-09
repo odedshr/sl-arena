@@ -2,7 +2,7 @@ import { INTERVAL } from '../common/config.js';
 import { Dimensions } from '../common/types/Arena.js';
 import Player from '../common/types/Player.js';
 import { ActionableUnit, Position, Unit, UnitType, WallElement } from '../common/types/Units.js';
-import drawNursery from './graphics/nursery.js';
+import drawBarracks from './graphics/barracks.js'
 import drawPawn from './graphics/pawn.js';
 import drawWalls from './graphics/wall.js';
 
@@ -80,7 +80,7 @@ function draw(units: Unit[]) {
 
   movingUnits = [];
   unitByType = {
-    [UnitType.nursery]: [],
+    [UnitType.barrack]: [],
     [UnitType.wall]: [],
   };
   units.forEach(unit => {
@@ -115,7 +115,7 @@ function drawFrame(progress: number) {
   drawGrid(CELL_SIZE);
 
   drawWalls(ctx, dimensions, unitByType[UnitType.wall] as WallElement[]);
-  drawNursery(ctx, unitByType[UnitType.nursery] as ActionableUnit[], factionColor);
+  drawBarracks(ctx, unitByType[UnitType.barrack] as ActionableUnit[], factionColor);
 
   movingUnits.forEach(unit => {
     const startPos = oldPositions.get(unit.id)!;

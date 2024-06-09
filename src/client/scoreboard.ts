@@ -2,6 +2,7 @@ import Player from '../common/types/Player.js';
 import { ActionableUnit, Unit, UnitAction } from '../common/types/Units.js';
 
 let playerList: number[] = [];
+let playerNameById: { [key: number]: string } = {};
 
 function initScoreBoard(players: Player[]) {
   const list = document.getElementById('scoreboard') as HTMLUListElement;
@@ -12,6 +13,7 @@ function initScoreBoard(players: Player[]) {
 
   players.forEach((player) => {
     playerList.push(player.id);
+    playerNameById[player.id] = player.name;
 
     const listItem = document.createElement('li');
     listItem.classList.add('player-item');
@@ -49,4 +51,8 @@ function updateScoreBoard(units: Unit[]) {
   });
 }
 
-export { initScoreBoard, updateScoreBoard };
+function getPlayerName(playerId: number) {
+  return playerNameById[playerId];
+}
+
+export { initScoreBoard, updateScoreBoard, getPlayerName };

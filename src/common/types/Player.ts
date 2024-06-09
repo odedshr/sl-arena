@@ -1,6 +1,6 @@
-import { Message, SendMethod } from '../Messages/Message';
+import { SendMethod } from '../Messages/Message';
 import { Color } from './Color';
-import { Unit } from './Units';
+import { ActionableUnit } from './Units';
 
 type Player = {
   id: number,
@@ -16,7 +16,7 @@ enum PlayerType {
 type DetailedPlayer = Player & {
   send: SendMethod;
   type: PlayerType;
-  units: { [unitId: string]: Unit };
+  units: { [unitId: string]: ActionableUnit };
   resources: number;
 };
 

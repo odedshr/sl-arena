@@ -14,7 +14,7 @@ const specs: { [key: string]: ArenaSpec } = {
 
 const setups: { [key: string]: ArenaInitialSetup } = {
   default: {
-    nurseries: [{ x: 2, y: 2 }, { x: 30, y: 22 }, { x: 30, y: 2 }, { x: 2, y: 22 }, { x: 16, y: 2 }, { x: 16, y: 22 }, { x: 2, y: 12 }, { x: 30, y: 12 }],
+    barracks: [{ x: 2, y: 2 }, { x: 30, y: 22 }, { x: 30, y: 2 }, { x: 2, y: 22 }, { x: 16, y: 2 }, { x: 16, y: 22 }, { x: 2, y: 12 }, { x: 30, y: 12 }],
     startingResources: 8,
     environment: [wall({ x: 6, y: 10 }, { x: 6, y: 6 }, { x: 10, y: 6 }),
     wall({ x: 22, y: 6 }, { x: 26, y: 6 }, { x: 26, y: 10 }),
@@ -57,7 +57,7 @@ function setupUnits(arena: Arena): void {
 
   players.forEach((player, i) => {
     player.resources = setup.startingResources;
-    addUnit(player, UnitType.nursery, setup.nurseries[i], UnitAction.idle, Direction.north);
+    addUnit(player, UnitType.barrack, setup.barracks[i], UnitAction.idle, Direction.north);
   });
 }
 

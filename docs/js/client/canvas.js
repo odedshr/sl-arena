@@ -1,6 +1,6 @@
 import { INTERVAL } from '../common/config.js';
 import { UnitType } from '../common/types/Units.js';
-import drawNursery from './graphics/nursery.js';
+import drawBarracks from './graphics/barracks.js';
 import drawPawn from './graphics/pawn.js';
 import drawWalls from './graphics/wall.js';
 // Get the canvas element and its 2D rendering context
@@ -62,7 +62,7 @@ function draw(units) {
     movingUnits.forEach(unit => oldPositions.set(unit.id, unit.position));
     movingUnits = [];
     unitByType = {
-        [UnitType.nursery]: [],
+        [UnitType.barrack]: [],
         [UnitType.wall]: [],
     };
     units.forEach(unit => {
@@ -94,7 +94,7 @@ function drawFrame(progress) {
     clearCanvas();
     drawGrid(CELL_SIZE);
     drawWalls(ctx, dimensions, unitByType[UnitType.wall]);
-    drawNursery(ctx, unitByType[UnitType.nursery], factionColor);
+    drawBarracks(ctx, unitByType[UnitType.barrack], factionColor);
     movingUnits.forEach(unit => {
         const startPos = oldPositions.get(unit.id);
         const x = startPos ? startPos.x + (unit.position.x - startPos.x) * progress : unit.position.x;

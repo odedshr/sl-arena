@@ -3,7 +3,9 @@ import { MessageType } from '../../common/Messages/Message.js';
 import { INTERVAL, KEEP_ALIVE } from '../../common/config.js';
 import updateState from '../../common/statusUpdaters/stateUpdater.js';
 const WORKER_URL = `${location.href.replace(/\/.*\.html/, '')}js/client/shared-worker/worker.js`;
+const SERVER_CONSOLE_STYLE = 'background-color:black;color:white;font-family:courier;width:100%;';
 function startSharedWorkerServer() {
+    console.log('%cThis tab will serve as your server, don\'t close it while running the game!', SERVER_CONSOLE_STYLE);
     const users = {};
     let worker = new SharedWorker(WORKER_URL).port;
     worker.start();
@@ -18,7 +20,7 @@ function startSharedWorkerServer() {
                 send: (content) => worker.postMessage({ target: clientId, content }),
                 heartbeat: setInterval(() => users[clientId].send({ type: MessageType.ping }), KEEP_ALIVE),
             };
-            console.log(`%cNew client user-${clientId} connected`, 'background-color:black;color:white;font-family:courier;width:100%;');
+            console.log(`%cNew client user-${clientId} connected`, SERVER_CONSOLE_STYLE);
             return;
         }
         const wrappedInstruction = event.data;

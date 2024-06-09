@@ -1,5 +1,6 @@
 import { UnitAction } from '../common/types/Units.js';
 let playerList = [];
+let playerNameById = {};
 function initScoreBoard(players) {
     const list = document.getElementById('scoreboard');
     while (list.firstChild) {
@@ -7,6 +8,7 @@ function initScoreBoard(players) {
     }
     players.forEach((player) => {
         playerList.push(player.id);
+        playerNameById[player.id] = player.name;
         const listItem = document.createElement('li');
         listItem.classList.add('player-item');
         listItem.setAttribute('style', `--player-color : ${player.color}`);
@@ -36,4 +38,7 @@ function updateScoreBoard(units) {
         playerScore.innerHTML = unitCount ? `${unitCount}` : 'Dead';
     });
 }
-export { initScoreBoard, updateScoreBoard };
+function getPlayerName(playerId) {
+    return playerNameById[playerId];
+}
+export { initScoreBoard, updateScoreBoard, getPlayerName };

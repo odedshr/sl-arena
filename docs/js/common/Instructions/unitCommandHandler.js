@@ -36,7 +36,7 @@ function handleCommand(command, player) {
 }
 const validActions = {
     [UnitType.pawn]: [UnitAction.idle, UnitAction.move, UnitAction.dead],
-    [UnitType.nursery]: [UnitAction.idle, UnitAction.produce, UnitAction.dead],
+    [UnitType.barrack]: [UnitAction.idle, UnitAction.produce, UnitAction.dead],
 };
 function isValidAction(action, unitType) {
     return validActions[unitType].includes(action);
