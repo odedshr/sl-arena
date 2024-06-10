@@ -86,4 +86,59 @@ function getNextDirection(start, end, grid, isLoop) {
     }
     return bestDirection;
 }
-export { findShortestPath, getNextDirection };
+function getWayPointGrid(dimensions) {
+    const height = dimensions.height;
+    const width = dimensions.width;
+    return new Array(height).fill(0).map(() => new Array(width).fill(undefined));
+}
+function toPositionSet(positions) {
+    const set = new Set();
+    for (const position of positions) {
+        set.add(`${position.x}, ${position.y}`);
+    }
+    return set;
+}
+function getPath(grid, end) {
+    const path = [];
+    let current = grid[end.y][end.x];
+    while (current) {
+        path.unshift(current);
+        current = grid[current.origin.y][current.origin.x];
+    }
+    return path;
+}
+function getPathToNearestTarget(start, targets, terrain, isLoop) {
+    var _a;
+    const height = terrain.length;
+    const width = terrain[0].length;
+    const waypoints = getWayPointGrid({ width, height });
+    const destinations = toPositionSet(targets);
+    const queue = [start];
+    const visited = new Set();
+    visited.add(`${start.x}, ${start.y}`);
+    while (queue.length) {
+        console.log(queue.length);
+        const current = queue.shift();
+        if (destinations.has(`${current.x}, ${current.y}`)) {
+            return getPath(waypoints, current);
+        }
+        const currentWayPoint = (waypoints[current.y][current.x] || { distance: 0 });
+        // Explore all directions
+        for (const dir of directions) {
+            const next = getNextPosition(current, dir, width, height, isLoop);
+            // Check if the next position is valid and not blocked
+            if (isValidPosition(next.x, next.y, width, height, terrain, isLoop) &&
+                (!visited.has(`${next.x},${next.y}`) || (((_a = waypoints[next.y][next.x]) === null || _a === void 0 ? void 0 : _a.distance) || Infinity) < currentWayPoint.distance)) {
+                queue.push(next);
+                waypoints[next.y][next.x] = {
+                    distance: currentWayPoint.distance + 1,
+                    direction: dir.direction,
+                    origin: current
+                };
+                visited.add(`${next.x},${next.y}`);
+            }
+        }
+    }
+    return [];
+}
+export { findShortestPath, getNextDirection, getPathToNearestTarget };

@@ -6,6 +6,7 @@ self.addEventListener('connect', (e) => {
     const port = e.ports[0];
     const clientId = connectionCount++;
     clients[clientId] = port;
+    console.log(`user ${clientId} connected`);
     // for any client trying to connect before server was initialized, send a message letting them know
     if (!server) {
         port.postMessage({ type: 'operation_failed', reason: 'not_connected' });
@@ -17,6 +18,7 @@ self.addEventListener('connect', (e) => {
         const message = event.data;
         if (!server) {
             if (message.type === 'register_server') {
+                console.log(`user ${clientId} is now the server`);
                 server = port;
                 server.onmessageerror = () => {
                     console.log('Shared worker: connection closed');

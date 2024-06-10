@@ -1,3 +1,4 @@
+import { Dimensions } from '../types/Arena.js';
 import { Direction, Position } from '../types/Units.js';
 
 const directions = [
@@ -104,4 +105,71 @@ function getNextDirection(start: Position, end: Position, grid: boolean[][], isL
   return bestDirection;
 }
 
-export { findShortestPath, getNextDirection };
+type WayPoint = {
+  distance: number;
+  direction: Direction;
+  origin: Position
+}
+
+function getWayPointGrid(dimensions: Dimensions): (WayPoint | undefined)[][] {
+  const height = dimensions.height;
+  const width = dimensions.width;
+  return new Array(height).fill(0).map(() => new Array(width).fill(undefined));
+}
+
+function toPositionSet(positions: Position[]): Set<string> {
+  const set = new Set<string>();
+  for (const position of positions) {
+    set.add(`${position.x}, ${position.y}`);
+  }
+  return set;
+}
+
+function getPath(grid: (WayPoint | undefined)[][], end: Position): WayPoint[] {
+  const path: WayPoint[] = [];
+  let current: WayPoint | undefined = grid[end.y][end.x];
+  while (current) {
+    path.unshift(current);
+    current = grid[current.origin.y][current.origin.x];
+  }
+  return path;
+}
+
+function getPathToNearestTarget(start: Position, targets: Position[], terrain: boolean[][], isLoop: boolean): WayPoint[] {
+  const height = terrain.length;
+  const width = terrain[0].length;
+  const waypoints = getWayPointGrid({ width, height });
+  const destinations = toPositionSet(targets);
+  const queue = [start];
+  const visited = new Set<string>();
+  visited.add(`${start.x}, ${start.y}`);
+
+  while (queue.length) {
+    console.log(queue.length);
+    const current = queue.shift()!;
+    if (destinations.has(`${current.x}, ${current.y}`)) {
+      return getPath(waypoints, current);
+    }
+    const currentWayPoint = (waypoints[current.y][current.x] || { distance: 0 }) as WayPoint;
+    // Explore all directions
+    for (const dir of directions) {
+      const next = getNextPosition(current, dir, width, height, isLoop);
+
+      // Check if the next position is valid and not blocked
+      if (isValidPosition(next.x, next.y, width, height, terrain, isLoop) &&
+        (!visited.has(`${next.x},${next.y}`) || (waypoints[next.y][next.x]?.distance || Infinity) < currentWayPoint.distance)) {
+        queue.push(next);
+        waypoints[next.y][next.x] = {
+          distance: currentWayPoint.distance + 1,
+          direction: dir.direction,
+          origin: current
+        };
+        visited.add(`${next.x},${next.y}`);
+      }
+    }
+  }
+
+  return [];
+}
+
+export { findShortestPath, getNextDirection, getPathToNearestTarget, WayPoint };

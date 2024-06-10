@@ -2,22 +2,26 @@ import { getRandomDirection } from '../generators.js';
 import { EdgeType } from '../types/Arena.js';
 import { UnitAction, UnitType } from '../types/Units.js';
 import createGrid from '../util-grid.js';
-import { findShortestPath, getNextDirection } from './path-finder.js';
+import { getPathToNearestTarget } from './path-finder.js';
 const handler = (units, playerId, resources, dimensions, features) => {
     const isLoop = features.edge === EdgeType.loop;
     const commands = [];
-    const barrack = units.find(unit => unit.type === UnitType.barrack && unit.owner === playerId);
+    const barracks = units.filter(unit => unit.type === UnitType.barrack && unit.owner === playerId);
     const grid = toBooleans(createGrid(dimensions, units.filter(unit => unit.type === UnitType.wall)));
-    if (barrack && resources > 0) {
-        commands.push({
-            unitId: barrack.id,
-            action: UnitAction.produce,
-            direction: getRandomDirection()
-        });
+    if (barracks.length) {
+        barracks.forEach(barrack => { grid[barrack.position.y][barrack.position.x] = true; });
+        if (resources > 0) {
+            commands.push({
+                unitId: barracks[0].id,
+                action: UnitAction.produce,
+                direction: getRandomDirection()
+            });
+        }
     }
     const pawns = units.filter(unit => unit.type === UnitType.pawn && unit.owner === playerId);
     const enemyBarracks = units.filter(unit => unit.type === UnitType.barrack && unit.owner !== playerId);
-    handlePawns(pawns, playerId, enemyBarracks, grid, isLoop);
+    // handlePawns(pawns, playerId, enemyBarracks, grid, isLoop);
+    // avoidCollisions(pawns, commands);
     return commands;
 };
 function toBooleans(grid) {
@@ -26,30 +30,22 @@ function toBooleans(grid) {
 function handlePawns(pawns, playerId, enemyBarracks, terrain, isLoop) {
     const commands = {};
     for (const pawn of pawns) {
-        const closestEnemyBarrack = findClosestEnemyBarrack(pawn, enemyBarracks, terrain, isLoop);
-        if (closestEnemyBarrack) {
-            pawn.direction = getNextDirection(pawn.position, closestEnemyBarrack.position, terrain, isLoop);
+        const bestPath = getPathToNearestTarget(pawn.position, enemyBarracks.map(barrack => barrack.position), terrain, isLoop);
+        if (bestPath.length) {
             commands[pawn.id] = {
                 unitId: pawn.id,
                 action: UnitAction.move,
+                direction: bestPath.pop().direction
+            };
+        }
+        else {
+            commands[pawn.id] = {
+                unitId: pawn.id,
+                action: UnitAction.idle,
                 direction: pawn.direction
             };
         }
     }
     return Object.values(commands);
 }
-// Function to find the closest enemy barrack
-const findClosestEnemyBarrack = (pawn, barracks, grid, isLoop) => {
-    const start = pawn.position;
-    let closestBarrack = undefined;
-    let shortestDistance = Infinity;
-    for (const barrack of barracks) {
-        const distance = findShortestPath(start, barrack.position, grid, isLoop);
-        if (distance < shortestDistance) {
-            shortestDistance = distance;
-            closestBarrack = barrack;
-        }
-    }
-    return closestBarrack;
-};
 export default handler;
