@@ -31,7 +31,7 @@ function handle(message, send) {
     }
 }
 function handleArenaCreated(message) {
-    inform(`arena created, you can invite your friends to the ${message.arenaId}`);
+    inform(`arena created, you can invite your friends to the %c${message.arenaId}`, 'display:inline-block;background-color:darkblue;color:white;');
 }
 function handleGameStarted(message) {
     inform(`Game Started. It's worth knowing that ${getMapEdgeMessage(message.features.edge)}`);

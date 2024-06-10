@@ -19,12 +19,15 @@ function getUnitPosition(position, command, dimensions, edge) {
 function avoidCollisions(units, commands, dimensions, edge) {
     // iterate through all commands, place the units on a grid and verify they don't collide- if a unit is about to collide, change its action to idle
     const grid = getEmptyGrid(dimensions);
-    for (const unit of units) {
-        const unitPosition = getUnitPosition(unit.position, commands[unit.id], dimensions, edge);
-        if (unitPosition && grid[unitPosition.y][unitPosition.x] !== undefined) {
-            commands[unit.id].action = UnitAction.idle;
+    units.forEach((unit) => {
+        const command = commands.find(command => command.unitId === unit.id);
+        if (command) {
+            const unitPosition = getUnitPosition(unit.position, command, dimensions, edge);
+            if (unitPosition && grid[unitPosition.y][unitPosition.x] !== undefined) {
+                command.action = UnitAction.idle;
+            }
         }
-    }
+    });
     return commands;
 }
 export default avoidCollisions;

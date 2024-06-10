@@ -34,7 +34,7 @@ function handle(message: Message, send: SendMethod) {
 }
 
 function handleArenaCreated(message: ArenaCreatedMessage) {
-  inform(`arena created, you can invite your friends to the ${message.arenaId}`);
+  inform(`arena created, you can invite your friends to the %c${message.arenaId}`, 'display:inline-block;background-color:darkblue;color:white;');
 }
 
 
