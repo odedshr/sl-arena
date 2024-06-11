@@ -25,7 +25,7 @@ const setups: { [key: string]: ArenaInitialSetup } = {
 }
 
 function wall(...position: Position[]): WallElement {
-  return { type: UnitType.wall, position: (position as Position & Position[]), onBump: UnitAction.idle };
+  return { type: UnitType.wall, position: (position as Position & Position[]) };
 }
 
 function setupArena(arenaName: ArenaName, owner: number): Arena {

@@ -71,11 +71,9 @@ function sendUpdateToPlayers(arena) {
 }
 function handleConflicts(grid) {
     grid.forEach(row => row.forEach(cell => {
-        if (cell.length > 1) {
+        if (cell.length > 1 && (new Set(cell.map(unit => unit.owner)).size > 1)) {
             cell.forEach(unit => {
-                if (unit.type === UnitType.pawn || unit.type === UnitType.barrack) {
-                    unit.action = UnitAction.dead;
-                }
+                unit.action = UnitAction.dead;
             });
         }
     }));

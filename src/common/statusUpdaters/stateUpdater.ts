@@ -84,11 +84,9 @@ function sendUpdateToPlayers(arena: Arena) {
 
 function handleConflicts(grid: Grid) {
   grid.forEach(row => row.forEach(cell => {
-    if (cell.length > 1) {
+    if (cell.length > 1 && (new Set(cell.map(unit => (unit as ActionableUnit).owner)).size > 1)) {
       cell.forEach(unit => {
-        if (unit.type === UnitType.pawn || unit.type === UnitType.barrack) {
-          (unit as ActionableUnit).action = UnitAction.dead;
-        }
+        (unit as ActionableUnit).action = UnitAction.dead;
       });
     }
   }))

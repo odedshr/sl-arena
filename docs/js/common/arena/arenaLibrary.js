@@ -21,7 +21,7 @@ const setups = {
     }
 };
 function wall(...position) {
-    return { type: UnitType.wall, position: position, onBump: UnitAction.idle };
+    return { type: UnitType.wall, position: position };
 }
 function setupArena(arenaName, owner) {
     const spec = specs[arenaName];

@@ -31,7 +31,6 @@ type Position = { x: number, y: number };
 type Unit = {
   type: UnitType,
   position: Position;
-  onBump: UnitAction.idle | UnitAction.move | UnitAction.dead;
 }
 type ActionableUnit = Unit & {
   id: string,
@@ -43,13 +42,11 @@ type ActionableUnit = Unit & {
 type WallElement = Unit & {
   type: UnitType.wall,
   position: Position[],
-  onBump: UnitAction.idle
 }
 
 type WaterElement = Unit & {
   type: UnitType.water,
   position: Position[],
-  onBump: UnitAction.dead
 }
 
 export { Unit, UnitType, Direction, UnitAction, Position, WallElement, WaterElement, ActionableUnit };

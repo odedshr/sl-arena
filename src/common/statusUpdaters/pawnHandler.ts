@@ -23,13 +23,14 @@ function handleUnitMove(unit: ActionableUnit, grid: Grid, dimensions: Dimensions
     unit.action = UnitAction.dead;
     unit.direction = Direction.north;
     return;
-  } else if (newPosition.x === unit.position.x && newPosition.y === unit.position.y) {
-    //didn't move, probably hit a map wall edge
+  } else if ((newPosition.x === unit.position.x && newPosition.y === unit.position.y) ||
+    (grid[newPosition.y][newPosition.x][0]?.type === UnitType.wall)) {
+    //didn't move, probably hit a map wall edge or an actual wall
     unit.action = UnitAction.idle;
     return;
-  } else if (grid[newPosition.y][newPosition.x][0]?.type === UnitType.wall) {
-    //hit a wall
-    unit.action = grid[newPosition.y][newPosition.x][0]?.onBump || UnitAction.idle
+  } else if (grid[newPosition.y][newPosition.x][0]?.type === UnitType.water) {
+    //fell in water
+    unit.action = UnitAction.dead;
     return;
   }
   unit.position = (newPosition as Position);
