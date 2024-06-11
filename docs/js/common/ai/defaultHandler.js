@@ -2,6 +2,7 @@ import { getRandomDirection } from '../generators.js';
 import { EdgeType } from '../types/Arena.js';
 import { UnitAction, UnitType } from '../types/Units.js';
 import createGrid from '../util-grid.js';
+import avoidCollisions from './collision-avoidance.js';
 import { getPathToNearestTarget } from './path-finder.js';
 const handler = (units, playerId, resources, dimensions, features) => {
     const isLoop = features.edge === EdgeType.loop;
@@ -20,14 +21,14 @@ const handler = (units, playerId, resources, dimensions, features) => {
     }
     const pawns = units.filter(unit => unit.type === UnitType.pawn && unit.owner === playerId);
     const enemyBarracks = units.filter(unit => unit.type === UnitType.barrack && unit.owner !== playerId);
-    // handlePawns(pawns, playerId, enemyBarracks, grid, isLoop);
-    // avoidCollisions(pawns, commands);
+    commands.push(...handlePawns(pawns, enemyBarracks, grid, isLoop));
+    avoidCollisions(pawns, commands, dimensions, features.edge);
     return commands;
 };
 function toBooleans(grid) {
     return grid.map(row => row.map(cell => (cell !== undefined && cell.length > 0)));
 }
-function handlePawns(pawns, playerId, enemyBarracks, terrain, isLoop) {
+function handlePawns(pawns, enemyBarracks, terrain, isLoop) {
     const commands = {};
     for (const pawn of pawns) {
         const bestPath = getPathToNearestTarget(pawn.position, enemyBarracks.map(barrack => barrack.position), terrain, isLoop);
@@ -35,7 +36,7 @@ function handlePawns(pawns, playerId, enemyBarracks, terrain, isLoop) {
             commands[pawn.id] = {
                 unitId: pawn.id,
                 action: UnitAction.move,
-                direction: bestPath.pop().direction
+                direction: bestPath[0].direction
             };
         }
         else {

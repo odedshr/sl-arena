@@ -1,7 +1,7 @@
-import { UnitCommand } from '../Instructions/Instruction';
-import getNewPosition from '../statusUpdaters/getNewPosition';
-import { Dimensions, EdgeType } from '../types/Arena';
-import { ActionableUnit, Position, UnitAction } from '../types/Units';
+import { UnitCommand } from '../Instructions/Instruction.js';
+import getNewPosition from '../statusUpdaters/getNewPosition.js';
+import { Dimensions, EdgeType } from '../types/Arena.js';
+import { ActionableUnit, Position, UnitAction } from '../types/Units.js';
 
 function getEmptyGrid(dimensions: Dimensions): (number | undefined)[][] {
   const grid: (number | undefined)[][] = [];

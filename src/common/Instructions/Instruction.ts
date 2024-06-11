@@ -1,6 +1,6 @@
-import { Message } from '../Messages/Message';
-import { ArenaName, Dimensions, Features } from '../types/Arena';
-import { Direction, Unit, UnitAction } from '../types/Units';
+import { Message } from '../Messages/Message.js';
+import { ArenaName, Dimensions, Features } from '../types/Arena.js';
+import { Direction, Unit, UnitAction } from '../types/Units.js';
 
 enum InstructionType {
   register_server = 'register_server',

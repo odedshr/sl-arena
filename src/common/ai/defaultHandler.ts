@@ -25,8 +25,10 @@ const handler: StatusUpdateHandler = (units: Unit[], playerId: number, resources
 
   const pawns = units.filter(unit => unit.type === UnitType.pawn && (unit as ActionableUnit).owner === playerId) as ActionableUnit[];
   const enemyBarracks = units.filter(unit => unit.type === UnitType.barrack && (unit as ActionableUnit).owner !== playerId) as ActionableUnit[];
-  handlePawns(pawns, playerId, enemyBarracks, grid, isLoop);
+
+  commands.push(...handlePawns(pawns, enemyBarracks, grid, isLoop));
   avoidCollisions(pawns, commands, dimensions, features.edge);
+
   return commands;
 }
 
@@ -34,7 +36,7 @@ function toBooleans(grid: Grid): boolean[][] {
   return grid.map(row => row.map(cell => (cell !== undefined && cell.length > 0)));
 }
 
-function handlePawns(pawns: ActionableUnit[], playerId: number, enemyBarracks: ActionableUnit[], terrain: boolean[][], isLoop: boolean) {
+function handlePawns(pawns: ActionableUnit[], enemyBarracks: ActionableUnit[], terrain: boolean[][], isLoop: boolean) {
   const commands: { [unitId: string]: UnitCommand } = {};
   for (const pawn of pawns) {
     const bestPath = getPathToNearestTarget(pawn.position, enemyBarracks.map(barrack => barrack.position), terrain, isLoop);
@@ -43,7 +45,7 @@ function handlePawns(pawns: ActionableUnit[], playerId: number, enemyBarracks: A
       commands[pawn.id] = {
         unitId: pawn.id,
         action: UnitAction.move,
-        direction: (bestPath.pop() as WayPoint).direction
+        direction: (bestPath[0] as WayPoint).direction
       }
     } else {
       commands[pawn.id] = {

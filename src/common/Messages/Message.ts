@@ -1,7 +1,7 @@
-import { InstructionType } from '../Instructions/Instruction';
-import { ArenaStatus, Dimensions, Features } from '../types/Arena';
-import Player from '../types/Player';
-import { ActionableUnit, Unit } from '../types/Units';
+import { InstructionType } from '../Instructions/Instruction.js';
+import { ArenaStatus, Dimensions, Features } from '../types/Arena.js';
+import Player from '../types/Player.js';
+import { ActionableUnit, Unit } from '../types/Units.js';
 
 enum MessageType {
   server_status = 'server_status',

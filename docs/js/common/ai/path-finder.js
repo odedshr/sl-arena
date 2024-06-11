@@ -59,16 +59,14 @@ function getPath(grid, end) {
     return path;
 }
 function getPathToNearestTarget(start, targets, terrain, isLoop) {
-    var _a;
     const height = terrain.length;
     const width = terrain[0].length;
     const waypoints = getWayPointGrid({ width, height });
     const destinations = toPositionSet(targets);
     const queue = [start];
     const visited = new Set();
-    visited.add(`${start.x}, ${start.y}`);
-    while (queue.length) {
-        console.log(queue.length);
+    visited.add(`${start.x},${start.y}`);
+    while (queue.length || queue.length > 1000) {
         const current = queue.shift();
         if (destinations.has(`${current.x}, ${current.y}`)) {
             return getPath(waypoints, current);
@@ -78,8 +76,8 @@ function getPathToNearestTarget(start, targets, terrain, isLoop) {
         for (const dir of directions) {
             const next = getNextPosition(current, dir, width, height, isLoop);
             // Check if the next position is valid and not blocked
-            if (isValidPosition(next.x, next.y, width, height, terrain, isLoop) &&
-                (!visited.has(`${next.x},${next.y}`) || (((_a = waypoints[next.y][next.x]) === null || _a === void 0 ? void 0 : _a.distance) || Infinity) < currentWayPoint.distance)) {
+            if (!visited.has(`${next.x},${next.y}`) &&
+                isValidPosition(next.x, next.y, width, height, terrain, isLoop)) {
                 queue.push(next);
                 waypoints[next.y][next.x] = {
                     distance: currentWayPoint.distance + 1,

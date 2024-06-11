@@ -1,6 +1,6 @@
-import { SendMethod } from '../Messages/Message';
-import { Color } from './Color';
-import { ActionableUnit } from './Units';
+import { SendMethod } from '../Messages/Message.js';
+import { Color } from './Color.js';
+import { ActionableUnit } from './Units.js';
 
 type Player = {
   id: number,

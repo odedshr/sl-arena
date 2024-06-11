@@ -65,10 +65,12 @@ function toPositionSet(positions: Position[]): Set<string> {
 function getPath(grid: (WayPoint | undefined)[][], end: Position): WayPoint[] {
   const path: WayPoint[] = [];
   let current: WayPoint | undefined = grid[end.y][end.x];
+
   while (current) {
     path.unshift(current);
     current = grid[current.origin.y][current.origin.x];
   }
+
   return path;
 }
 
@@ -79,22 +81,24 @@ function getPathToNearestTarget(start: Position, targets: Position[], terrain: b
   const destinations = toPositionSet(targets);
   const queue = [start];
   const visited = new Set<string>();
-  visited.add(`${start.x}, ${start.y}`);
+  visited.add(`${start.x},${start.y}`);
 
-  while (queue.length) {
-    console.log(queue.length);
+  while (queue.length || queue.length > 1000) {
     const current = queue.shift()!;
     if (destinations.has(`${current.x}, ${current.y}`)) {
       return getPath(waypoints, current);
     }
+
     const currentWayPoint = (waypoints[current.y][current.x] || { distance: 0 }) as WayPoint;
     // Explore all directions
     for (const dir of directions) {
       const next = getNextPosition(current, dir, width, height, isLoop);
 
       // Check if the next position is valid and not blocked
-      if (isValidPosition(next.x, next.y, width, height, terrain, isLoop) &&
-        (!visited.has(`${next.x},${next.y}`) || (waypoints[next.y][next.x]?.distance || Infinity) < currentWayPoint.distance)) {
+      if (
+        !visited.has(`${next.x},${next.y}`) &&
+        isValidPosition(next.x, next.y, width, height, terrain, isLoop)
+      ) {
         queue.push(next);
         waypoints[next.y][next.x] = {
           distance: currentWayPoint.distance + 1,
