@@ -4,6 +4,7 @@ import Player from '../common/types/Player.js';
 import { ActionableUnit, Position, Unit, UnitType, WallElement } from '../common/types/Units.js';
 import drawBarracks from './graphics/barracks.js'
 import drawPawn from './graphics/pawn.js';
+import drawResources from './graphics/resource.js';
 import drawWalls from './graphics/wall.js';
 
 // Get the canvas element and its 2D rendering context
@@ -82,6 +83,7 @@ function draw(units: Unit[]) {
   unitByType = {
     [UnitType.barrack]: [],
     [UnitType.wall]: [],
+    [UnitType.resource]: [],
   };
   units.forEach(unit => {
     if (unit.type === UnitType.pawn) {
@@ -115,6 +117,7 @@ function drawFrame(progress: number) {
   drawGrid(CELL_SIZE);
 
   drawWalls(ctx, dimensions, unitByType[UnitType.wall] as WallElement[]);
+  drawResources(ctx, unitByType[UnitType.resource] as Unit[]);
   drawBarracks(ctx, unitByType[UnitType.barrack] as ActionableUnit[], factionColor);
 
   movingUnits.forEach(unit => {

@@ -30,8 +30,9 @@ type Features = {
 // ArenaTemplate is used to provide initial fixed parameters for a new arena
 type ArenaSpec = {
   maxPlayers: number,
+  resourceProbability: number, // a number between 0 and 1
   dimensions: Dimensions,
-  features: Features,
+  features: Features
 }
 
 type ArenaInitialSetup = {

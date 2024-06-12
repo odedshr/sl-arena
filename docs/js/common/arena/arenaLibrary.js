@@ -4,7 +4,8 @@ import { Direction, UnitAction, UnitType } from '../types/Units.js';
 import { addUnit } from './arena.js';
 const specs = {
     default: {
-        maxPlayers: 8,
+        maxPlayers: 4,
+        resourceProbability: 0.1,
         dimensions: { width: 32, height: 25 },
         features: { edge: EdgeType.wall, fogOfWar: false }
     }

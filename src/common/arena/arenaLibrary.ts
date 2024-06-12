@@ -6,7 +6,8 @@ import { addUnit } from './arena.js';
 
 const specs: { [key: string]: ArenaSpec } = {
   default: {
-    maxPlayers: 8,
+    maxPlayers: 4,
+    resourceProbability: 0.1,
     dimensions: { width: 32, height: 25 },
     features: { edge: EdgeType.wall, fogOfWar: false }
   }

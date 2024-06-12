@@ -9,37 +9,50 @@ import { WayPoint, getPathToNearestTarget } from './path-finder.js';
 const handler: StatusUpdateHandler = (units: Unit[], playerId: number, resources: number, dimensions: Dimensions, features: Features) => {
   const isLoop = features.edge === EdgeType.loop;
   const commands: UnitCommand[] = [];
-  const barracks = units.filter(unit => unit.type === UnitType.barrack && (unit as ActionableUnit).owner === playerId) as ActionableUnit[];
+  const barracks = getMyUnits(UnitType.barrack, units, playerId);
   const grid = toBooleans(createGrid(dimensions, units.filter(unit => unit.type === UnitType.wall)));
 
   if (barracks.length) {
     barracks.forEach(barrack => { grid[barrack.position.y][barrack.position.x] = true; });
-    if (resources > 0) {
+    let barrack = 0;
+    while (resources--) {
       commands.push({
-        unitId: barracks[0].id,
+        unitId: barracks[barrack++ % barracks.length].id,
         action: UnitAction.produce,
         direction: getRandomDirection()
       });
     }
   }
 
-  const pawns = units.filter(unit => unit.type === UnitType.pawn && (unit as ActionableUnit).owner === playerId) as ActionableUnit[];
-  const enemyBarracks = units.filter(unit => unit.type === UnitType.barrack && (unit as ActionableUnit).owner !== playerId) as ActionableUnit[];
+  const pawns = getMyUnits(UnitType.pawn, units, playerId);
+  const potentialTargets = findTargets(units, playerId);
 
-  commands.push(...handlePawns(pawns, enemyBarracks, grid, isLoop));
+  commands.push(...handlePawns(pawns, potentialTargets, grid, isLoop));
   avoidCollisions(pawns, commands, dimensions, features.edge);
 
   return commands;
+}
+
+function getMyUnits(type: UnitType, units: Unit[], playerId: number) {
+  return (units as ActionableUnit[]).filter(unit => 
+    unit.type === type &&
+    unit.owner === playerId &&
+    unit.action !== UnitAction.dead);
+}
+function findTargets(units: Unit[], playerId: number) {
+  return units.filter(unit => (unit.type === UnitType.barrack && (unit as ActionableUnit).owner !== playerId) || (
+    unit.type === UnitType.resource
+  ));
 }
 
 function toBooleans(grid: Grid): boolean[][] {
   return grid.map(row => row.map(cell => (cell !== undefined && cell.length > 0)));
 }
 
-function handlePawns(pawns: ActionableUnit[], enemyBarracks: ActionableUnit[], terrain: boolean[][], isLoop: boolean) {
+function handlePawns(pawns: ActionableUnit[], potentialTargets: Unit[], terrain: boolean[][], isLoop: boolean) {
   const commands: { [unitId: string]: UnitCommand } = {};
   for (const pawn of pawns) {
-    const bestPath = getPathToNearestTarget(pawn.position, enemyBarracks.map(barrack => barrack.position), terrain, isLoop);
+    const bestPath = getPathToNearestTarget(pawn.position, potentialTargets.map(target => target.position), terrain, isLoop);
 
     if (bestPath.length) {
       commands[pawn.id] = {

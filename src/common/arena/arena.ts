@@ -1,7 +1,7 @@
 import { SendMethod } from '../Messages/Message.js';
 import { Arena, ArenaName } from '../types/Arena.js';
 import { colors } from '../generators.js';
-import { ActionableUnit, Direction, Position, UnitAction, UnitType } from '../types/Units.js';
+import { ActionableUnit, Direction, Position, Unit, UnitAction, UnitType } from '../types/Units.js';
 import { DetailedPlayer, PlayerType } from '../types/Player.js';
 import { setupArena } from './arenaLibrary.js';
 
@@ -77,4 +77,10 @@ function addUnit(player: DetailedPlayer, type: UnitType, position: Position, act
   player.units[id] = unit;
 }
 
-export { addArena, getArena, setPlayerArena, getPlayerArena, forEachArena, getNewUnitId, addUnit, addPlayer };
+function addResource(units:Unit[], type: UnitType, position: Position) {
+  units.push({
+    type,
+    position
+  } as Unit);
+}
+export { addArena, getArena, setPlayerArena, getPlayerArena, forEachArena, getNewUnitId, addResource, addUnit, addPlayer };

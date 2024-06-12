@@ -61,4 +61,10 @@ function addUnit(player, type, position, action, direction) {
     };
     player.units[id] = unit;
 }
-export { addArena, getArena, setPlayerArena, getPlayerArena, forEachArena, getNewUnitId, addUnit, addPlayer };
+function addResource(units, type, position) {
+    units.push({
+        type,
+        position
+    });
+}
+export { addArena, getArena, setPlayerArena, getPlayerArena, forEachArena, getNewUnitId, addResource, addUnit, addPlayer };

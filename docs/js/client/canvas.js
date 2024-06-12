@@ -2,6 +2,7 @@ import { INTERVAL } from '../common/config.js';
 import { UnitType } from '../common/types/Units.js';
 import drawBarracks from './graphics/barracks.js';
 import drawPawn from './graphics/pawn.js';
+import drawResources from './graphics/resource.js';
 import drawWalls from './graphics/wall.js';
 // Get the canvas element and its 2D rendering context
 const canvas = document.getElementById('map');
@@ -64,6 +65,7 @@ function draw(units) {
     unitByType = {
         [UnitType.barrack]: [],
         [UnitType.wall]: [],
+        [UnitType.resource]: [],
     };
     units.forEach(unit => {
         if (unit.type === UnitType.pawn) {
@@ -94,6 +96,7 @@ function drawFrame(progress) {
     clearCanvas();
     drawGrid(CELL_SIZE);
     drawWalls(ctx, dimensions, unitByType[UnitType.wall]);
+    drawResources(ctx, unitByType[UnitType.resource]);
     drawBarracks(ctx, unitByType[UnitType.barrack], factionColor);
     movingUnits.forEach(unit => {
         const startPos = oldPositions.get(unit.id);
