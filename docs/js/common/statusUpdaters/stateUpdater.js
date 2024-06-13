@@ -8,14 +8,15 @@ import handlePawnUnit from './pawnHandler.js';
 function updateState() {
     forEachArena(arena => {
         if (arena.status === ArenaStatus.started) {
+            removeDeadUnits(arena);
             const dimensions = arena.spec.dimensions;
             const players = Object.values(arena.players);
             const units = flattenCollection(arena.players);
             let grid = createGrid(dimensions, [...arena.environment, ...units]);
-            players.forEach(player => updatePlayer(player, grid, arena));
+            handleConflicts(grid, arena);
             // update grid with new unit positions
             grid = createGrid(dimensions, [...arena.environment, ...units]);
-            handleConflicts(grid, arena);
+            players.forEach(player => updatePlayer(player, grid, arena));
             if (!checkGameOver(arena)) {
                 addResources(grid, arena);
             }
@@ -23,37 +24,34 @@ function updateState() {
         }
     });
 }
+function removeDeadUnits(arena) {
+    Object.values(arena.players).forEach(player => {
+        Object.values(player.units).forEach(unit => {
+            if (unit.action === UnitAction.dead) {
+                delete player.units[(unit).id];
+            }
+        });
+    });
+}
 function updatePlayer(player, grid, arena) {
-    Object.values(player.units).forEach(unit => updateUnit(unit, grid, player, arena));
-    killAllUnitsIfNoBarracksRemaining(Object.values(player.units));
+    const units = Object.values(player.units).filter(unit => unit.action !== UnitAction.dead);
+    if (hasAnyBarracksStanding(units)) {
+        units.forEach(unit => handleUnitByType(unit, grid, player, arena));
+    }
+    else {
+        units.forEach(unit => { unit.action = UnitAction.dead; });
+    }
 }
 function hasAnyBarracksStanding(units) {
     return units.some(unit => unit.type === UnitType.barrack);
 }
-function killAllUnitsIfNoBarracksRemaining(units) {
-    if (!hasAnyBarracksStanding(units)) {
-        units.forEach(unit => { unit.action = UnitAction.dead; });
-    }
-}
-function updateUnit(unit, grid, player, arena) {
-    if (handleUnitByType(unit, grid, player, arena)) {
-        // unit died
-        delete player.units[(unit).id];
-    }
-}
 function handleUnitByType(unit, grid, player, arena) {
     switch (unit.type) {
         case UnitType.pawn:
-            return handlePawnUnit(unit, grid, arena.spec.dimensions, arena.spec.features.edge);
+            handlePawnUnit(unit, grid, arena.spec.dimensions, arena.spec.features.edge);
         case UnitType.barrack:
-            const isDead = handleBarrackUnit(unit, player, grid, arena.spec.dimensions, arena.spec.features.edge);
-            // if the barrack was destroyed, kill all other units
-            if (!isDead && (unit.action === UnitAction.dead)) {
-                Object.values(player.units).forEach(unit => { unit.action = UnitAction.dead; });
-            }
-            return isDead;
+            handleBarrackUnit(unit, player, grid, arena.spec.dimensions, arena.spec.features.edge);
     }
-    return false;
 }
 function checkGameOver(arena) {
     const players = Object.values(arena.players);
