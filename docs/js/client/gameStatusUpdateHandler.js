@@ -2,6 +2,7 @@ import { InstructionType } from '../common/Instructions/Instruction.js';
 import { ArenaStatus } from '../common/types/Arena.js';
 import { UnitType } from '../common/types/Units.js';
 import { draw } from './canvas.js';
+import { draw as drawMinimap } from './minimap.js';
 import { default as defaultHandler } from '../common/ai/defaultHandler.js';
 import { getPlayerName, updateScoreBoard } from './scoreboard.js';
 import inform from './inform.js';
@@ -14,6 +15,7 @@ function handleGameStatusUpdate(message, send) {
     switch (status) {
         case ArenaStatus.started:
             draw(units);
+            drawMinimap(units);
             updateScoreBoard(units);
             const commands = handle(units, playerId, resources, dimensions, features);
             if (commands.length) {

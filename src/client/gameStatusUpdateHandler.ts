@@ -1,8 +1,9 @@
 import { InstructionType, SendMethod, StatusUpdateHandler } from '../common/Instructions/Instruction.js';
 import { GameStateMessage } from '../common/Messages/Message.js';
 import { ArenaStatus } from '../common/types/Arena.js';
-import { ActionableUnit, Unit, UnitType } from '../common/types/Units.js';
+import { ActionableUnit, UnitType } from '../common/types/Units.js';
 import { draw } from './canvas.js';
+import { draw as drawMinimap } from './minimap.js';
 import { default as defaultHandler } from '../common/ai/defaultHandler.js'
 import { getPlayerName, updateScoreBoard } from './scoreboard.js';
 import inform from './inform.js';
@@ -18,6 +19,7 @@ function handleGameStatusUpdate(message: GameStateMessage, send: SendMethod) {
   switch (status) {
     case ArenaStatus.started:
       draw(units);
+      drawMinimap(units);
       updateScoreBoard(units);
 
       const commands = handle(units, playerId, resources, dimensions, features);

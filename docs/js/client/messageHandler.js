@@ -3,6 +3,7 @@ import { EdgeType } from '../common/types/Arena.js';
 import { setCanvasSize, setFactionColors } from './canvas.js';
 import { handleGameStatusUpdate } from './gameStatusUpdateHandler.js';
 import inform from './inform.js';
+import { setMiniMapSize, setFactionColors as setMiniMapColors } from './minimap.js';
 import { initScoreBoard } from './scoreboard.js';
 function handle(message, send) {
     switch (message.type) {
@@ -36,7 +37,9 @@ function handleArenaCreated(message) {
 function handleGameStarted(message) {
     inform(`Game Started. It's worth knowing that ${getMapEdgeMessage(message.features.edge)}`);
     setCanvasSize(message.dimensions);
+    setMiniMapSize(message.dimensions);
     setFactionColors(message.factions);
+    setMiniMapColors(message.factions);
     initScoreBoard(message.factions);
 }
 function getMapEdgeMessage(edgeType) {

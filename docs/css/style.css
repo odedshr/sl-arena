@@ -70,6 +70,13 @@ h1 {
   margin: 0 auto;
 }
 
+#minimap {
+  border: 1px solid black;
+  box-sizing: border-box;
+  height: 10rem;
+  width: 100%;
+}
+
 #scoreboard {
   font-size: 1.6rem;
   margin: 0;
