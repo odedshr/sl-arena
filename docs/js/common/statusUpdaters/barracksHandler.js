@@ -1,16 +1,12 @@
 import { UnitAction, UnitType } from '../types/Units.js';
 import { addUnit } from '../arena/arena.js';
-import getNewPosition from './getNewPosition.js';
 function handleBarrackUnit(unit, player, grid, dimensions, edge) {
     //return true of unit died (and should be removed from the arena)
     switch (unit.action) {
         case UnitAction.produce:
             if (player.resources > 0) {
-                const newUnitPosition = getNewPosition(unit.position, unit.direction, dimensions, edge);
-                if (isNewPositionValid(newUnitPosition, unit.position, grid)) {
-                    addUnit(player, UnitType.pawn, newUnitPosition, UnitAction.move, unit.direction);
-                    player.resources--;
-                }
+                addUnit(player, UnitType.pawn, unit.position, UnitAction.move, unit.direction);
+                player.resources--;
             }
             if (player.resources === 0) {
                 unit.action = UnitAction.idle;

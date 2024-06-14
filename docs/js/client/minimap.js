@@ -4,10 +4,10 @@ import { drawCircle, drawRectangle } from './graphics/shapes.js';
 // Get the canvas element and its 2D rendering context
 const canvas = document.getElementById('minimap');
 const ctx = canvas.getContext('2d');
-const factionColor = {};
 const oldPositions = new Map();
 let movingUnits = [];
 let unitByType = {};
+let factionColor = {};
 const animationDuration = INTERVAL;
 let animationStartTime = 0;
 let dimensions = getElementDimensions(canvas);
@@ -21,7 +21,7 @@ function getElementDimensions(element) {
     const { width, height } = element.getBoundingClientRect();
     return { width, height };
 }
-function setMiniMapSize(newDimensions) {
+function setCanvasSize(newDimensions) {
     dimensions = newDimensions;
     applyCanvasSize(dimensions);
 }
@@ -84,9 +84,7 @@ function drawFrame(progress) {
         drawPawn(ctx, { x, y }, factionColor[unit.owner]);
     });
 }
-function setFactionColors(factions) {
-    factions.forEach(faction => { factionColor[faction.id] = faction.color; });
-}
+function setFactionColors(colors) { factionColor = colors; }
 function drawWalls(ctx, walls) {
     ctx.lineWidth = 1;
     ctx.strokeStyle = 'black';
@@ -108,4 +106,4 @@ function drawResources(ctx, resources) {
 function drawPawn(ctx, position, color) {
     drawCircle(ctx, position.x, position.y, 0.25, color);
 }
-export { setMiniMapSize, setFactionColors, draw };
+export { setCanvasSize, setFactionColors, draw };

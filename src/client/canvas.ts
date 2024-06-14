@@ -1,6 +1,5 @@
 import { INTERVAL } from '../common/config.js';
 import { Dimensions } from '../common/types/Arena.js';
-import Player from '../common/types/Player.js';
 import { ActionableUnit, Position, Unit, UnitType, WallElement } from '../common/types/Units.js';
 import drawBarracks from './graphics/barracks.js'
 import drawPawn from './graphics/pawn.js';
@@ -11,10 +10,10 @@ import drawWalls from './graphics/wall.js';
 const canvas = document.getElementById('map') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 const CELL_SIZE = 16;
-const factionColor: { [playerId: string]: string } = {};
 const oldPositions: Map<string, Position> = new Map();
 let movingUnits: ActionableUnit[] = [];
 let unitByType: { [unitType: string]: Unit[] } = {};
+let factionColor: { [playerId: string]: string } = {};
 
 const animationDuration = INTERVAL;
 let animationStartTime: number = 0;
@@ -129,8 +128,6 @@ function drawFrame(progress: number) {
   });
 }
 
-function setFactionColors(factions: Player[]) {
-  factions.forEach(faction => { factionColor[faction.id] = faction.color; });
-}
+function setFactionColors(colors: { [playerId: string]: string }) { factionColor = colors; }
 
 export { setCanvasSize, setFactionColors, draw };

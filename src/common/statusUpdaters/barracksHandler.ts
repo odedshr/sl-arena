@@ -10,11 +10,8 @@ function handleBarrackUnit(unit: ActionableUnit, player: DetailedPlayer, grid: G
   switch (unit.action) {
     case UnitAction.produce:
       if (player.resources > 0) {
-        const newUnitPosition = getNewPosition(unit.position, unit.direction, dimensions, edge)
-        if (isNewPositionValid(newUnitPosition, unit.position, grid)) {
-          addUnit(player, UnitType.pawn, newUnitPosition as Position, UnitAction.move, unit.direction);
-          player.resources--;
-        }
+        addUnit(player, UnitType.pawn, unit.position, UnitAction.move, unit.direction);
+        player.resources--;
       }
       if (player.resources === 0) {
         unit.action = UnitAction.idle;

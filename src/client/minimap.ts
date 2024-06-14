@@ -1,6 +1,5 @@
 import { INTERVAL } from '../common/config.js';
 import { Dimensions } from '../common/types/Arena.js';
-import Player from '../common/types/Player.js';
 import { ActionableUnit, Position, Unit, UnitType, WallElement } from '../common/types/Units.js';
 import { drawCircle, drawRectangle } from './graphics/shapes.js';
 
@@ -8,10 +7,10 @@ import { drawCircle, drawRectangle } from './graphics/shapes.js';
 const canvas = document.getElementById('minimap') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-const factionColor: { [playerId: string]: string } = {};
 const oldPositions: Map<string, Position> = new Map();
 let movingUnits: ActionableUnit[] = [];
 let unitByType: { [unitType: string]: Unit[] } = {};
+let factionColor: { [playerId: string]: string } = {};
 
 const animationDuration = INTERVAL;
 let animationStartTime: number = 0;
@@ -31,7 +30,7 @@ function getElementDimensions(element: HTMLElement) {
   return { width, height };
 }
 
-function setMiniMapSize(newDimensions: Dimensions) {
+function setCanvasSize(newDimensions: Dimensions) {
   dimensions = newDimensions
   applyCanvasSize(dimensions);
 }
@@ -107,9 +106,7 @@ function drawFrame(progress: number) {
   });
 }
 
-function setFactionColors(factions: Player[]) {
-  factions.forEach(faction => { factionColor[faction.id] = faction.color; });
-}
+function setFactionColors(colors: { [playerId: string]: string }) { factionColor = colors; }
 
 function drawWalls(ctx: CanvasRenderingContext2D, walls: WallElement[]) {
   ctx.lineWidth = 1;
@@ -137,4 +134,4 @@ function drawPawn(ctx: CanvasRenderingContext2D, position: Position, color: stri
   drawCircle(ctx, position.x, position.y, 0.25, color);
 }
 
-export { setMiniMapSize, setFactionColors, draw };
+export { setCanvasSize, setFactionColors, draw };

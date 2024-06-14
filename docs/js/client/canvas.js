@@ -8,10 +8,10 @@ import drawWalls from './graphics/wall.js';
 const canvas = document.getElementById('map');
 const ctx = canvas.getContext('2d');
 const CELL_SIZE = 16;
-const factionColor = {};
 const oldPositions = new Map();
 let movingUnits = [];
 let unitByType = {};
+let factionColor = {};
 const animationDuration = INTERVAL;
 let animationStartTime = 0;
 let dimensions = getElementDimensions(canvas.parentElement);
@@ -105,7 +105,5 @@ function drawFrame(progress) {
         drawPawn(ctx, { x, y }, unit.action, unit.direction, factionColor[unit.owner]);
     });
 }
-function setFactionColors(factions) {
-    factions.forEach(faction => { factionColor[faction.id] = faction.color; });
-}
+function setFactionColors(colors) { factionColor = colors; }
 export { setCanvasSize, setFactionColors, draw };

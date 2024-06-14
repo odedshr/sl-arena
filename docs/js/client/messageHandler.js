@@ -1,9 +1,10 @@
 import { MessageType } from '../common/Messages/Message.js';
 import { EdgeType } from '../common/types/Arena.js';
-import { setCanvasSize, setFactionColors } from './canvas.js';
+import { setCanvasSize, setFactionColors as setCanvasColors } from './canvas.js';
 import { handleGameStatusUpdate } from './gameStatusUpdateHandler.js';
 import inform from './inform.js';
-import { setMiniMapSize, setFactionColors as setMiniMapColors } from './minimap.js';
+import { setCanvasSize as setMiniMapSize, setFactionColors as setMiniMapColors } from './minimap.js';
+import { setFactionColors as setGraphColors } from './graph.js';
 import { initScoreBoard } from './scoreboard.js';
 function handle(message, send) {
     switch (message.type) {
@@ -36,11 +37,16 @@ function handleArenaCreated(message) {
 }
 function handleGameStarted(message) {
     inform(`Game Started. It's worth knowing that ${getMapEdgeMessage(message.features.edge)}`);
+    setFactionColors(message.factions);
     setCanvasSize(message.dimensions);
     setMiniMapSize(message.dimensions);
-    setFactionColors(message.factions);
-    setMiniMapColors(message.factions);
     initScoreBoard(message.factions);
+}
+function setFactionColors(factions) {
+    const factionColor = factions.reduce((acc, faction) => { acc[faction.id] = faction.color; return acc; }, {});
+    setCanvasColors(factionColor);
+    setMiniMapColors(factionColor);
+    setGraphColors(factionColor);
 }
 function getMapEdgeMessage(edgeType) {
     switch (edgeType) {
