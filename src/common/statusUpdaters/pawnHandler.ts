@@ -1,5 +1,5 @@
 import { Dimensions, EdgeType } from '../../common/types/Arena.js';
-import { ActionableUnit, Direction, Position, UnitAction, UnitType } from '../../common/types/Units.js';
+import { ActionableUnit, Direction, Position, Unit, UnitAction, UnitType } from '../../common/types/Units.js';
 import { Grid } from '../../common/util-grid.js';
 import getNewPosition from './getNewPosition.js';
 
@@ -33,7 +33,19 @@ function handleUnitMove(unit: ActionableUnit, grid: Grid, dimensions: Dimensions
     unit.action = UnitAction.dead;
     return;
   }
-  unit.position = (newPosition as Position);
+
+  moveUnit(unit, grid, newPosition);
+}
+
+function moveUnit(unit:Unit, grid:Grid, position:Position) {
+  removeUnitFromGrid(unit, grid);
+  unit.position = position;
+  grid[position.y][position.x].push(unit);
+}
+
+function removeUnitFromGrid(unit:Unit, grid:Grid) {
+  const {y,x} = unit.position;
+  grid[y][x].splice(grid[y][x].indexOf(unit), 1);
 }
 
 export default handlePawnUnit;

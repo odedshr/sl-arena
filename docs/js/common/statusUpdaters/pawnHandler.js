@@ -31,6 +31,15 @@ function handleUnitMove(unit, grid, dimensions, edge) {
         unit.action = UnitAction.dead;
         return;
     }
-    unit.position = newPosition;
+    moveUnit(unit, grid, newPosition);
+}
+function moveUnit(unit, grid, position) {
+    removeUnitFromGrid(unit, grid);
+    unit.position = position;
+    grid[position.y][position.x].push(unit);
+}
+function removeUnitFromGrid(unit, grid) {
+    const { y, x } = unit.position;
+    grid[y][x].splice(grid[y][x].indexOf(unit), 1);
 }
 export default handlePawnUnit;

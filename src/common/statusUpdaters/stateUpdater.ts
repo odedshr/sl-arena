@@ -1,7 +1,7 @@
 import { GameStateMessage, MessageType } from '../Messages/Message.js';
 import { Arena, ArenaStatus } from '../types/Arena.js';
 import { DetailedPlayer } from '../../common/types/Player.js';
-import { ActionableUnit, Unit, UnitAction, UnitType } from '../types/Units.js';
+import { ActionableUnit, Position, Unit, UnitAction, UnitType } from '../types/Units.js';
 import createGrid, { Grid } from '../../common/util-grid.js';
 import { addResource, forEachArena } from '../arena/arena.js';
 import handleBarrackUnit from './barracksHandler.js';
@@ -10,19 +10,18 @@ import handlePawnUnit from './pawnHandler.js';
 function updateState() {
   forEachArena(arena => {
     if (arena.status === ArenaStatus.started) {
-      removeDeadUnits(arena);
       const dimensions = arena.spec.dimensions;
       const players = Object.values(arena.players);
       const units = flattenCollection(arena.players);
       let grid = createGrid(dimensions, [...arena.environment, ...units]);
+      removeDeadUnits(grid, arena);
 
       handleConflicts(grid, arena);
 
-      // update grid with new unit positions
-      grid = createGrid(dimensions, [...arena.environment, ...units]);
-
       players.forEach(player => updatePlayer(player, grid, arena));
-      
+
+      collectResources(grid,arena);
+
       if (!checkGameOver(arena)) {
         addResources(grid, arena);
       }
@@ -32,11 +31,11 @@ function updateState() {
   });
 }
 
-function removeDeadUnits(arena:Arena) {
+function removeDeadUnits(grid:Grid, arena:Arena) {
   Object.values(arena.players).forEach(player => {
     Object.values(player.units).forEach(unit => {
       if (unit.action === UnitAction.dead) {
-        delete player.units[(unit).id];
+        removeUnit(unit, arena, grid);
       }
     });
   });
@@ -92,17 +91,26 @@ function handleConflicts(grid: Grid, arena:Arena) {
     if (cell.length > 1) {
       const actionableUnits = getActionableUnits(cell);
 
-      const resource = cell.find(unit=>unit.type===UnitType.resource);
-      if (resource) {
-        actionableUnits.forEach(unit => arena.players[unit.owner].resources++ );
-        arena.environment.splice(arena.environment.indexOf(resource), 1);
-      }
-
       if (new Set(actionableUnits.map(unit => (unit as ActionableUnit).owner)).size > 1) {
         actionableUnits.forEach(unit => { unit.action = UnitAction.dead; });
       }
     }
   }))
+}
+
+function collectResources(grid: Grid, arena:Arena) {
+  grid.forEach(row => row.forEach(cell => {
+    if (cell.length > 1) {
+      
+      const resource = cell.find(unit=>unit.type===UnitType.resource);
+      if (resource) {
+        const actionableUnits = getActionableUnits(cell);
+        actionableUnits.forEach(unit => arena.players[unit.owner].resources++ );
+        arena.environment.splice(arena.environment.indexOf(resource), 1);
+        cell.splice(cell.indexOf(resource), 1);
+      }
+    }
+  }));
 }
 
 function getActionableUnits(units: Unit[]) {
@@ -129,5 +137,15 @@ function flattenCollection(players: { [playerId: number]: DetailedPlayer }) {
     .reduce((acc, player) => [...acc, ...Object.values(player.units)], [] as Unit[]);
 }
 
+function removeUnit(unit: ActionableUnit, arena: Arena, grid:Grid) {
+  delete arena.players[unit.owner].units[unit.id];
+  removeUnitFromGrid(unit, grid);
+}
 
+function removeUnitFromGrid(unit:Unit, grid:Grid) {
+  const {y,x} = unit.position;
+  grid[y][x].splice(grid[y][x].indexOf(unit), 1);
+}
+
+// setInterval(updateState, 1000
 export default updateState;

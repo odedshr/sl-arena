@@ -8,15 +8,14 @@ import handlePawnUnit from './pawnHandler.js';
 function updateState() {
     forEachArena(arena => {
         if (arena.status === ArenaStatus.started) {
-            removeDeadUnits(arena);
             const dimensions = arena.spec.dimensions;
             const players = Object.values(arena.players);
             const units = flattenCollection(arena.players);
             let grid = createGrid(dimensions, [...arena.environment, ...units]);
+            removeDeadUnits(grid, arena);
             handleConflicts(grid, arena);
-            // update grid with new unit positions
-            grid = createGrid(dimensions, [...arena.environment, ...units]);
             players.forEach(player => updatePlayer(player, grid, arena));
+            collectResources(grid, arena);
             if (!checkGameOver(arena)) {
                 addResources(grid, arena);
             }
@@ -24,11 +23,11 @@ function updateState() {
         }
     });
 }
-function removeDeadUnits(arena) {
+function removeDeadUnits(grid, arena) {
     Object.values(arena.players).forEach(player => {
         Object.values(player.units).forEach(unit => {
             if (unit.action === UnitAction.dead) {
-                delete player.units[(unit).id];
+                removeUnit(unit, arena, grid);
             }
         });
     });
@@ -76,13 +75,21 @@ function handleConflicts(grid, arena) {
     grid.forEach(row => row.forEach(cell => {
         if (cell.length > 1) {
             const actionableUnits = getActionableUnits(cell);
-            const resource = cell.find(unit => unit.type === UnitType.resource);
-            if (resource) {
-                actionableUnits.forEach(unit => arena.players[unit.owner].resources++);
-                arena.environment.splice(arena.environment.indexOf(resource), 1);
-            }
             if (new Set(actionableUnits.map(unit => unit.owner)).size > 1) {
                 actionableUnits.forEach(unit => { unit.action = UnitAction.dead; });
+            }
+        }
+    }));
+}
+function collectResources(grid, arena) {
+    grid.forEach(row => row.forEach(cell => {
+        if (cell.length > 1) {
+            const resource = cell.find(unit => unit.type === UnitType.resource);
+            if (resource) {
+                const actionableUnits = getActionableUnits(cell);
+                actionableUnits.forEach(unit => arena.players[unit.owner].resources++);
+                arena.environment.splice(arena.environment.indexOf(resource), 1);
+                cell.splice(cell.indexOf(resource), 1);
             }
         }
     }));
@@ -108,4 +115,13 @@ function flattenCollection(players) {
     return Object.values(players)
         .reduce((acc, player) => [...acc, ...Object.values(player.units)], []);
 }
+function removeUnit(unit, arena, grid) {
+    delete arena.players[unit.owner].units[unit.id];
+    removeUnitFromGrid(unit, grid);
+}
+function removeUnitFromGrid(unit, grid) {
+    const { y, x } = unit.position;
+    grid[y][x].splice(grid[y][x].indexOf(unit), 1);
+}
+// setInterval(updateState, 1000
 export default updateState;

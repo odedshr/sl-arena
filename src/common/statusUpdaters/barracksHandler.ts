@@ -3,7 +3,6 @@ import { DetailedPlayer } from '../types/Player.js';
 import { ActionableUnit, Position, UnitAction, UnitType } from '../types/Units.js';
 import { Grid } from '../util-grid.js';
 import { addUnit } from '../arena/arena.js';
-import getNewPosition from './getNewPosition.js';
 
 function handleBarrackUnit(unit: ActionableUnit, player: DetailedPlayer, grid: Grid, dimensions: Dimensions, edge: EdgeType) {
   //return true of unit died (and should be removed from the arena)
