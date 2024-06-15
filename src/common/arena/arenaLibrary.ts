@@ -1,8 +1,8 @@
 import { getRandomArenaId } from '../generators.js';
-import { Arena, ArenaName, ArenaStatus, ArenaSpec, EdgeType, ArenaInitialSetup } from '../types/Arena.js';
+import { Arena, ArenaName, ArenaStatus, ArenaSpec, EdgeType, ArenaInitialSetup, Dimensions } from '../types/Arena.js';
 import { Direction, Position, UnitAction, UnitType, WallElement } from '../types/Units.js';
 import { addUnit } from './arena.js';
-
+import createGrid from '../../common/util-grid.js';
 
 const specs: { [key: string]: ArenaSpec } = {
   default: {
@@ -17,7 +17,7 @@ const setups: { [key: string]: ArenaInitialSetup } = {
   default: {
     barracks: [{ x: 2, y: 2 }, { x: 30, y: 22 }, { x: 30, y: 2 }, { x: 2, y: 22 }, { x: 16, y: 2 }, { x: 16, y: 22 }, { x: 2, y: 12 }, { x: 30, y: 12 }],
     startingResources: 8,
-    environment: [wall({ x: 6, y: 10 }, { x: 6, y: 6 }, { x: 10, y: 6 }),
+    obstacles: [wall({ x: 6, y: 10 }, { x: 6, y: 6 }, { x: 10, y: 6 }),
     wall({ x: 22, y: 6 }, { x: 26, y: 6 }, { x: 26, y: 10 }),
     wall({ x: 26, y: 14 }, { x: 26, y: 18 }, { x: 22, y: 18 }),
     wall({ x: 10, y: 18 }, { x: 6, y: 18 }, { x: 6, y: 14 })
@@ -34,14 +34,18 @@ function setupArena(arenaName: ArenaName, owner: number): Arena {
   if (!spec) {
     throw Error(`Unknown Arena: ${arenaName}`);
   }
+  const obstacles = [...setups[arenaName].obstacles]
   return {
     spec,
     name: arenaName,
     id: getRandomArenaId(),
+    tick: 0,
     owner,
     players: {},
     status: ArenaStatus.init,
-    environment: [...setups[arenaName].environment],
+    obstacles,
+    resources: [],
+    grid: createGrid(spec.dimensions, obstacles)
   }
 }
 
@@ -58,7 +62,7 @@ function setupUnits(arena: Arena): void {
 
   players.forEach((player, i) => {
     player.resources = setup.startingResources;
-    addUnit(player, UnitType.barrack, setup.barracks[i], UnitAction.idle, Direction.north);
+    addUnit(arena, player.id, UnitType.barrack, setup.barracks[i], UnitAction.idle, Direction.north);
   });
 }
 

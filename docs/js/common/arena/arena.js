@@ -49,22 +49,43 @@ function forEachArena(callback) {
 function getNewUnitId(playerId, unitType) {
     return `${unitType}-${playerId}-${playerUnitCount[playerId]++}`;
 }
-function addUnit(player, type, position, action, direction) {
-    const id = getNewUnitId(player.id, type);
+function addUnit(arena, playerId, type, position, action, direction) {
+    const id = getNewUnitId(playerId, type);
     const unit = {
         type,
-        owner: player.id,
+        owner: playerId,
         id,
         position,
         action,
         direction
     };
-    player.units[id] = unit;
+    arena.players[playerId].units[id] = unit;
+    arena.grid[position.y][position.x].push(unit);
 }
-function addResource(units, type, position) {
-    units.push({
+function removeUnit(unit, arena) {
+    delete arena.players[unit.owner].units[unit.id];
+    removeFromGrid(unit, arena);
+}
+function moveUnit(unit, arena, position) {
+    removeFromGrid(unit, arena);
+    unit.position = position;
+    arena.grid[position.y][position.x].push(unit);
+}
+function addResource(arena, type, position) {
+    const unit = {
         type,
         position
-    });
+    };
+    arena.resources.push(unit);
+    arena.grid[position.y][position.y].push(unit);
 }
-export { addArena, getArena, setPlayerArena, getPlayerArena, forEachArena, getNewUnitId, addResource, addUnit, addPlayer };
+function removeResource(arena, resource) {
+    arena.resources.splice(arena.resources.indexOf(resource), 1);
+    removeFromGrid(resource, arena);
+}
+function removeFromGrid(unit, arena) {
+    const { x, y } = unit.position;
+    const cell = arena.grid[y][x];
+    cell.splice(cell.indexOf(unit), 1);
+}
+export { addArena, getArena, setPlayerArena, getPlayerArena, forEachArena, getNewUnitId, addResource, removeResource, addUnit, removeUnit, moveUnit, addPlayer };

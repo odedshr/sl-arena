@@ -1,5 +1,5 @@
 import { Dimensions } from '../../common/types/Arena';
-import { WallElement } from '../../common/types/Units';
+import { Unit, WallElement } from '../../common/types/Units';
 import createGrid, { Grid, GridRow } from '../../common/util-grid.js';
 import getImage from './canvas-image.js';
 
@@ -36,7 +36,7 @@ function drawWalls(ctx: CanvasRenderingContext2D, dimensions: Dimensions, walls:
   }));
 }
 
-function getImageCode(grid: Grid, row: GridRow, x: number, y: number) {
+function getImageCode(grid: Grid<Unit[]>, row: GridRow<Unit[]>, x: number, y: number) {
   let value = 0;
   if (y - 1 >= 0 && grid[y - 1][x].length) {
     value += 1;

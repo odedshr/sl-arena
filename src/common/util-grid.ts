@@ -1,11 +1,9 @@
 import { Dimensions } from './types/Arena.js';
 import { Position, Unit, UnitType, WallElement } from './types/Units.js';
+import { Grid, GridRow } from './types/Grid.js';
 
-type GridCell = Unit[];
-type GridRow = GridCell[];
-type Grid = GridRow[];
 
-function createGrid(dimensions: Dimensions, units: Unit[]): Grid {
+function createGrid(dimensions: Dimensions, units: Unit[]): Grid<Unit[]> {
   const grid = getEmptyGrid(dimensions);
   //Array.from({ length: dimensions.height }, () => Array(dimensions.width).fill([]));
 
@@ -24,10 +22,10 @@ function createGrid(dimensions: Dimensions, units: Unit[]): Grid {
 }
 
 function getEmptyGrid(dimensions: Dimensions) {
-  const grid: Grid = [];
+  const grid: Grid<Unit[]> = [];
   const { width, height } = dimensions;
   for (let y = 0; y < height; y++) {
-    const gridRow: GridRow = [];
+    const gridRow: GridRow<Unit[]> = [];
     for (let x = 0; x < width; x++) {
       gridRow.push([])
     }
@@ -36,7 +34,7 @@ function getEmptyGrid(dimensions: Dimensions) {
   return grid;
 }
 
-function setCell(position: Position, unit: Unit, grid: Grid) {
+function setCell(position: Position, unit: Unit, grid: Grid<Unit[]>) {
   if (!grid[position.y][position.x]) {
     grid[position.y][position.x] = [];
   }

@@ -1,13 +1,13 @@
-import { Dimensions, EdgeType } from '../../common/types/Arena.js';
-import { ActionableUnit, Direction, Position, Unit, UnitAction, UnitType } from '../../common/types/Units.js';
-import { Grid } from '../../common/util-grid.js';
+import { Arena } from '../../common/types/Arena.js';
+import { ActionableUnit, UnitAction, UnitType } from '../../common/types/Units.js';
+import { moveUnit } from '../arena/arena.js';
 import getNewPosition from './getNewPosition.js';
 
-function handlePawnUnit(unit: ActionableUnit, grid: Grid, dimensions: Dimensions, edge: EdgeType): boolean {
+function handlePawnUnit(unit: ActionableUnit, arena:Arena): boolean {
   //return true of unit died (and should be removed from the arena)
   switch (unit.action) {
     case UnitAction.move:
-      handleUnitMove(unit, grid, dimensions, edge);
+      handleUnitMove(unit, arena);
       break;
     case UnitAction.dead:
       return true;
@@ -16,36 +16,29 @@ function handlePawnUnit(unit: ActionableUnit, grid: Grid, dimensions: Dimensions
   return false;
 }
 
-function handleUnitMove(unit: ActionableUnit, grid: Grid, dimensions: Dimensions, edge: EdgeType) {
-  const newPosition = getNewPosition(unit.position, unit.direction, dimensions, edge);
+function handleUnitMove(unit: ActionableUnit, arena:Arena) {
+  const newPosition = getNewPosition(unit.position, unit.direction, arena.spec.dimensions, arena.spec.features.edge);
   if (newPosition === null) {
     // couldn't get new position, probably fell off a map
     unit.action = UnitAction.dead;
-    unit.direction = Direction.north;
     return;
-  } else if ((newPosition.x === unit.position.x && newPosition.y === unit.position.y) ||
-    (grid[newPosition.y][newPosition.x][0]?.type === UnitType.wall)) {
+  }
+
+  const {y,x} = newPosition;
+  const cell = arena.grid[y][x];
+
+  if ((x === unit.position.x && y === unit.position.y) ||
+    (cell.some(unit=> (unit.type === UnitType.wall)))) {
     //didn't move, probably hit a map wall edge or an actual wall
     unit.action = UnitAction.idle;
     return;
-  } else if (grid[newPosition.y][newPosition.x][0]?.type === UnitType.water) {
+  } else if (cell.some(unit=> (unit.type === UnitType.water))) {
     //fell in water
     unit.action = UnitAction.dead;
     return;
   }
 
-  moveUnit(unit, grid, newPosition);
-}
-
-function moveUnit(unit:Unit, grid:Grid, position:Position) {
-  removeUnitFromGrid(unit, grid);
-  unit.position = position;
-  grid[position.y][position.x].push(unit);
-}
-
-function removeUnitFromGrid(unit:Unit, grid:Grid) {
-  const {y,x} = unit.position;
-  grid[y][x].splice(grid[y][x].indexOf(unit), 1);
+  moveUnit(unit, arena, newPosition);
 }
 
 export default handlePawnUnit;

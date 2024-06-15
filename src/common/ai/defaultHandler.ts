@@ -45,7 +45,7 @@ function findTargets(units: Unit[], playerId: number) {
   ));
 }
 
-function toBooleans(grid: Grid): boolean[][] {
+function toBooleans(grid: Grid<Unit[]>): boolean[][] {
   return grid.map(row => row.map(cell => (cell !== undefined && cell.length > 0)));
 }
 

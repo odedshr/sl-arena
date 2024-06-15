@@ -64,23 +64,64 @@ function getNewUnitId(playerId: number, unitType: UnitType) {
   return `${unitType}-${playerId}-${playerUnitCount[playerId]++}`;
 }
 
-function addUnit(player: DetailedPlayer, type: UnitType, position: Position, action: UnitAction, direction: Direction) {
-  const id = getNewUnitId(player.id, type);
+function addUnit(arena:Arena, playerId:number, type: UnitType, position: Position, action: UnitAction, direction: Direction) {
+  const id = getNewUnitId(playerId, type);
   const unit: ActionableUnit = {
     type,
-    owner: player.id,
+    owner: playerId,
     id,
     position,
     action,
     direction
   } as ActionableUnit
-  player.units[id] = unit;
+
+  arena.players[playerId].units[id] = unit;
+  arena.grid[position.y][position.x].push(unit);
 }
 
-function addResource(units:Unit[], type: UnitType, position: Position) {
-  units.push({
+function removeUnit(unit: ActionableUnit, arena: Arena) {
+  delete arena.players[unit.owner].units[unit.id];
+  removeFromGrid(unit, arena);
+}
+
+function moveUnit(unit:Unit, arena: Arena, position:Position) {
+  removeFromGrid(unit, arena);
+  unit.position = position;
+  arena.grid[position.y][position.x].push(unit);
+}
+
+function addResource(arena:Arena, type: UnitType, position: Position) {
+  const unit = {
     type,
     position
-  } as Unit);
+  } as Unit;
+
+  arena.resources.push(unit);
+  arena.grid[position.y][position.y].push(unit);
 }
-export { addArena, getArena, setPlayerArena, getPlayerArena, forEachArena, getNewUnitId, addResource, addUnit, addPlayer };
+
+function removeResource(arena:Arena, resource: Unit) {
+  arena.resources.splice(arena.resources.indexOf(resource), 1);
+  removeFromGrid(resource, arena);
+}
+
+function removeFromGrid(unit: Unit, arena: Arena) {
+  const { x, y } = unit.position;
+  const cell = arena.grid[y][x];
+  cell.splice(cell.indexOf(unit), 1);
+}
+
+export {
+  addArena,
+  getArena,
+  setPlayerArena,
+  getPlayerArena,
+  forEachArena,
+  getNewUnitId,
+  addResource,
+  removeResource,
+  addUnit,
+  removeUnit,
+  moveUnit,
+  addPlayer 
+};

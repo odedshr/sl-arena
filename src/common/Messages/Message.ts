@@ -72,6 +72,7 @@ type GameStateMessage = {
   dimensions: Dimensions,
   features: Features,
   units: Unit[];
+  tick: number;
 }
 
 type MessageUnion = PingMessage |
