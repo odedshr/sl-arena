@@ -1,24 +1,29 @@
 import { InstructionType } from '../common/Instructions/Instruction.js';
 import { ArenaStatus } from '../common/types/Arena.js';
 import { UnitType } from '../common/types/Units.js';
-import { draw } from './canvas.js';
-import { draw as drawMinimap } from './minimap.js';
-import { draw as drawGraph } from './graph.js';
+import { draw } from './ui/canvas.js';
+import { draw as drawMinimap } from './ui/minimap.js';
+import { draw as drawGraph } from './ui/graph.js';
 import { default as defaultHandler } from '../common/ai/defaultHandler.js';
-import { getPlayerName, updateScoreBoard } from './scoreboard.js';
-import inform from './inform.js';
+import { getPlayerName, updateScoreBoard } from './ui/scoreboard.js';
+import inform from './ui/inform.js';
+import { getMovingUnits, updateState } from './ui/position-tracker.js';
 let handle = defaultHandler;
 function setHandler(handler) {
     handle = handler;
 }
 function handleGameStatusUpdate(message, send) {
-    const { playerId, resources, units, status, dimensions, features } = message;
+    const { playerId, resources, units, stats, status, dimensions, features } = message;
+    updateState(units, playerId);
+    const movingUnits = getMovingUnits();
+    if (status !== ArenaStatus.init) {
+        draw(movingUnits);
+        drawMinimap(movingUnits);
+        drawGraph(stats);
+        updateScoreBoard(stats);
+    }
     switch (status) {
         case ArenaStatus.started:
-            draw(units);
-            drawMinimap(units);
-            drawGraph(units);
-            updateScoreBoard(units);
             const commands = handle(units, playerId, resources, dimensions, features);
             if (commands.length) {
                 send({
@@ -28,14 +33,12 @@ function handleGameStatusUpdate(message, send) {
             }
             return;
         case ArenaStatus.finished:
-            draw(units);
-            updateScoreBoard(units);
             inform(`Game over. ${findWinner(units)} won.`);
             return;
     }
 }
 function findWinner(units) {
-    const [winningBarrack] = units.filter(unit => unit.type === UnitType.barrack);
-    return getPlayerName(winningBarrack.owner);
+    const winningBarrack = units.find(unit => unit.type === UnitType.barrack);
+    return winningBarrack ? getPlayerName(winningBarrack.owner) : 'No one';
 }
 export { handleGameStatusUpdate, setHandler };

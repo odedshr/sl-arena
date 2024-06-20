@@ -77,7 +77,7 @@ function addResource(arena, type, position) {
         position
     };
     arena.resources.push(unit);
-    arena.grid[position.y][position.y].push(unit);
+    arena.grid[position.y][position.x].push(unit);
 }
 function removeResource(arena, resource) {
     arena.resources.splice(arena.resources.indexOf(resource), 1);

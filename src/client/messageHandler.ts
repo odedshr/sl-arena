@@ -1,15 +1,16 @@
-import { SendMethod } from '../common/Instructions/Instruction.js';
+import { SendInstructionMethod } from '../common/Instructions/Instruction.js';
 import { MessageType, Message, GameStateMessage, GameStartedMessage, ArenaCreatedMessage } from '../common/Messages/Message.js';
-import { EdgeType } from '../common/types/Arena.js';
-import { setCanvasSize, setFactionColors as setCanvasColors} from './canvas.js';
+import { EdgeType, FogOfWar } from '../common/types/Arena.js';
+import { setCanvasSize, setFactionColors as setCanvasColors} from './ui/canvas.js';
 import { handleGameStatusUpdate } from './gameStatusUpdateHandler.js';
-import inform from './inform.js';
-import { setCanvasSize as setMiniMapSize, setFactionColors as setMiniMapColors } from './minimap.js';
-import { setFactionColors as setGraphColors } from './graph.js';
-import { initScoreBoard } from './scoreboard.js';
+import inform from './ui/inform.js';
+import { setCanvasSize as setMiniMapSize, setFactionColors as setMiniMapColors } from './ui/minimap.js';
+import { setFactionColors as setGraphColors } from './ui/graph.js';
+import { initScoreBoard } from './ui/scoreboard.js';
 import Player from '../common/types/Player.js';
+import { initGrid } from './ui/position-tracker.js';
 
-function handle(message: Message, send: SendMethod) {
+function handle(message: Message, send: SendInstructionMethod) {
   switch (message.type) {
     case MessageType.arena_created:
       return handleArenaCreated(message as ArenaCreatedMessage);
@@ -43,10 +44,13 @@ function handleArenaCreated(message: ArenaCreatedMessage) {
 
 function handleGameStarted(message: GameStartedMessage) {
   inform(`Game Started. It's worth knowing that ${getMapEdgeMessage(message.features.edge)}`);
-  setFactionColors(message.factions);
-  setCanvasSize(message.dimensions);
-  setMiniMapSize(message.dimensions);
-  initScoreBoard(message.factions);
+  const {factions, dimensions} = message;
+  const fogOfWar = message.features.fogOfWar;
+  setFactionColors(factions);
+  initScoreBoard(factions);
+  setCanvasSize(dimensions);
+  setMiniMapSize(dimensions);
+  initGrid(dimensions, fogOfWar===FogOfWar.both || fogOfWar===FogOfWar.human);
 }
 
 function setFactionColors(factions: Player[]) {

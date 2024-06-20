@@ -1,15 +1,15 @@
 import { InstructionType } from './Instruction.js';
-import { GameStartedMessage, Message, MessageType, SendMethod } from '../Messages/Message.js';
+import { GameStartedMessage, Message, MessageType, SendMessageMethod } from '../Messages/Message.js';
 import handle from '../ai/defaultHandler.js';
 import { ArenaStatus } from '../types/Arena.js';
 import Player, { PlayerType } from '../types/Player.js';
 import { addPlayer, getPlayerArena } from '../arena/arena.js';
 import { setupUnits } from '../arena/arenaLibrary.js';
 import broadcast from './broadcast.js';
-import { sendFail } from './instructionHandler.js';
+import sendFail from './sendFail.js';
 import handleUnitCommand from './unitCommandHandler.js';
 
-function startGame(playerId: number, send: SendMethod, callback?: number) {
+function startGame(playerId: number, send: SendMessageMethod, callback?: number) {
   const arena = getPlayerArena(playerId);
   if (!arena) {
     return sendFail(send, InstructionType.arena_start_game, `start-game: not in arena`);

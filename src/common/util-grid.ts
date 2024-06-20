@@ -4,9 +4,14 @@ import { Grid, GridRow } from './types/Grid.js';
 
 
 function createGrid(dimensions: Dimensions, units: Unit[]): Grid<Unit[]> {
-  const grid = getEmptyGrid(dimensions);
-  //Array.from({ length: dimensions.height }, () => Array(dimensions.width).fill([]));
+  const grid = getEmptyUnitGrid(dimensions);
 
+  addUnits(grid, units);
+
+  return grid;
+}
+
+function addUnits(grid:Grid<Unit[]>, units:Unit[]) {
   units.forEach(unit => {
     if (unit.type === UnitType.wall) {
       const { position } = (unit as WallElement);
@@ -17,11 +22,9 @@ function createGrid(dimensions: Dimensions, units: Unit[]): Grid<Unit[]> {
       setCell(unit.position, unit, grid)
     }
   });
-
-  return grid;
 }
 
-function getEmptyGrid(dimensions: Dimensions) {
+function getEmptyUnitGrid(dimensions: Dimensions) {
   const grid: Grid<Unit[]> = [];
   const { width, height } = dimensions;
   for (let y = 0; y < height; y++) {
@@ -35,10 +38,11 @@ function getEmptyGrid(dimensions: Dimensions) {
 }
 
 function setCell(position: Position, unit: Unit, grid: Grid<Unit[]>) {
-  if (!grid[position.y][position.x]) {
-    grid[position.y][position.x] = [];
+  const {x, y} = position;
+  if (!grid[y][x]) {
+    grid[y][x] = [];
   }
-  grid[position.y][position.x].push(unit);
+  grid[y][x].push(unit);
 }
 
 function markLineOnGrid(lineStart: Position, lineEnd: Position, markCell: (position: Position) => void): void {
@@ -46,8 +50,6 @@ function markLineOnGrid(lineStart: Position, lineEnd: Position, markCell: (posit
   const y0 = Math.floor(lineStart.y);
   const x1 = Math.floor(lineEnd.x);
   const y1 = Math.floor(lineEnd.y);
-
-  markCell({ x: x0, y: y0 });
 
   let dx = Math.abs(x1 - x0);
   let dy = Math.abs(y1 - y0);
@@ -74,5 +76,4 @@ function markLineOnGrid(lineStart: Position, lineEnd: Position, markCell: (posit
   markCell({ x: x1, y: y1 });
 }
 
-export default createGrid;
-export { GridRow, Grid };
+export { createGrid, addUnits, getEmptyUnitGrid, GridRow, Grid };

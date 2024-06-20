@@ -12,5 +12,4 @@ var Color;
 })(Color || (Color = {}));
 ;
 const colors = [Color.blue, Color.red, Color.green, Color.yellow, Color.purple, Color.orange, Color.pink, Color.brown, Color.teal];
-export default colors;
-export { Color };
+export { Color, colors };

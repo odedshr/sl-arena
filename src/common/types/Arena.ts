@@ -1,5 +1,5 @@
 import { Grid } from './Grid.js';
-import { DetailedPlayer } from './Player.js';
+import { DetailedPlayer, PlayerType } from './Player.js';
 import { Position, Unit } from './Units.js';
 
 enum ArenaName {
@@ -18,13 +18,20 @@ enum EdgeType {
   loop = 'loop'
 }
 
+enum FogOfWar {
+  none = 'none',
+  human = 'human',
+  ai = 'ai',
+  both = 'both'
+};
+
 type Dimensions = {
   width: number,
   height: number
 };
 
 type Features = {
-  fogOfWar: boolean,
+  fogOfWar: FogOfWar | PlayerType,
   edge: EdgeType
 };
 
@@ -55,4 +62,4 @@ type Arena = {
   grid: Grid<Unit[]>;
 };
 
-export { Arena, ArenaSpec, ArenaInitialSetup, ArenaName, ArenaStatus, Dimensions, Features, EdgeType };
+export { Arena, ArenaSpec, ArenaInitialSetup, ArenaName, ArenaStatus, Dimensions, Features, EdgeType, FogOfWar };

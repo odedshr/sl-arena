@@ -6,6 +6,7 @@ import handleUnitCommand from './unitCommandHandler.js';
 import { PlayerType } from '../types/Player.js';
 import broadcast from './broadcast.js';
 import startGame from './startGameHandler.js';
+import sendFail from './sendFail.js';
 function handle(instruction, playerId, send) {
     switch (instruction.type) {
         case InstructionType.arena_create:
@@ -79,8 +80,4 @@ function listUnits(playerId, send, callback) {
     }
     send({ callback, type: MessageType.player_unit_list, units: Object.values(arena.players[playerId].units) });
 }
-function sendFail(send, instruction, reason, callback) {
-    return send({ callback, type: MessageType.operation_failed, instruction, reason: reason });
-}
 export default handle;
-export { sendFail };

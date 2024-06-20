@@ -1,7 +1,10 @@
 import { UnitType } from './types/Units.js';
 function createGrid(dimensions, units) {
-    const grid = getEmptyGrid(dimensions);
-    //Array.from({ length: dimensions.height }, () => Array(dimensions.width).fill([]));
+    const grid = getEmptyUnitGrid(dimensions);
+    addUnits(grid, units);
+    return grid;
+}
+function addUnits(grid, units) {
     units.forEach(unit => {
         if (unit.type === UnitType.wall) {
             const { position } = unit;
@@ -13,9 +16,8 @@ function createGrid(dimensions, units) {
             setCell(unit.position, unit, grid);
         }
     });
-    return grid;
 }
-function getEmptyGrid(dimensions) {
+function getEmptyUnitGrid(dimensions) {
     const grid = [];
     const { width, height } = dimensions;
     for (let y = 0; y < height; y++) {
@@ -28,17 +30,17 @@ function getEmptyGrid(dimensions) {
     return grid;
 }
 function setCell(position, unit, grid) {
-    if (!grid[position.y][position.x]) {
-        grid[position.y][position.x] = [];
+    const { x, y } = position;
+    if (!grid[y][x]) {
+        grid[y][x] = [];
     }
-    grid[position.y][position.x].push(unit);
+    grid[y][x].push(unit);
 }
 function markLineOnGrid(lineStart, lineEnd, markCell) {
     const x0 = Math.floor(lineStart.x);
     const y0 = Math.floor(lineStart.y);
     const x1 = Math.floor(lineEnd.x);
     const y1 = Math.floor(lineEnd.y);
-    markCell({ x: x0, y: y0 });
     let dx = Math.abs(x1 - x0);
     let dy = Math.abs(y1 - y0);
     let sx = (x0 < x1) ? 1 : -1;
@@ -60,4 +62,4 @@ function markLineOnGrid(lineStart, lineEnd, markCell) {
     }
     markCell({ x: x1, y: y1 });
 }
-export default createGrid;
+export { createGrid, addUnits, getEmptyUnitGrid };

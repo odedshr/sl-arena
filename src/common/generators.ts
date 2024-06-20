@@ -1,4 +1,4 @@
-import colors from './types/Color.js';
+import { colors } from './types/Color.js';
 import { Direction } from './types/Units.js';
 
 const fightingAdjectives: string[] = [

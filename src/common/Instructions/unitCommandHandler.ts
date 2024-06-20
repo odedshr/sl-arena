@@ -1,12 +1,12 @@
 import { InstructionType, UnitCommand } from './Instruction.js';
-import { SendMethod } from '../Messages/Message';
+import { SendMessageMethod } from '../Messages/Message';
 import { ArenaStatus } from '../types/Arena.js';
 import { DetailedPlayer } from '../types/Player.js';
 import { ActionableUnit, Direction, UnitAction, UnitType } from '../types/Units.js';
 import { getPlayerArena } from '../arena/arena.js';
-import { sendFail } from './instructionHandler.js';
+import sendFail from './sendFail.js';
 
-function handleUnitCommand(commands: UnitCommand[], playerId: number, send: SendMethod) {
+function handleUnitCommand(commands: UnitCommand[], playerId: number, send: SendMessageMethod) {
   const arena = getPlayerArena(playerId);
 
   if (!arena) {

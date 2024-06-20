@@ -16,4 +16,12 @@ var EdgeType;
     EdgeType["wall"] = "wall";
     EdgeType["loop"] = "loop";
 })(EdgeType || (EdgeType = {}));
-export { ArenaName, ArenaStatus, EdgeType };
+var FogOfWar;
+(function (FogOfWar) {
+    FogOfWar["none"] = "none";
+    FogOfWar["human"] = "human";
+    FogOfWar["ai"] = "ai";
+    FogOfWar["both"] = "both";
+})(FogOfWar || (FogOfWar = {}));
+;
+export { ArenaName, ArenaStatus, EdgeType, FogOfWar };

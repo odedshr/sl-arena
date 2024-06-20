@@ -1,4 +1,4 @@
-import { SendMethod } from '../Messages/Message.js';
+import { SendMessageMethod } from '../Messages/Message.js';
 import { Color } from './Color.js';
 import { ActionableUnit } from './Units.js';
 
@@ -14,7 +14,7 @@ enum PlayerType {
 };
 
 type DetailedPlayer = Player & {
-  send: SendMethod;
+  send: SendMessageMethod;
   type: PlayerType;
   units: { [unitId: string]: ActionableUnit };
   resources: number;

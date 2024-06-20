@@ -38,6 +38,9 @@ type ActionableUnit = Unit & {
   action: UnitAction;
   direction: Direction;
 }
+type MovingUnit = ActionableUnit & {
+  oldPosition: Position;
+}
 
 type WallElement = Unit & {
   type: UnitType.wall,
@@ -49,4 +52,4 @@ type WaterElement = Unit & {
   position: Position[],
 }
 
-export { Unit, UnitType, Direction, UnitAction, Position, WallElement, WaterElement, ActionableUnit };
+export { Unit, UnitType, Direction, UnitAction, Position, WallElement, WaterElement, ActionableUnit, MovingUnit };

@@ -1,14 +1,14 @@
 
-import { Message, MessageType, PingMessage, SendMethod } from '../common/Messages/Message.js';
+import { Message, MessageType, PingMessage, SendMessageMethod } from '../common/Messages/Message.js';
 import { Instruction, InstructionType } from '../common/Instructions/Instruction.js';
 
-import updateState from '../common/statusUpdaters/stateUpdater.js';
+import updateState from '../common/stateUpdaters/stateUpdater.js';
 import startHttpServer from './httpServer.js';
 import startWSServer from './webSocketServer.js';
 import handle from '../common/Instructions/instructionHandler.js';
 import { INTERVAL, KEEP_ALIVE } from '../common/config.js';
 
-const users: { [userId: number]: { send: SendMethod, heartbeat: NodeJS.Timeout } } = {};
+const users: { [userId: number]: { send: SendMessageMethod, heartbeat: NodeJS.Timeout } } = {};
 const hostname = 'localhost';
 const port = 3000;
 
@@ -44,4 +44,6 @@ async function setupServer(hostname: string, port: number) {
 }
 
 setInterval(updateState, INTERVAL);
-setupServer(hostname, port);
+setupServer(hostname, port);  
+
+export default setupServer;

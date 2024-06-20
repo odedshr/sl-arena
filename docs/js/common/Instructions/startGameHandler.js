@@ -6,7 +6,7 @@ import { PlayerType } from '../types/Player.js';
 import { addPlayer, getPlayerArena } from '../arena/arena.js';
 import { setupUnits } from '../arena/arenaLibrary.js';
 import broadcast from './broadcast.js';
-import { sendFail } from './instructionHandler.js';
+import sendFail from './sendFail.js';
 import handleUnitCommand from './unitCommandHandler.js';
 function startGame(playerId, send, callback) {
     const arena = getPlayerArena(playerId);

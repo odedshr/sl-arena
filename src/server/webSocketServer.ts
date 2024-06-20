@@ -1,5 +1,5 @@
 import http from 'http';
-import WebSocket, { AddressInfo } from 'ws';
+import WebSocket, { WebSocketServer, AddressInfo } from 'ws';
 
 let connectionCount = 0;
 
@@ -10,7 +10,7 @@ function startWSServer(
   onDisconnected: (userId: number) => void,
   onError: (error: Error) => void
 ) {
-  const wss = new WebSocket.Server({ server });
+  const wss = new WebSocketServer({ server });
 
   const addressInfo = server.address() as AddressInfo;
   console.log(`WebSocket server is running on wss://${addressInfo.address === '::1' ? 'localhost' : addressInfo.address}:${addressInfo.port}`);

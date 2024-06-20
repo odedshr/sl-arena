@@ -45,7 +45,7 @@ type Instruction = CreateArenaInstruction
   | StartGameInstruction
   | UnitInstructions;
 
-type SendMethod = (instruction: Instruction, callback?: (message: Message) => void) => void;
+type SendInstructionMethod = (instruction: Instruction, callback?: (message: Message) => void) => void;
 
 export {
   InstructionType,
@@ -58,6 +58,6 @@ export {
   StartGameInstruction,
   UnitInstructions,
   UnitCommand,
-  SendMethod,
+  SendInstructionMethod,
   StatusUpdateHandler
 };

@@ -1,8 +1,8 @@
 import { Instruction } from '../../common/Instructions/Instruction.js';
 import handle from '../../common/Instructions/instructionHandler.js';
-import { Message, MessageType, PingMessage, SendMethod } from '../../common/Messages/Message.js';
+import { Message, MessageType, PingMessage, SendMessageMethod } from '../../common/Messages/Message.js';
 import { INTERVAL, KEEP_ALIVE } from '../../common/config.js';
-import updateState from '../../common/statusUpdaters/stateUpdater.js';
+import updateState from '../../common/stateUpdaters/stateUpdater.js';
 
 type WrappedInstruction = Instruction & { clientId: number };
 type ConnectToServerMessage = { type: 'server_connect', clientId: number };
@@ -12,7 +12,7 @@ const SERVER_CONSOLE_STYLE = 'background-color:black;color:white;font-family:cou
 
 function startSharedWorkerServer() {
   console.log('%cThis tab will serve as your server, don\'t close it while running the game!', SERVER_CONSOLE_STYLE)
-  const users: { [userId: number]: { send: SendMethod, heartbeat: NodeJS.Timeout } } = {};
+  const users: { [userId: number]: { send: SendMessageMethod, heartbeat: NodeJS.Timeout } } = {};
 
   let worker = new SharedWorker(WORKER_URL).port;
   worker.start();

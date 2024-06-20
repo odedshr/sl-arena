@@ -3,24 +3,28 @@ import { Direction, Position } from '../types/Units.js';
 
 type WayPoint = {
   distance: number;
-  direction: Direction;
-  origin: Position
+  forward: Direction;
+  backward: Direction;
+  origin: Position;
+  position: Position;
 }
 
 const directions = [
-  { x: 0, y: -1, direction: Direction.north },
-  { x: 1, y: -1, direction: Direction.northEast },
-  { x: 1, y: 0, direction: Direction.east },
-  { x: 1, y: 1, direction: Direction.southEast },
-  { x: 0, y: 1, direction: Direction.south },
-  { x: -1, y: 1, direction: Direction.southWest },
-  { x: -1, y: 0, direction: Direction.west },
-  { x: -1, y: -1, direction: Direction.southWest }
+  { x: 0, y: -1, forward: Direction.north, backward: Direction.south },
+  { x: 1, y: -1, forward: Direction.northEast, backward: Direction.southWest },
+  { x: 1, y: 0, forward: Direction.east, backward: Direction.west },
+  { x: 1, y: 1, forward: Direction.southEast, backward: Direction.northWest },
+  { x: 0, y: 1, forward: Direction.south, backward: Direction.north },
+  { x: -1, y: 1, forward: Direction.southWest, backward: Direction.northEast },
+  { x: -1, y: 0, forward: Direction.west, backward: Direction.east },
+  { x: -1, y: -1, forward: Direction.southWest, backward: Direction.northEast }
 ];
 
+// Function to check if a position is within grid boundaries and not occupied by obstacles
+function isValidPosition(position:Position, dimensions:Dimensions, obstacles: boolean[][], isLoop: boolean): boolean {
+  const { width, height } = dimensions;
+  let { x, y } = position;
 
-// Function to check if a position is within grid boundaries
-function isValidPosition(x: number, y: number, width: number, height: number, grid: boolean[][], isLoop: boolean): boolean {
   if (isLoop) {
     y = (y + height) % height;
     x = (x + width) % width;
@@ -30,19 +34,19 @@ function isValidPosition(x: number, y: number, width: number, height: number, gr
     return false;
   }
 
-  return !grid[y][x];
+  return !obstacles[y][x];
 }
 
 // Function to get the next position with looping consideration
-function getNextPosition(pos: Position, direction: Position, cols: number, rows: number, isLoop: boolean): Position {
-  let nextX = pos.x + direction.x;
-  let nextY = pos.y + direction.y;
+function getNextPosition(pos: Position, towards: Position, dimensions:Dimensions, isLoop: boolean): Position {
+  let nextX = pos.x + towards.x;
+  let nextY = pos.y + towards.y;
 
   if (isLoop) {
-    if (nextX < 0) nextX = cols - 1;
-    else if (nextX >= cols) nextX = 0;
-    if (nextY < 0) nextY = rows - 1;
-    else if (nextY >= rows) nextY = 0;
+    const { width, height } = dimensions;
+
+    nextY = (nextY + height) % height;
+    nextX = (nextX + width) % width;
   }
 
   return { x: nextX, y: nextY };
@@ -77,13 +81,14 @@ function getPath(grid: (WayPoint | undefined)[][], end: Position): WayPoint[] {
 function getPathToNearestTarget(start: Position, targets: Position[], terrain: boolean[][], isLoop: boolean): WayPoint[] {
   const height = terrain.length;
   const width = terrain[0].length;
-  const waypoints = getWayPointGrid({ width, height });
+  const dimensions = { width, height };
+  const waypoints = getWayPointGrid(dimensions);
   const destinations = toPositionSet(targets);
   const queue = [start];
   const visited = new Set<string>();
   visited.add(`${start.x},${start.y}`);
 
-  while (queue.length || queue.length > 1000) {
+  while (queue.length || queue.length > 5000) {
     const current = queue.shift()!;
     if (destinations.has(`${current.x}, ${current.y}`)) {
       return getPath(waypoints, current);
@@ -92,18 +97,20 @@ function getPathToNearestTarget(start: Position, targets: Position[], terrain: b
     const currentWayPoint = (waypoints[current.y][current.x] || { distance: 0 }) as WayPoint;
     // Explore all directions
     for (const dir of directions) {
-      const next = getNextPosition(current, dir, width, height, isLoop);
+      const next = getNextPosition(current, dir, dimensions, isLoop);
 
       // Check if the next position is valid and not blocked
       if (
         !visited.has(`${next.x},${next.y}`) &&
-        isValidPosition(next.x, next.y, width, height, terrain, isLoop)
+        isValidPosition(next, dimensions, terrain, isLoop)
       ) {
         queue.push(next);
         waypoints[next.y][next.x] = {
           distance: currentWayPoint.distance + 1,
-          direction: dir.direction,
-          origin: current
+          forward: dir.forward,
+          backward: dir.backward,
+          origin: current,
+          position: next
         };
         visited.add(`${next.x},${next.y}`);
       }
@@ -113,4 +120,4 @@ function getPathToNearestTarget(start: Position, targets: Position[], terrain: b
   return [];
 }
 
-export { getPathToNearestTarget, WayPoint };
+export { getPathToNearestTarget, WayPoint, isValidPosition, getNextPosition };

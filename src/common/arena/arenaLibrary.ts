@@ -1,15 +1,15 @@
 import { getRandomArenaId } from '../generators.js';
-import { Arena, ArenaName, ArenaStatus, ArenaSpec, EdgeType, ArenaInitialSetup, Dimensions } from '../types/Arena.js';
+import { Arena, ArenaName, ArenaStatus, ArenaSpec, EdgeType, ArenaInitialSetup, FogOfWar } from '../types/Arena.js';
 import { Direction, Position, UnitAction, UnitType, WallElement } from '../types/Units.js';
 import { addUnit } from './arena.js';
-import createGrid from '../../common/util-grid.js';
+import { createGrid } from '../../common/util-grid.js';
 
 const specs: { [key: string]: ArenaSpec } = {
   default: {
     maxPlayers: 4,
     resourceProbability: 0.1,
     dimensions: { width: 32, height: 25 },
-    features: { edge: EdgeType.wall, fogOfWar: false }
+    features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both }
   }
 };
 

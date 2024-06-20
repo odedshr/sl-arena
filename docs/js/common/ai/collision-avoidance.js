@@ -1,4 +1,4 @@
-import getNewPosition from '../statusUpdaters/getNewPosition.js';
+import getNewPosition from '../stateUpdaters/getNewPosition.js';
 import { UnitAction } from '../types/Units.js';
 function getEmptyGrid(dimensions) {
     const grid = [];

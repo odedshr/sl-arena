@@ -72,6 +72,7 @@ type GameStateMessage = {
   dimensions: Dimensions,
   features: Features,
   units: Unit[];
+  stats:{[key:number]:number},
   tick: number;
 }
 
@@ -86,7 +87,7 @@ type MessageUnion = PingMessage |
   GameStartedMessage;
 type Message = { callback?: number } & MessageUnion
 
-type SendMethod = (message: Message) => void
+type SendMessageMethod = (message: Message) => void
 
 export {
   MessageType,
@@ -101,5 +102,5 @@ export {
   UnitListMessage,
   GameStartedMessage,
   GameStateMessage,
-  SendMethod
+  SendMessageMethod
 };

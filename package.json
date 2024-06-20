@@ -2,9 +2,10 @@
   "name": "sl-arena",
   "version": "1.0.0",
   "main": "dist/main.js",
+  "type": "module",
   "scripts": {
     "start": "node dist/server/main.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "build": "tsc -w --project tsconfig.server.json & tsc -w --project tsconfig.client.json &",
     "tunnel": "lt --port 3000"
   },
@@ -17,6 +18,8 @@
     "ws": "^8.17.0"
   },
   "devDependencies": {
-    "@types/ws": "^8.5.10"
+    "@jest/globals": "^29.7.0",
+    "@types/ws": "^8.5.10",
+    "jest": "^29.7.0"
   }
 }

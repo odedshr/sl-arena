@@ -1,14 +1,15 @@
 import { Instruction, InstructionType, CreateArenaInstruction, JoinArenaInstruction, UnitInstructions, LeaveArenaInstruction, ListUsersInstruction, ListUnitsInstruction } from './Instruction.js';
 import { Arena, ArenaStatus } from '../types/Arena.js';
-import { MessageType, ArenaCreatedMessage, PlayerJoinedMessage, OperationErrorMessage, PlayerLeftMessage, PlayerListMessage, SendMethod, UnitListMessage } from '../Messages/Message.js';
+import { MessageType, ArenaCreatedMessage, PlayerJoinedMessage, OperationErrorMessage, PlayerLeftMessage, PlayerListMessage, SendMessageMethod, UnitListMessage } from '../Messages/Message.js';
 import { addArena, addPlayer, getArena, getPlayerArena, setPlayerArena } from '../arena/arena.js';
 import handleUnitCommand from './unitCommandHandler.js';
 import { PlayerType } from '../types/Player.js';
 import { ActionableUnit } from '../types/Units.js';
 import broadcast from './broadcast.js';
 import startGame from './startGameHandler.js';
+import sendFail from './sendFail.js';
 
-function handle(instruction: Instruction, playerId: number, send: SendMethod) {
+function handle(instruction: Instruction, playerId: number, send: SendMessageMethod) {
   switch (instruction.type) {
     case InstructionType.arena_create:
       return createArena(instruction as CreateArenaInstruction, playerId, send);
@@ -31,7 +32,7 @@ function handle(instruction: Instruction, playerId: number, send: SendMethod) {
   }
 }
 
-function createArena(instruction: CreateArenaInstruction, playerId: number, send: SendMethod) {
+function createArena(instruction: CreateArenaInstruction, playerId: number, send: SendMessageMethod) {
   leaveArena(playerId);
   const { arenaName, playerName, callback } = instruction;
 
@@ -39,7 +40,7 @@ function createArena(instruction: CreateArenaInstruction, playerId: number, send
   send({ callback, type: MessageType.arena_created, arenaId } as ArenaCreatedMessage);
 }
 
-function joinArena(instruction: JoinArenaInstruction, playerId: number, send: SendMethod) {
+function joinArena(instruction: JoinArenaInstruction, playerId: number, send: SendMessageMethod) {
   leaveArena(playerId);
   const { callback, arenaId, playerName } = instruction;
   const arena = getArena(arenaId);
@@ -76,7 +77,7 @@ function getPlayerNames(arena: Arena) {
   return Object.values(arena.players).map(player => player.name);
 }
 
-function listPlayers(playerId: number, send: SendMethod, callback?: number) {
+function listPlayers(playerId: number, send: SendMessageMethod, callback?: number) {
   const arena = getPlayerArena(playerId);
   if (!arena) {
     return sendFail(send, InstructionType.arena_list_users, 'list-players: not in arena');
@@ -86,7 +87,7 @@ function listPlayers(playerId: number, send: SendMethod, callback?: number) {
 }
 
 
-function listUnits(playerId: number, send: SendMethod, callback?: number) {
+function listUnits(playerId: number, send: SendMessageMethod, callback?: number) {
   const arena = getPlayerArena(playerId);
   if (!arena) {
     return sendFail(send, InstructionType.arena_list_units, `list-units: not in arena`);
@@ -94,9 +95,4 @@ function listUnits(playerId: number, send: SendMethod, callback?: number) {
   send({ callback, type: MessageType.player_unit_list, units: Object.values(arena.players[playerId].units) as ActionableUnit[] } as UnitListMessage);
 }
 
-function sendFail(send: SendMethod, instruction: InstructionType, reason: string, callback?: number) {
-  return send({ callback, type: MessageType.operation_failed, instruction, reason: reason } as OperationErrorMessage)
-}
-
 export default handle;
-export { sendFail };

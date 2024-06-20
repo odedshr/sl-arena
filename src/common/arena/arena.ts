@@ -1,4 +1,4 @@
-import { SendMethod } from '../Messages/Message.js';
+import { SendMessageMethod } from '../Messages/Message.js';
 import { Arena, ArenaName } from '../types/Arena.js';
 import { colors } from '../generators.js';
 import { ActionableUnit, Direction, Position, Unit, UnitAction, UnitType } from '../types/Units.js';
@@ -9,7 +9,7 @@ const arenas: { [id: string]: Arena } = {}
 const playerArena: { [id: number]: string } = {};
 const playerUnitCount: { [id: number]: number } = {};
 
-function addArena(arenaName: ArenaName, playerName: string, owner: number, send: SendMethod): string {
+function addArena(arenaName: ArenaName, playerName: string, owner: number, send: SendMessageMethod): string {
   const arena: Arena = setupArena(arenaName, owner)
   arenas[arena.id] = arena;
 
@@ -22,7 +22,7 @@ function getArena(arenaId: string): Arena {
   return arenas[arenaId];
 }
 
-function addPlayer(arena: Arena, id: number, name: String, type: PlayerType, send: SendMethod) {
+function addPlayer(arena: Arena, id: number, name: String, type: PlayerType, send: SendMessageMethod) {
   arena.players[id] = {
     type,
     name,
@@ -97,7 +97,7 @@ function addResource(arena:Arena, type: UnitType, position: Position) {
   } as Unit;
 
   arena.resources.push(unit);
-  arena.grid[position.y][position.y].push(unit);
+  arena.grid[position.y][position.x].push(unit);
 }
 
 function removeResource(arena:Arena, resource: Unit) {

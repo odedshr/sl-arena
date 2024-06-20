@@ -1,8 +1,8 @@
 import { Message } from '../common/Messages/Message.js';
 import connect from './shared-worker/client.js';
 
-import getControls from './controls.js';
-import inform from './inform.js';
+import getControls from './ui/controls.js';
+import inform from './ui/inform.js';
 import handle from './messageHandler.js';
 
 function initInterface() {
