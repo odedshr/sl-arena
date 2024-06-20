@@ -1,13 +1,13 @@
 import { Instruction, InstructionType, CreateArenaInstruction, JoinArenaInstruction, UnitInstructions, LeaveArenaInstruction, ListUsersInstruction, ListUnitsInstruction } from './Instruction.js';
 import { Arena, ArenaStatus } from '../types/Arena.js';
-import { MessageType, ArenaCreatedMessage, PlayerJoinedMessage, OperationErrorMessage, PlayerLeftMessage, PlayerListMessage, SendMessageMethod, UnitListMessage } from '../Messages/Message.js';
+import { MessageType, ArenaCreatedMessage, PlayerJoinedMessage, PlayerLeftMessage, PlayerListMessage, SendMessageMethod, UnitListMessage } from '../Messages/Message.js';
 import { addArena, addPlayer, getArena, getPlayerArena, setPlayerArena } from '../arena/arena.js';
-import handleUnitCommand from './unitCommandHandler.js';
+import handleUnitCommand from './unit-command-handler.js';
 import { PlayerType } from '../types/Player.js';
 import { ActionableUnit } from '../types/Units.js';
 import broadcast from './broadcast.js';
-import startGame from './startGameHandler.js';
-import sendFail from './sendFail.js';
+import startGame from './start-game-handler.js';
+import sendFail from './send-fail.js';
 
 function handle(instruction: Instruction, playerId: number, send: SendMessageMethod) {
   switch (instruction.type) {

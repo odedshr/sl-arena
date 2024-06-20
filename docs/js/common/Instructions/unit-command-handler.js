@@ -2,7 +2,7 @@ import { InstructionType } from './Instruction.js';
 import { ArenaStatus } from '../types/Arena.js';
 import { Direction, UnitAction, UnitType } from '../types/Units.js';
 import { getPlayerArena } from '../arena/arena.js';
-import sendFail from './sendFail.js';
+import sendFail from './send-fail.js';
 function handleUnitCommand(commands, playerId, send) {
     const arena = getPlayerArena(playerId);
     if (!arena) {

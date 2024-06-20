@@ -6,7 +6,7 @@ jest.unstable_mockModule('../../../docs/js/common/arena/arena.js', () => ({
 
 const { UnitAction, UnitType }  = await import ( '../../../docs/js/common/types/Units.js');
 const { addUnit }  = await import ( '../../../docs/js/common/arena/arena.js');
-const { default: handleBarrackUnit } = await import ('../../../docs/js/common/stateUpdaters/barracksHandler.js');
+const { default: handleBarrackUnit } = await import ('../../../docs/js/common/state-updaters/barracks-handler.js');
 
 describe('handleBarrackUnit', () => {
     let mockUnit;

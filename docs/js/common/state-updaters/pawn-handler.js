@@ -1,6 +1,6 @@
 import { UnitAction, UnitType } from '../types/Units.js';
 import { moveUnit } from '../arena/arena.js';
-import getNewPosition from './getNewPosition.js';
+import getNewPosition from './get-new-position.js';
 function handlePawnUnit(unit, arena) {
     //return true of unit died (and should be removed from the arena)
     switch (unit.action) {

@@ -1,6 +1,6 @@
 import { colors } from '../generators.js';
 import { PlayerType } from '../types/Player.js';
-import { setupArena } from './arenaLibrary.js';
+import { setupArena } from './arena-library.js';
 const arenas = {};
 const playerArena = {};
 const playerUnitCount = {};

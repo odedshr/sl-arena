@@ -1,7 +1,7 @@
-import handle from '../../common/Instructions/instructionHandler.js';
+import handle from '../../common/Instructions/instruction-handler.js';
 import { MessageType } from '../../common/Messages/Message.js';
 import { INTERVAL, KEEP_ALIVE } from '../../common/config.js';
-import updateState from '../../common/stateUpdaters/stateUpdater.js';
+import updateState from '../../common/state-updaters/state-updater.js';
 const WORKER_URL = `${location.href.replace(/\/.*\.html/, '')}js/client/shared-worker/worker.js`;
 const SERVER_CONSOLE_STYLE = 'background-color:black;color:white;font-family:courier;width:100%;';
 function startSharedWorkerServer() {

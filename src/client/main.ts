@@ -3,7 +3,7 @@ import connect from './shared-worker/client.js';
 
 import getControls from './ui/controls.js';
 import inform from './ui/inform.js';
-import handle from './messageHandler.js';
+import handle from './message-handler.js';
 
 function initInterface() {
   //@ts-ignore

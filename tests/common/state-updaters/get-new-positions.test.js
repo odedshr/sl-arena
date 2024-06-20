@@ -1,6 +1,6 @@
 import { describe, expect } from '@jest/globals';
 
-import getNewPosition from '../../../docs/js/common/stateUpdaters/getNewPosition.js';
+import getNewPosition from '../../../docs/js/common/state-updaters/get-new-position.js';
 import { EdgeType } from '../../../docs/js/common/types/Arena.js';
 import { Direction } from '../../../docs/js/common/types/Units.js';
 

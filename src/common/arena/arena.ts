@@ -3,7 +3,7 @@ import { Arena, ArenaName } from '../types/Arena.js';
 import { colors } from '../generators.js';
 import { ActionableUnit, Direction, Position, Unit, UnitAction, UnitType } from '../types/Units.js';
 import { DetailedPlayer, PlayerType } from '../types/Player.js';
-import { setupArena } from './arenaLibrary.js';
+import { setupArena } from './arena-library.js';
 
 const arenas: { [id: string]: Arena } = {}
 const playerArena: { [id: number]: string } = {};

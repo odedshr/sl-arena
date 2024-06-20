@@ -11,7 +11,7 @@ jest.unstable_mockModule('../../../dist/common/util-grid.js', () => ({
     createGrid: jest.fn()
 }));
 
-const { default: handler } = await import ('../../../dist/common/ai/defaultHandler.js');
+const { default: handler } = await import ('../../../dist/common/ai/default-handler.js');
 const { getRandomDirection } = await import ( '../../../dist/common/generators.js');
 const { EdgeType } = await import ( '../../../dist/common/types/Arena.js');
 const { Direction, UnitAction, UnitType } = await import ( '../../../dist/common/types/Units.js');
@@ -54,8 +54,7 @@ describe('default ai handler', () => {
         it('should produce units when barracks and resources are available', () => {
             getRandomDirection.mockReturnValue(Direction.north);
             const units = [
-                { id: 1, type: UnitType.barrack, owner: 1, action: UnitAction.idle },
-                { id: 2, type: UnitType.pawn, owner: 1, action: UnitAction.idle, position: { x: 1, y: 1 } }
+                { id: 1, type: UnitType.barrack, owner: 1, action: UnitAction.idle }
             ];
             const playerId = 1;
             const resources = 1;
@@ -70,8 +69,7 @@ describe('default ai handler', () => {
 
         it('should not produce units when no resources are available', () => {
             const units = [
-                { id: 1, type: UnitType.barrack, owner: 1, action: UnitAction.idle },
-                { id: 2, type: UnitType.pawn, owner: 1, action: UnitAction.idle, position: { x: 1, y: 1 } }
+                { id: 1, type: UnitType.barrack, owner: 1, action: UnitAction.idle }
             ];
             const playerId = 1;
             const resources = 0;
@@ -92,7 +90,7 @@ describe('default ai handler', () => {
             const dimensions = { width: 2, height: 2 };
             const features = { edge: EdgeType.loop };
             createGrid.mockReturnValue([[[], []], [[], []]]);
-            getPathToNearestTarget.mockReturnValue([{ position: { x: 1, y: 1 }, backward: Direction.north }, { position: { x: 2, y: 2 } }]);
+            getPathToNearestTarget.mockReturnValue([{ position: { x: 2, y: 2 } }, { position: { x: 1, y: 1 }, backward: Direction.north }]);
             const result = handler(units, playerId, resources, dimensions, features);
             expect(result).toEqual([
                 { unitId: 1, action: UnitAction.move, direction: Direction.north }

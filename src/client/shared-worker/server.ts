@@ -1,8 +1,8 @@
 import { Instruction } from '../../common/Instructions/Instruction.js';
-import handle from '../../common/Instructions/instructionHandler.js';
+import handle from '../../common/Instructions/instruction-handler.js';
 import { Message, MessageType, PingMessage, SendMessageMethod } from '../../common/Messages/Message.js';
 import { INTERVAL, KEEP_ALIVE } from '../../common/config.js';
-import updateState from '../../common/stateUpdaters/stateUpdater.js';
+import updateState from '../../common/state-updaters/state-updater.js';
 
 type WrappedInstruction = Instruction & { clientId: number };
 type ConnectToServerMessage = { type: 'server_connect', clientId: number };

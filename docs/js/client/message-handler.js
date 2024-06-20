@@ -1,11 +1,11 @@
 import { MessageType } from '../common/Messages/Message.js';
 import { EdgeType, FogOfWar } from '../common/types/Arena.js';
 import { setCanvasSize, setFactionColors as setCanvasColors } from './ui/canvas.js';
-import { handleGameStatusUpdate } from './gameStatusUpdateHandler.js';
+import { handleGameStatusUpdate } from './game-status-update-handler.js';
 import inform from './ui/inform.js';
 import { setCanvasSize as setMiniMapSize, setFactionColors as setMiniMapColors } from './ui/minimap.js';
 import { setFactionColors as setGraphColors } from './ui/graph.js';
-import { initScoreBoard } from './ui/scoreboard.js';
+import { initScoreBoard } from './ui/score-board.js';
 import { initGrid } from './ui/position-tracker.js';
 function handle(message, send) {
     switch (message.type) {

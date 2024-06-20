@@ -9,13 +9,13 @@ jest.unstable_mockModule('../../../docs/js/common/arena/arena.js', () => ({
     moveUnit: jest.fn()
 }));
 
-jest.unstable_mockModule('../../../docs/js/common/stateUpdaters/getNewPosition.js', () => ({ default: jest.fn()}));
+jest.unstable_mockModule('../../../docs/js/common/state-updaters/get-new-position.js', () => ({ default: jest.fn()}));
 
-const { default: handlePawnUnit} = await import ('../../../docs/js/common/stateUpdaters/pawnHandler.js');
+const { default: handlePawnUnit} = await import ('../../../docs/js/common/state-updaters/pawn-handler.js');
 const { EdgeType } = await import ( '../../../docs/js/common/types/Arena.js');
 const { UnitAction, UnitType } = await import ( '../../../docs/js/common/types/Units.js');
 const { moveUnit } = await import ( '../../../docs/js/common/arena/arena.js');
-const { default: getNewPosition} = await import ( '../../../docs/js/common/stateUpdaters/getNewPosition.js');
+const { default: getNewPosition} = await import ( '../../../docs/js/common/state-updaters/get-new-position.js');
 
 describe('handlePawnUnit', () => {
     let mockUnit;

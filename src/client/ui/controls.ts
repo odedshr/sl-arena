@@ -11,7 +11,7 @@ import {
   SendInstructionMethod
 } from '../../common/Instructions/Instruction.js';
 import { ArenaName } from '../../common/types/Arena.js';
-import { setHandler } from '../gameStatusUpdateHandler.js';
+import { setHandler } from '../game-status-update-handler.js';
 
 function createArena(sendInstruction: SendInstructionMethod, playerName: string) {
   return new Promise(resolve => {

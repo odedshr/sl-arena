@@ -8,12 +8,12 @@ jest.unstable_mockModule('../../../docs/js/common/arena/arena.js', () => ({
     setPlayerArena: jest.fn(),
 }));
 
-jest.unstable_mockModule('../../../docs/js/common/Instructions/unitCommandHandler.js', () => ({ default: jest.fn()}));
+jest.unstable_mockModule('../../../docs/js/common/Instructions/unit-command-handler.js', () => ({ default: jest.fn()}));
 jest.unstable_mockModule('../../../docs/js/common/Instructions/broadcast.js', () => ({ default: jest.fn()}));
-jest.unstable_mockModule('../../../docs/js/common/Instructions/startGameHandler.js', () => ({ default: jest.fn()}));
-jest.unstable_mockModule('../../../docs/js/common/Instructions/sendFail.js', () => ({ default: jest.fn()}));
+jest.unstable_mockModule('../../../docs/js/common/Instructions/start-game-handler.js', () => ({ default: jest.fn()}));
+jest.unstable_mockModule('../../../docs/js/common/Instructions/send-fail.js', () => ({ default: jest.fn()}));
 
-const {default: handle} = await import ('../../../docs/js/common/Instructions/instructionHandler');
+const {default: handle} = await import ('../../../docs/js/common/Instructions/instruction-handler.js');
 const { InstructionType } = await import ( '../../../docs/js/common/Instructions/Instruction.js');
 const { ArenaStatus } = await import ( '../../../docs/js/common/types/Arena.js');
 const { MessageType } = await import ( '../../../docs/js/common/Messages/Message.js');
@@ -25,10 +25,10 @@ const {
     setPlayerArena,
 } = await import ( '../../../docs/js/common/arena/arena.js');
 const { PlayerType } = await import ( '../../../docs/js/common/types/Player.js');
-const {default:handleUnitCommand} = await import ( '../../../docs/js/common/Instructions/unitCommandHandler.js');
+const {default:handleUnitCommand} = await import ( '../../../docs/js/common/Instructions/unit-command-handler.js');
 const {default:broadcast} = await import ( '../../../docs/js/common/Instructions/broadcast.js');
-const {default:startGame} = await import ( '../../../docs/js/common/Instructions/startGameHandler.js');
-const {default:sendFail} = await import ( '../../../docs/js/common/Instructions/sendFail.js');
+const {default:startGame} = await import ( '../../../docs/js/common/Instructions/start-game-handler.js');
+const {default:sendFail} = await import ( '../../../docs/js/common/Instructions/send-fail.js');
 
 describe('handle function', () => {
     let sendMock;

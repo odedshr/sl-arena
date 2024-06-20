@@ -2,10 +2,10 @@ import { MessageType } from '../Messages/Message.js';
 import { ArenaStatus } from '../types/Arena.js';
 import { UnitAction, UnitType } from '../types/Units.js';
 import { addResource, forEachArena, removeResource, removeUnit } from '../arena/arena.js';
-import handleBarrackUnit from './barracksHandler.js';
-import handlePawnUnit from './pawnHandler.js';
-import getUnits from './getUnits.js';
-import getStats from './getStats.js';
+import handleBarrackUnit from './barracks-handler.js';
+import handlePawnUnit from './pawn-handler.js';
+import getUnits from './get-units.js';
+import getStats from './get-stats.js';
 function updateState() {
     forEachArena(arena => {
         arena.tick++;

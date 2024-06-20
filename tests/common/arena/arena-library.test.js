@@ -10,7 +10,7 @@ jest.unstable_mockModule('../../../docs/js/common/arena/arena.js', () => ({
 
 jest.unstable_mockModule('../../../docs/js/common/util-grid.js', () => ({ createGrid: jest.fn(() => 'mock-grid')}));
 
-const { setupArena, setupUnits } = await import('../../../docs/js/common/arena/arenaLibrary.js');
+const { setupArena, setupUnits } = await import('../../../docs/js/common/arena/arena-library.js');
 const { ArenaStatus, EdgeType, FogOfWar } = await import( '../../../docs/js/common/types/Arena.js');
 const { Direction, UnitAction, UnitType } = await import( '../../../docs/js/common/types/Units.js');
 const { addUnit } = await import( '../../../docs/js/common/arena/arena.js');

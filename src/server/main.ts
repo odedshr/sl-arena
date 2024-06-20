@@ -2,10 +2,10 @@
 import { Message, MessageType, PingMessage, SendMessageMethod } from '../common/Messages/Message.js';
 import { Instruction, InstructionType } from '../common/Instructions/Instruction.js';
 
-import updateState from '../common/stateUpdaters/stateUpdater.js';
-import startHttpServer from './httpServer.js';
-import startWSServer from './webSocketServer.js';
-import handle from '../common/Instructions/instructionHandler.js';
+import updateState from '../common/state-updaters/state-updater.js';
+import startHttpServer from './http-server.js';
+import startWSServer from './web-socket-server.js';
+import handle from '../common/Instructions/instruction-handler.js';
 import { INTERVAL, KEEP_ALIVE } from '../common/config.js';
 
 const users: { [userId: number]: { send: SendMessageMethod, heartbeat: NodeJS.Timeout } } = {};

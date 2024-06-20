@@ -2,11 +2,11 @@ import { InstructionType } from './Instruction.js';
 import { ArenaStatus } from '../types/Arena.js';
 import { MessageType } from '../Messages/Message.js';
 import { addArena, addPlayer, getArena, getPlayerArena, setPlayerArena } from '../arena/arena.js';
-import handleUnitCommand from './unitCommandHandler.js';
+import handleUnitCommand from './unit-command-handler.js';
 import { PlayerType } from '../types/Player.js';
 import broadcast from './broadcast.js';
-import startGame from './startGameHandler.js';
-import sendFail from './sendFail.js';
+import startGame from './start-game-handler.js';
+import sendFail from './send-fail.js';
 function handle(instruction, playerId, send) {
     switch (instruction.type) {
         case InstructionType.arena_create:

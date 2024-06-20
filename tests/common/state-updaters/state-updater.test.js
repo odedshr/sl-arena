@@ -7,16 +7,16 @@ jest.unstable_mockModule('../../../docs/js/common/arena/arena.js', () => ({
     removeUnit: jest.fn()
 }));
 
-jest.unstable_mockModule('../../../docs/js/common/stateUpdaters/barracksHandler.js', () => ({ default: jest.fn()}));
-jest.unstable_mockModule('../../../docs/js/common/stateUpdaters/pawnHandler.js', () => ({ default: jest.fn()}));
+jest.unstable_mockModule('../../../docs/js/common/state-updaters/barracks-handler.js', () => ({ default: jest.fn()}));
+jest.unstable_mockModule('../../../docs/js/common/state-updaters/pawn-handler.js', () => ({ default: jest.fn()}));
 
-const { default: updateState}  = await import('../../../docs/js/common/stateUpdaters/stateUpdater.js');
+const { default: updateState}  = await import('../../../docs/js/common/state-updaters/state-updater.js');
 const { MessageType }  = await import( '../../../docs/js/common/Messages/Message.js');
 const { ArenaStatus }  = await import( '../../../docs/js/common/types/Arena.js');
 const { UnitAction, UnitType }  = await import( '../../../docs/js/common/types/Units.js');
 const { addResource, forEachArena, removeResource, removeUnit }  = await import( '../../../docs/js/common/arena/arena.js');
-const { default: handleBarrackUnit }  = await import( '../../../docs/js/common/stateUpdaters/barracksHandler.js');
-const { default: handlePawnUnit }  = await import( '../../../docs/js/common/stateUpdaters/pawnHandler.js');
+const { default: handleBarrackUnit }  = await import( '../../../docs/js/common/state-updaters/barracks-handler.js');
+const { default: handlePawnUnit }  = await import( '../../../docs/js/common/state-updaters/pawn-handler.js');
 
 describe('updateState', () => {
     let mockArena;

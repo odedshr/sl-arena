@@ -1,5 +1,5 @@
 import { UnitCommand } from '../Instructions/Instruction.js';
-import getNewPosition from '../stateUpdaters/getNewPosition.js';
+import getNewPosition from '../state-updaters/get-new-position.js';
 import { Dimensions, EdgeType } from '../types/Arena.js';
 import { ActionableUnit, Position, UnitAction } from '../types/Units.js';
 
