@@ -16,8 +16,9 @@ function handle(message, send) {
         case MessageType.game_started:
             return handleGameStarted(message);
         case MessageType.player_joined:
-            return inform(`player ${message.playerName} joined`);
+            return handleArenaJoined(message);
         case MessageType.player_left:
+            setArenaName('');
             return inform(`player ${message.playerName} left`);
         case MessageType.player_unit_list:
             return console.log(message.units);
@@ -35,6 +36,18 @@ function handle(message, send) {
 }
 function handleArenaCreated(message) {
     inform(`arena created, you can invite your friends to the %c${message.arenaId}`, 'display:inline-block;background-color:darkblue;color:white;');
+    const arenaNameElement = document.getElementById('arena-name');
+    setArenaName(message.arenaId);
+}
+function handleArenaJoined(message) {
+    inform(`player ${message.playerName} joined`);
+    setArenaName(message.arenaId);
+}
+function setArenaName(name) {
+    const arenaNameElement = document.getElementById('arena-name');
+    if (arenaNameElement) {
+        arenaNameElement.innerHTML = name;
+    }
 }
 function handleGameStarted(message) {
     inform(`Game Started. It's worth knowing that ${getMapEdgeMessage(message.features.edge)}`);

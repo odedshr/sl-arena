@@ -51,9 +51,7 @@ function handleUnitByType(unit, arena) {
     }
 }
 function checkGameOver(arena) {
-    const players = Object.values(arena.players);
-    const playersWithBarracks = players.filter(player => hasAnyBarracksStanding(Object.values(player.units)));
-    if (playersWithBarracks.length <= 1) {
+    if (arena.spec.isGameOver(arena)) {
         arena.status = ArenaStatus.finished;
     }
     return arena.status === ArenaStatus.finished;

@@ -8,9 +8,17 @@ const specs = {
         maxPlayers: 4,
         resourceProbability: 0.1,
         dimensions: { width: 32, height: 25 },
-        features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both }
+        features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both },
+        isGameOver: (arena) => {
+            const players = Object.values(arena.players);
+            const playersWithBarracks = players.filter(player => hasAnyBarracksStanding(Object.values(player.units)));
+            return playersWithBarracks.length <= 1;
+        }
     }
 };
+function hasAnyBarracksStanding(units) {
+    return units.some(unit => unit.type === UnitType.barrack);
+}
 const setups = {
     default: {
         barracks: [{ x: 2, y: 2 }, { x: 30, y: 22 }, { x: 30, y: 2 }, { x: 2, y: 22 }, { x: 16, y: 2 }, { x: 16, y: 22 }, { x: 2, y: 12 }, { x: 30, y: 12 }],

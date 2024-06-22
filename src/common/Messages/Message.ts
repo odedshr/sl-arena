@@ -34,6 +34,7 @@ type ArenaCreatedMessage = {
 type PlayerJoinedMessage = {
   type: MessageType.player_joined;
   playerName: string;
+  arenaId: string;
 };
 
 type OperationErrorMessage = {

@@ -1,6 +1,6 @@
 import { getRandomArenaId } from '../generators.js';
 import { Arena, ArenaName, ArenaStatus, ArenaSpec, EdgeType, ArenaInitialSetup, FogOfWar } from '../types/Arena.js';
-import { Direction, Position, UnitAction, UnitType, WallElement } from '../types/Units.js';
+import { ActionableUnit, Direction, Position, UnitAction, UnitType, WallElement } from '../types/Units.js';
 import { addUnit } from './arena.js';
 import { createGrid } from '../../common/util-grid.js';
 
@@ -9,9 +9,18 @@ const specs: { [key: string]: ArenaSpec } = {
     maxPlayers: 4,
     resourceProbability: 0.1,
     dimensions: { width: 32, height: 25 },
-    features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both }
+    features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both },
+    isGameOver: (arena:Arena)=> {
+      const players = Object.values(arena.players);
+      const playersWithBarracks = players.filter(player => hasAnyBarracksStanding(Object.values(player.units)));
+      return playersWithBarracks.length <= 1;
+    }
   }
 };
+
+function hasAnyBarracksStanding(units: ActionableUnit[]) {
+  return units.some(unit => unit.type === UnitType.barrack);
+}
 
 const setups: { [key: string]: ArenaInitialSetup } = {
   default: {

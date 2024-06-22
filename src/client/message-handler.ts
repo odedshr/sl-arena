@@ -1,5 +1,5 @@
 import { SendInstructionMethod } from '../common/Instructions/Instruction.js';
-import { MessageType, Message, GameStateMessage, GameStartedMessage, ArenaCreatedMessage } from '../common/Messages/Message.js';
+import { MessageType, Message, GameStateMessage, GameStartedMessage, PlayerJoinedMessage, ArenaCreatedMessage } from '../common/Messages/Message.js';
 import { EdgeType, FogOfWar } from '../common/types/Arena.js';
 import { setCanvasSize, setFactionColors as setCanvasColors} from './ui/canvas.js';
 import { handleGameStatusUpdate } from './game-status-update-handler.js';
@@ -19,8 +19,9 @@ function handle(message: Message, send: SendInstructionMethod) {
     case MessageType.game_started:
       return handleGameStarted(message as GameStartedMessage);
     case MessageType.player_joined:
-      return inform(`player ${message.playerName} joined`);
+      return handleArenaJoined(message as PlayerJoinedMessage);
     case MessageType.player_left:
+      setArenaName('');
       return inform(`player ${message.playerName} left`);
     case MessageType.player_unit_list:
       return console.log(message.units);
@@ -39,6 +40,20 @@ function handle(message: Message, send: SendInstructionMethod) {
 
 function handleArenaCreated(message: ArenaCreatedMessage) {
   inform(`arena created, you can invite your friends to the %c${message.arenaId}`, 'display:inline-block;background-color:darkblue;color:white;');
+  const arenaNameElement = document.getElementById('arena-name');
+  setArenaName(message.arenaId);
+}
+
+function handleArenaJoined(message:PlayerJoinedMessage) {
+  inform(`player ${message.playerName} joined`);
+  setArenaName(message.arenaId);
+}
+
+function setArenaName(name:string) {
+  const arenaNameElement = document.getElementById('arena-name');
+  if (arenaNameElement) {
+    arenaNameElement.innerHTML = name;
+  }
 }
 
 
