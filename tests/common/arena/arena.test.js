@@ -1,6 +1,7 @@
 import { jest, describe, expect } from '@jest/globals';
 
 jest.unstable_mockModule('../../../docs/js/common/generators.js', () => ({
+    getRandomArenaId: ()=>'randomArenaId', 
     colors: ['red', 'blue', 'green', 'yellow']
 }));
 
@@ -11,7 +12,7 @@ jest.unstable_mockModule('../../../docs/js/common/types/Player.js', () => ({
     }
 }));
 
-jest.unstable_mockModule('../../../docs/js/common/arena/arena-library.js', () => ({
+jest.unstable_mockModule('../../../docs/js/common/arena/set-up-arena.js', () => ({
     setupArena: jest.fn((arenaName, owner) => ({
         id: `random-arena-id`,
         players: {},
@@ -20,9 +21,8 @@ jest.unstable_mockModule('../../../docs/js/common/arena/arena-library.js', () =>
     }))
 }));
 
-const { colors } = await import('../../../docs/js/common/generators.js');
 const { PlayerType } = await import ('../../../docs/js/common/types/Player.js');
-const { setupArena } = await import ('../../../docs/js/common/arena/arena-library.js');
+const { setupArena } = await import ('../../../docs/js/common/arena/set-up-arena.js');
 const { addArena,
     getArena,
     setPlayerArena,

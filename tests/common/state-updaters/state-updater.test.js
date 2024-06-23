@@ -14,9 +14,15 @@ const { default: updateState}  = await import('../../../docs/js/common/state-upd
 const { MessageType }  = await import( '../../../docs/js/common/Messages/Message.js');
 const { ArenaStatus }  = await import( '../../../docs/js/common/types/Arena.js');
 const { UnitAction, UnitType }  = await import( '../../../docs/js/common/types/Units.js');
-const { addResource, forEachArena, removeResource, removeUnit }  = await import( '../../../docs/js/common/arena/arena.js');
+const { addResource, forEachArena, removeUnit }  = await import( '../../../docs/js/common/arena/arena.js');
 const { default: handleBarrackUnit }  = await import( '../../../docs/js/common/state-updaters/barracks-handler.js');
 const { default: handlePawnUnit }  = await import( '../../../docs/js/common/state-updaters/pawn-handler.js');
+
+function isGameOver(arena) {
+    const players = Object.values(arena.players);
+    const playersWithBarracks = players.filter(player => (Object.values(player.units)).some(unit => unit.type === UnitType.barrack));
+    return playersWithBarracks.length <= 1;
+}
 
 describe('updateState', () => {
     let mockArena;
@@ -55,7 +61,8 @@ describe('updateState', () => {
             spec: {
                 dimensions: { width: 3, height: 3 },
                 features: {},
-                resourceProbability: 1.0 // Always add resource in test
+                resourceProbability: 1.0,// Always add resource in test
+                isGameOver
             }
         };
         forEachArena.mockImplementation(callback => callback(mockArena));

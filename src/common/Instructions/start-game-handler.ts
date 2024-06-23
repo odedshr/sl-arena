@@ -4,7 +4,7 @@ import handle from '../ai/default-handler.js';
 import { ArenaStatus } from '../types/Arena.js';
 import Player, { PlayerType } from '../types/Player.js';
 import { addPlayer, getPlayerArena } from '../arena/arena.js';
-import { setupUnits } from '../arena/arena-library.js';
+import { setupUnits } from '../arena/set-up-arena.js';
 import broadcast from './broadcast.js';
 import sendFail from './send-fail.js';
 import handleUnitCommand from './unit-command-handler.js';

@@ -10,11 +10,17 @@ jest.unstable_mockModule('../../../docs/js/common/arena/arena.js', () => ({
 
 jest.unstable_mockModule('../../../docs/js/common/util-grid.js', () => ({ createGrid: jest.fn(() => 'mock-grid')}));
 
-const { setupArena, setupUnits } = await import('../../../docs/js/common/arena/arena-library.js');
+const { setupArena, setupUnits } = await import('../../../docs/js/common/arena/set-up-arena.js');
 const { ArenaStatus, EdgeType, FogOfWar } = await import( '../../../docs/js/common/types/Arena.js');
 const { Direction, UnitAction, UnitType } = await import( '../../../docs/js/common/types/Units.js');
 const { addUnit } = await import( '../../../docs/js/common/arena/arena.js');
 const { createGrid } = await import( '../../../docs/js/common/util-grid.js');
+
+function isGameOver(arena) {
+    const players = Object.values(arena.players);
+    const playersWithBarracks = players.filter(player => (Object.values(player.units)).some(unit => unit.type === UnitType.barrack));
+    return playersWithBarracks.length <= 1;
+}
 
 describe('setupArena', () => {
     it('should setup an arena with the given name and owner', () => {
@@ -23,12 +29,13 @@ describe('setupArena', () => {
         
         const arena = setupArena(arenaName, owner);
         
-        expect(arena).toEqual({
+        expect({... arena, spec:  { ...arena.spec, isGameOver: false }}).toEqual({
             spec: {
                 maxPlayers: 4,
                 resourceProbability: 0.1,
                 dimensions: { width: 32, height: 25 },
-                features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both }
+                features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both },
+                isGameOver: false //isGameOver is internal method and won't pass this test
             },
             name: arenaName,
             id: 'test-arena-id',

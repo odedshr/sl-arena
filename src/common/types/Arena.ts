@@ -48,7 +48,12 @@ type ArenaInitialSetup = {
   barracks: Position[],
   startingResources: number,
   obstacles: Unit[]
-}
+};
+
+type ArenaTemplate = {
+  spec: ArenaSpec,
+  initialSetup: ArenaInitialSetup
+};
 
 type Arena = {
   tick: number,
@@ -63,4 +68,4 @@ type Arena = {
   grid: Grid<Unit[]>;
 };
 
-export { Arena, ArenaSpec, ArenaInitialSetup, ArenaName, ArenaStatus, Dimensions, Features, EdgeType, FogOfWar };
+export { Arena, ArenaTemplate, ArenaSpec, ArenaInitialSetup, ArenaName, ArenaStatus, Dimensions, Features, EdgeType, FogOfWar };
