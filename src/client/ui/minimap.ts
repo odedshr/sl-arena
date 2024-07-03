@@ -1,7 +1,5 @@
 import { INTERVAL } from '../../common/config.js';
-import distance from '../../common/distance.js';
 import { Dimensions } from '../../common/types/Arena.js';
-import { Grid } from '../../common/types/Grid.js';
 import { ActionableUnit, MovingUnit, Position, Unit, UnitType, WallElement } from '../../common/types/Units.js';
 import { drawCircle, drawRectangle } from './graphics/shapes.js';
 import { getObstacles, getStaticElements, isFogged } from './position-tracker.js';
@@ -94,7 +92,7 @@ function drawFrame(progress: number) {
     const x = startPos ? startPos.x + (unit.position.x - startPos.x) * progress : unit.position.x;
     const y = startPos ? startPos.y + (unit.position.y - startPos.y) * progress : unit.position.y;
 
-    drawPawn(ctx, { x, y }, factionColor[unit.owner]);
+    drawPawn(ctx, { x, y }, factionColor[unit.owner]); 
   });
 
   applyFogOfWar();
@@ -125,7 +123,10 @@ function drawResource(ctx: CanvasRenderingContext2D, resource: Unit) {
 }
 
 function drawPawn(ctx: CanvasRenderingContext2D, position: Position, color: string) {
-  drawCircle(ctx, position.x, position.y, 0.25, color);
+  ctx.lineWidth = 0.1;
+  ctx.strokeStyle = 'white';
+  drawCircle(ctx, position.x + 0.5, position.y + 0.5, 0.25, color);
+  ctx.stroke();
 }
 
 function applyFogOfWar() {

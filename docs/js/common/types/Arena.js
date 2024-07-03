@@ -1,6 +1,8 @@
 var ArenaName;
 (function (ArenaName) {
     ArenaName["default"] = "default";
+    ArenaName["tutorial_01"] = "tutorial_01";
+    ArenaName["tutorial_02"] = "tutorial_02";
 })(ArenaName || (ArenaName = {}));
 ;
 var ArenaStatus;

@@ -94,7 +94,10 @@ function drawResource(ctx, resource) {
     drawRectangle(ctx, resource.position.x, resource.position.y, 0.5, 0.5, 'black');
 }
 function drawPawn(ctx, position, color) {
-    drawCircle(ctx, position.x, position.y, 0.25, color);
+    ctx.lineWidth = 0.1;
+    ctx.strokeStyle = 'white';
+    drawCircle(ctx, position.x + 0.5, position.y + 0.5, 0.25, color);
+    ctx.stroke();
 }
 function applyFogOfWar() {
     // Cover with fog of war

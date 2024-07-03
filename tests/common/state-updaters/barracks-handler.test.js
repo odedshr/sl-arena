@@ -66,7 +66,7 @@ describe('handleBarrackUnit', () => {
 
         handleBarrackUnit(mockUnit, mockArena);
 
-        expect(addUnit).toHaveBeenCalledWith(mockArena, 'player1', UnitType.pawn, { x: 2, y: 2 }, UnitAction.move, 'north');
+        expect(addUnit).toHaveBeenCalledWith(mockArena, 'player1', UnitType.pawn, { x: 2, y: 2 }, UnitAction.idle, 'north');
         expect(mockPlayer.resources).toBe(4);
     });
 
@@ -76,7 +76,7 @@ describe('handleBarrackUnit', () => {
 
         handleBarrackUnit(mockUnit, mockArena);
 
-        expect(addUnit).toHaveBeenCalledWith(mockArena, 'player1', UnitType.pawn, { x: 2, y: 2 }, UnitAction.move, 'north');
+        expect(addUnit).toHaveBeenCalledWith(mockArena, 'player1', UnitType.pawn, { x: 2, y: 2 }, UnitAction.idle, 'north');
         expect(mockPlayer.resources).toBe(0);
         expect(mockUnit.action).toBe(UnitAction.idle);
     });

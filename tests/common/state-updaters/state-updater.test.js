@@ -59,16 +59,8 @@ describe('updateState', () => {
             obstacles: [],
             resources: [],
             spec: {
-                details: {
-                    dimensions: { width: 3, height: 3 },
-                    features: {},
-                    messages: {
-                        lose: "{playerName} lost!",
-                        start: "Game Started. It's worth knowing that the map's edge is a wall",
-                        tie: "Tie!",
-                        win: "{playerName} won!",
-                    },   
-                },
+                dimensions: { width: 3, height: 3 },
+                features: {},
                 resourceProbability: 1.0,// Always add resource in test
                 isGameOver
             }

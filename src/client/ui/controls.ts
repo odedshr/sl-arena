@@ -13,11 +13,15 @@ import {
 import { ArenaName } from '../../common/types/Arena.js';
 import { setHandler } from '../game-status-update-handler.js';
 
-function createArena(sendInstruction: SendInstructionMethod, playerName: string) {
+function createArena(sendInstruction: SendInstructionMethod, playerName: string, arenaName: ArenaName) {
+  if (!Object.values(ArenaName).includes(arenaName)) {
+    throw Error(`Unknown Arena: ${arenaName}`);
+  }
+
   return new Promise(resolve => {
     const instruction: CreateArenaInstruction = {
       type: InstructionType.arena_create,
-      arenaName: ArenaName.default,
+      arenaName,
       playerName
     };
     sendInstruction(instruction, resolve);
@@ -51,20 +55,20 @@ function startGame(sendInstruction: SendInstructionMethod) {
   return new Promise(resolve => sendInstruction({ type: InstructionType.arena_start_game } as StartGameInstruction, resolve));
 }
 
-function sendOrders(sendInstruction: SendInstructionMethod, commands: UnitCommand[]) {
+function sendCommands(sendInstruction: SendInstructionMethod, commands: UnitCommand[]) {
   // verify input quality
   sendInstruction({ type: InstructionType.unit_command, commands } as UnitInstructions);
 }
 
 function getControls(send: SendInstructionMethod) {
   return {
-    createArena: (playerName: string) => createArena(send, playerName),
+    createArena: (playerName: string, arenaName?: ArenaName) => createArena(send, playerName, arenaName || ArenaName.default),
     joinArena: (arenaId: string, playerName: string) => joinArena(send, arenaId, playerName),
     leaveArena: () => leaveArena(send),
     listUsers: () => listUsers(send),
     listUnits: () => listUnits(send),
     startGame: () => startGame(send),
-    sendOrders: (commands: UnitCommand[]) => sendOrders(send, commands),
+    sendCommands: (commands: UnitCommand[]) => sendCommands(send, commands),
     onUpdate: setHandler
   }
 }

@@ -1,5 +1,5 @@
 import { InstructionType } from '../Instructions/Instruction.js';
-import { ArenaStatus, Dimensions, Features, ArenaDetails } from '../types/Arena.js';
+import { ArenaStatus, Dimensions, Features } from '../types/Arena.js';
 import Player from '../types/Player.js';
 import { ActionableUnit, Unit } from '../types/Units.js';
 
@@ -60,7 +60,6 @@ type UnitListMessage = {
 
 type GameStartedMessage = {
   type: MessageType.game_started;
-  details: ArenaDetails,
   dimensions: Dimensions;
   features: Features;
   factions: Player[];
@@ -77,6 +76,7 @@ type GameStateMessage = {
   units: Unit[];
   stats:{[key:number]:number},
   tick: number;
+  message?: string; // place-holder for game-over message and other broadcasted messages
 }
 
 type MessageUnion = PingMessage |

@@ -21,7 +21,7 @@ function setupArena(arenaName, owner) {
         status: ArenaStatus.init,
         obstacles,
         resources: [],
-        grid: createGrid(template.spec.details.dimensions, obstacles)
+        grid: createGrid(template.spec.dimensions, obstacles)
     };
 }
 function setupUnits(arena) {

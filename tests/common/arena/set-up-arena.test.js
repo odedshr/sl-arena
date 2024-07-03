@@ -16,12 +16,6 @@ const { Direction, UnitAction, UnitType } = await import( '../../../docs/js/comm
 const { addUnit } = await import( '../../../docs/js/common/arena/arena.js');
 const { createGrid } = await import( '../../../docs/js/common/util-grid.js');
 
-function isGameOver(arena) {
-    const players = Object.values(arena.players);
-    const playersWithBarracks = players.filter(player => (Object.values(player.units)).some(unit => unit.type === UnitType.barrack));
-    return playersWithBarracks.length <= 1;
-}
-
 describe('setupArena', () => {
     it('should setup an arena with the given name and owner', () => {
         const arenaName = 'default';
@@ -29,20 +23,14 @@ describe('setupArena', () => {
         
         const arena = setupArena(arenaName, owner);
         
-        expect({... arena, spec:  { ...arena.spec, isGameOver: false }}).toEqual({
+        expect({... arena, spec:  { ...arena.spec, onGameStart:false, onGameOver: false, isGameOver: false }}).toEqual({
             spec: {
                 maxPlayers: 4,
                 resourceProbability: 0.1,
-                details: {
-                    dimensions: { width: 32, height: 25 },
-                    features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both },
-                    messages: {
-                        lose: "{playerName} lost!",
-                        start: "Game Started. It's worth knowing that the map's edge is a wall",
-                        tie: "Tie!",
-                        win: "{playerName} won!",
-                    },
-                },
+                dimensions: { width: 32, height: 25 },
+                features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both },
+                onGameStart: false,
+                onGameOver: false,
                 isGameOver: false //isGameOver is internal method and won't pass this test
             },
             name: arenaName,

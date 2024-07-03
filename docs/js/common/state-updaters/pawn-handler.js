@@ -13,7 +13,7 @@ function handlePawnUnit(unit, arena) {
     return false;
 }
 function handleUnitMove(unit, arena) {
-    const { dimensions, features } = arena.spec.details;
+    const { dimensions, features } = arena.spec;
     const newPosition = getNewPosition(unit.position, unit.direction, dimensions, features.edge);
     if (newPosition === null) {
         // couldn't get new position, probably fell off a map

@@ -3,7 +3,9 @@ import { DetailedPlayer, PlayerType } from './Player.js';
 import { Position, Unit } from './Units.js';
 
 enum ArenaName {
-  default = 'default'
+  default = 'default',
+  tutorial_01 = 'tutorial_01',
+  tutorial_02 = 'tutorial_02',
 };
 
 enum ArenaStatus {
@@ -35,23 +37,15 @@ type Features = {
   edge: EdgeType
 };
 
-type ArenaDetails = { // ArenaDetails is sent to the client side at the beginning of the game
-  dimensions: Dimensions,
-  features: Features,
-  messages: {
-    start: string,
-    win: string,
-    lose?: string,
-    tie?: string
-  }
-}
-
 // ArenaTemplate is used to provide initial fixed parameters for a new arena
 type ArenaSpec = {
   maxPlayers: number,
   startOnMaxPlayersReached?: boolean,
   resourceProbability: number, // a number between 0 and 1
-  details: ArenaDetails
+  dimensions: Dimensions,
+  features: Features,
+  onGameStart: (arena:Arena)=>string,
+  onGameOver: (arena:Arena)=>string,
   isGameOver: (arena:Arena)=>boolean,
 }
 
@@ -80,7 +74,6 @@ type Arena = {
 };
 
 export { Arena,
-  ArenaDetails,
   ArenaTemplate,
   ArenaSpec,
   ArenaInitialSetup,

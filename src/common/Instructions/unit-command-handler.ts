@@ -26,27 +26,40 @@ function handleUnitCommand(commands: UnitCommand[], playerId: number, send: Send
   return handleCommand(commands as UnitCommand, player)
 }
 
+const actionRequireDirection:{[key:string]:boolean} = {
+  [UnitAction.move]: true,
+  [UnitAction.produce]: false,
+  [UnitAction.idle]: false,
+  [UnitAction.dead]: false
+};
+
 function handleCommand(command: UnitCommand, player: DetailedPlayer) {
-  if (!isValidDirection(command.direction)) {
-    return sendFail(player.send, InstructionType.unit_command, `invalid direction: ${command.direction}`);
+  const { action, unitId, direction } = command;
+  if (actionRequireDirection[action]) {
+    if (direction===undefined) {
+      return sendFail(player.send, InstructionType.unit_command, `missing direction for action ${action}`);
+    }
+    if (!isValidDirection(direction)) {
+      return sendFail(player.send, InstructionType.unit_command, `invalid direction: ${direction}`);
+    }
   }
 
-  const unit = player.units[command.unitId] as ActionableUnit;
+  const unit = player.units[unitId] as ActionableUnit;
 
   if (!unit) {
-    return sendFail(player.send, InstructionType.unit_command, `invalid unit: ${command.unitId}`);
+    return sendFail(player.send, InstructionType.unit_command, `invalid unit: ${unitId}`);
   }
 
   if (unit.action === UnitAction.dead) {
     return sendFail(player.send, InstructionType.unit_command, `unit is dead`);
   }
 
-  if (!isValidAction(command.action, unit.type)) {
-    return sendFail(player.send, InstructionType.unit_command, `invalid action: ${command.action}`);
+  if (!isValidAction(action, unit.type)) {
+    return sendFail(player.send, InstructionType.unit_command, `invalid action: ${action}`);
   }
 
-  unit.action = command.action;
-  unit.direction = command.direction;
+  unit.action = action;
+  unit.direction = direction;
 }
 
 const validActions: { [key: string]: UnitAction[] } = {

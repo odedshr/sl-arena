@@ -1,4 +1,3 @@
-import { getCell } from '../../client/ui/position-tracker.js';
 import { StatusUpdateHandler, UnitCommand } from '../Instructions/Instruction.js';
 import { getRandomDirection } from '../generators.js';
 import { Dimensions, EdgeType, Features } from '../types/Arena.js';

@@ -58,17 +58,25 @@ function checkGameOver(arena) {
 }
 function sendUpdateToPlayers(arena) {
     const stats = getStats(arena);
+    const message = getGameOverMessageIfNeeded(arena);
     Object.values(arena.players).forEach(player => player.send({
         type: MessageType.game_status,
         status: arena.status,
         playerId: player.id,
         resources: player.resources,
         units: getUnits(player.id, arena),
-        dimensions: arena.spec.details.dimensions,
-        features: arena.spec.details.features,
+        dimensions: arena.spec.dimensions,
+        features: arena.spec.features,
         stats,
-        tick: arena.tick
+        tick: arena.tick,
+        message
     }));
+}
+function getGameOverMessageIfNeeded(arena) {
+    if (arena.status === ArenaStatus.finished) {
+        return arena.spec.onGameOver ? arena.spec.onGameOver(arena) : 'Game Over';
+    }
+    return undefined;
 }
 function handleConflicts(arena) {
     arena.grid.forEach(row => row.forEach(cell => {
@@ -96,7 +104,7 @@ function getActionableUnits(units) {
 }
 function addResources(arena) {
     if (Math.random() < arena.spec.resourceProbability) {
-        const { width, height } = arena.spec.details.dimensions;
+        const { width, height } = arena.spec.dimensions;
         let attempts = 100;
         while (attempts--) {
             const x = Math.floor(Math.random() * width);

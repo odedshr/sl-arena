@@ -24,12 +24,12 @@ function startGame(playerId, send, callback) {
     }
     setupUnits(arena);
     arena.status = ArenaStatus.started;
-    const { dimensions, features, messages } = arena.spec.details;
+    const { dimensions, features, onGameStart } = arena.spec;
     broadcast(arena, {
         type: MessageType.game_started,
         dimensions,
         features,
-        startMessage: messages.start,
+        startMessage: onGameStart(arena),
         factions: Object.values(arena.players).map(({ id, name, color }) => ({ id, name, color }))
     }, playerId, callback);
 }
