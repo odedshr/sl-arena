@@ -9,13 +9,13 @@ const arenas: { [id: string]: Arena } = {}
 const playerArena: { [id: number]: string } = {};
 const playerUnitCount: { [id: number]: number } = {};
 
-function addArena(arenaName: ArenaName, playerName: string, owner: number, send: SendMessageMethod): string {
+function addArena(arenaName: ArenaName, playerName: string, owner: number, send: SendMessageMethod): Arena {
   const arena: Arena = setupArena(arenaName, owner)
   arenas[arena.id] = arena;
 
   addPlayer(arena, owner, playerName, PlayerType.human, send);
 
-  return arena.id;
+  return arena;
 }
 
 function getArena(arenaId: string): Arena {

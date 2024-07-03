@@ -33,8 +33,16 @@ describe('setupArena', () => {
             spec: {
                 maxPlayers: 4,
                 resourceProbability: 0.1,
-                dimensions: { width: 32, height: 25 },
-                features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both },
+                details: {
+                    dimensions: { width: 32, height: 25 },
+                    features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both },
+                    messages: {
+                        lose: "{playerName} lost!",
+                        start: "Game Started. It's worth knowing that the map's edge is a wall",
+                        tie: "Tie!",
+                        win: "{playerName} won!",
+                    },
+                },
                 isGameOver: false //isGameOver is internal method and won't pass this test
             },
             name: arenaName,

@@ -14,7 +14,7 @@ function handle(instruction: Instruction, playerId: number, send: SendMessageMet
     case InstructionType.arena_create:
       return createArena(instruction as CreateArenaInstruction, playerId, send);
     case InstructionType.arena_join:
-      return joinArena(instruction as JoinArenaInstruction, playerId, send);
+      return safelyJoinArena(instruction as JoinArenaInstruction, playerId, send);
     case InstructionType.arena_leave:
       return leaveArena(playerId, (instruction as LeaveArenaInstruction).callback);
     case InstructionType.arena_list_users:
@@ -35,12 +35,16 @@ function handle(instruction: Instruction, playerId: number, send: SendMessageMet
 function createArena(instruction: CreateArenaInstruction, playerId: number, send: SendMessageMethod) {
   leaveArena(playerId);
   const { arenaName, playerName, callback } = instruction;
+  const arena = addArena(arenaName, playerName, playerId, send);
 
-  const arenaId = addArena(arenaName, playerName, playerId, send);
-  send({ callback, type: MessageType.arena_created, arenaId } as ArenaCreatedMessage);
+  if (arena.spec.startOnMaxPlayersReached && arena.spec.maxPlayers===Object.values(arena.players).length) {
+    startGame(playerId, send, callback);
+  } else {
+    send({ callback, type: MessageType.arena_created, arenaId: arena.id } as ArenaCreatedMessage);
+  }
 }
 
-function joinArena(instruction: JoinArenaInstruction, playerId: number, send: SendMessageMethod) {
+function safelyJoinArena(instruction: JoinArenaInstruction, playerId: number, send: SendMessageMethod) {
   leaveArena(playerId);
   const { callback, arenaId, playerName } = instruction;
   const arena = getArena(arenaId);
@@ -54,7 +58,12 @@ function joinArena(instruction: JoinArenaInstruction, playerId: number, send: Se
 
   addPlayer(arena, playerId, playerName, PlayerType.human, send);
 
-  broadcast(arena, { type: MessageType.player_joined, playerName } as PlayerJoinedMessage, playerId, callback);
+  if (arena.spec.startOnMaxPlayersReached && arena.spec.maxPlayers===Object.values(arena.players).length) {
+    broadcast(arena, { type: MessageType.player_joined, playerName } as PlayerJoinedMessage, playerId);
+    startGame(playerId, send, callback);
+  } else {
+    broadcast(arena, { type: MessageType.player_joined, playerName } as PlayerJoinedMessage, playerId, callback);
+  }
 }
 
 function leaveArena(playerId: number, callback?: number) {

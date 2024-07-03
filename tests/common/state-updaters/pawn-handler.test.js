@@ -30,8 +30,16 @@ describe('handlePawnUnit', () => {
         };
         mockArena = {
             spec: {
-                dimensions: { width: 5, height: 5 },
-                features: { edge: EdgeType.wall }
+                details: {
+                    dimensions: { width: 5, height: 5 },
+                    features: { edge: EdgeType.wall },
+                    messages: {
+                        lose: "{playerName} lost!",
+                        start: "Game Started. It's worth knowing that the map's edge is a wall",
+                        tie: "Tie!",
+                        win: "{playerName} won!",
+                    },
+                }
             },
             grid: [
                 [[], [], [], [], []],

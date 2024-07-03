@@ -6,7 +6,7 @@ function getUnits(playerId, arena) {
         return [];
     }
     ;
-    const { fogOfWar } = arena.spec.features;
+    const { fogOfWar } = arena.spec.details.features;
     if (fogOfWar === player.type || fogOfWar === FogOfWar.both) {
         return filterUnits(playerId, allUnits);
     }

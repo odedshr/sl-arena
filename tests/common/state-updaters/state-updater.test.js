@@ -59,8 +59,16 @@ describe('updateState', () => {
             obstacles: [],
             resources: [],
             spec: {
-                dimensions: { width: 3, height: 3 },
-                features: {},
+                details: {
+                    dimensions: { width: 3, height: 3 },
+                    features: {},
+                    messages: {
+                        lose: "{playerName} lost!",
+                        start: "Game Started. It's worth knowing that the map's edge is a wall",
+                        tie: "Tie!",
+                        win: "{playerName} won!",
+                    },   
+                },
                 resourceProbability: 1.0,// Always add resource in test
                 isGameOver
             }
@@ -98,8 +106,6 @@ describe('updateState', () => {
             playerId: 0,
             resources: 0,
             units: expect.any(Array),
-            dimensions: mockArena.spec.dimensions,
-            features: mockArena.spec.features,
             tick: 1
         }));
     });

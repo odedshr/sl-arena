@@ -58,7 +58,7 @@ function setArenaName(name:string) {
 
 
 function handleGameStarted(message: GameStartedMessage) {
-  inform(`Game Started. It's worth knowing that ${getMapEdgeMessage(message.features.edge)}`);
+  inform(message.startMessage);
   const {factions, dimensions} = message;
   const fogOfWar = message.features.fogOfWar;
   setFactionColors(factions);
@@ -77,17 +77,6 @@ function setFactionColors(factions: Player[]) {
   setCanvasColors(factionColor);
   setMiniMapColors(factionColor);
   setGraphColors(factionColor);
-}
-
-function getMapEdgeMessage(edgeType: EdgeType) {
-  switch (edgeType) {
-    case EdgeType.wall:
-      return `the map's edge is a wall`;
-    case EdgeType.death:
-      return `you need to be careful not to fall off the map`;
-    case EdgeType.loop:
-      return `the world is round`;
-  }
 }
 
 export default handle;

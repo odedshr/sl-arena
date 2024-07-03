@@ -35,13 +35,24 @@ type Features = {
   edge: EdgeType
 };
 
+type ArenaDetails = { // ArenaDetails is sent to the client side at the beginning of the game
+  dimensions: Dimensions,
+  features: Features,
+  messages: {
+    start: string,
+    win: string,
+    lose?: string,
+    tie?: string
+  }
+}
+
 // ArenaTemplate is used to provide initial fixed parameters for a new arena
 type ArenaSpec = {
   maxPlayers: number,
+  startOnMaxPlayersReached?: boolean,
   resourceProbability: number, // a number between 0 and 1
-  dimensions: Dimensions,
-  features: Features,
-  isGameOver: (arena:Arena)=>boolean
+  details: ArenaDetails
+  isGameOver: (arena:Arena)=>boolean,
 }
 
 type ArenaInitialSetup = {
@@ -68,4 +79,14 @@ type Arena = {
   grid: Grid<Unit[]>;
 };
 
-export { Arena, ArenaTemplate, ArenaSpec, ArenaInitialSetup, ArenaName, ArenaStatus, Dimensions, Features, EdgeType, FogOfWar };
+export { Arena,
+  ArenaDetails,
+  ArenaTemplate,
+  ArenaSpec,
+  ArenaInitialSetup,
+  ArenaName,
+  ArenaStatus,
+  Dimensions,
+  Features,
+  EdgeType,
+  FogOfWar };

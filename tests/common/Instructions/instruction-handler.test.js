@@ -48,8 +48,8 @@ describe('handle function', () => {
             playerName: 'Player1',
             callback: 'callbackId',
         };
-        const arenaId = 'arena1';
-        addArena.mockReturnValue(arenaId);
+        const arena = { id: 'arena1', spec: {}}
+        addArena.mockReturnValue(arena);
 
         handle(instruction, 'player1', sendMock);
 
@@ -57,20 +57,21 @@ describe('handle function', () => {
         expect(sendMock).toHaveBeenCalledWith({
             callback: 'callbackId',
             type: MessageType.arena_created,
-            arenaId,
+            arenaId: arena.id,
         });
     });
 
     it('should handle arena_join instruction when arena exists and is in init status', () => {
         const instruction = {
             type: InstructionType.arena_join,
-            arenaId: 'arena1',
             playerName: 'Player1',
             callback: 'callbackId',
+            arenaId: 'arena1'
         };
         const mockArena = {
             status: ArenaStatus.init,
             players: {},
+            spec: {}
         };
         getArena.mockReturnValue(mockArena);
 

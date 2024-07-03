@@ -1,5 +1,5 @@
 import { InstructionType } from '../Instructions/Instruction.js';
-import { ArenaStatus, Dimensions, Features } from '../types/Arena.js';
+import { ArenaStatus, Dimensions, Features, ArenaDetails } from '../types/Arena.js';
 import Player from '../types/Player.js';
 import { ActionableUnit, Unit } from '../types/Units.js';
 
@@ -60,9 +60,11 @@ type UnitListMessage = {
 
 type GameStartedMessage = {
   type: MessageType.game_started;
+  details: ArenaDetails,
   dimensions: Dimensions;
   features: Features;
   factions: Player[];
+  startMessage: string;
 }
 
 type GameStateMessage = {

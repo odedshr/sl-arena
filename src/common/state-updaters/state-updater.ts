@@ -79,8 +79,8 @@ function sendUpdateToPlayers(arena: Arena) {
     playerId: player.id,
     resources: player.resources,
     units: getUnits(player.id, arena),
-    dimensions: arena.spec.dimensions,
-    features: arena.spec.features,
+    dimensions: arena.spec.details.dimensions,
+    features: arena.spec.details.features,
     stats,
     tick: arena.tick
   } as GameStateMessage));
@@ -118,7 +118,7 @@ function getActionableUnits(units: Unit[]) {
 
 function addResources(arena:Arena) {
   if (Math.random() < arena.spec.resourceProbability) {
-    const { width, height } =arena.spec.dimensions;
+    const { width, height } =arena.spec.details.dimensions;
     let attempts = 100;
     while (attempts--) {
       const x = Math.floor(Math.random() * width);

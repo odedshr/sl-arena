@@ -12,7 +12,7 @@ function handle(instruction, playerId, send) {
         case InstructionType.arena_create:
             return createArena(instruction, playerId, send);
         case InstructionType.arena_join:
-            return joinArena(instruction, playerId, send);
+            return safelyJoinArena(instruction, playerId, send);
         case InstructionType.arena_leave:
             return leaveArena(playerId, instruction.callback);
         case InstructionType.arena_list_users:
@@ -32,10 +32,15 @@ function handle(instruction, playerId, send) {
 function createArena(instruction, playerId, send) {
     leaveArena(playerId);
     const { arenaName, playerName, callback } = instruction;
-    const arenaId = addArena(arenaName, playerName, playerId, send);
-    send({ callback, type: MessageType.arena_created, arenaId });
+    const arena = addArena(arenaName, playerName, playerId, send);
+    if (arena.spec.startOnMaxPlayersReached && arena.spec.maxPlayers === Object.values(arena.players).length) {
+        startGame(playerId, send, callback);
+    }
+    else {
+        send({ callback, type: MessageType.arena_created, arenaId: arena.id });
+    }
 }
-function joinArena(instruction, playerId, send) {
+function safelyJoinArena(instruction, playerId, send) {
     leaveArena(playerId);
     const { callback, arenaId, playerName } = instruction;
     const arena = getArena(arenaId);
@@ -46,7 +51,13 @@ function joinArena(instruction, playerId, send) {
         return sendFail(send, InstructionType.arena_join, `arena doesn't accept players`);
     }
     addPlayer(arena, playerId, playerName, PlayerType.human, send);
-    broadcast(arena, { type: MessageType.player_joined, playerName }, playerId, callback);
+    if (arena.spec.startOnMaxPlayersReached && arena.spec.maxPlayers === Object.values(arena.players).length) {
+        broadcast(arena, { type: MessageType.player_joined, playerName }, playerId);
+        startGame(playerId, send, callback);
+    }
+    else {
+        broadcast(arena, { type: MessageType.player_joined, playerName }, playerId, callback);
+    }
 }
 function leaveArena(playerId, callback) {
     const arena = getPlayerArena(playerId);

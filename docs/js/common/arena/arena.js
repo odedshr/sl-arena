@@ -8,7 +8,7 @@ function addArena(arenaName, playerName, owner, send) {
     const arena = setupArena(arenaName, owner);
     arenas[arena.id] = arena;
     addPlayer(arena, owner, playerName, PlayerType.human, send);
-    return arena.id;
+    return arena;
 }
 function getArena(arenaId) {
     return arenas[arenaId];
