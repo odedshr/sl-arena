@@ -40,7 +40,7 @@ const templates = {
 Hello ${arena.players[0].name} and welcome to SL-Arena;
 Your first task is to produce a pawn.
 For that, you'll need to select your barracks and set the action to \`produce\`.
-For that you'll need to find the barracks' unitId (from the \`sl.listUnits()\` command and then \`sl.sendCommand({unitId, action})\` with the appropriate details.
+For that you'll need to find the barracks' unitId (from the \`sl.listUnits()\` command and then \`sl.sendCommands({unitId, action})\` with the appropriate details.
 Good luck!`),
             onGameOver: (arena) => (`
 Good job! you have a learned how to send commands and produce pawns.
