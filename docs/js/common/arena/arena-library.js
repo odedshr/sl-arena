@@ -6,7 +6,7 @@ const templates = {
             maxPlayers: 4,
             resourceProbability: 0.1,
             dimensions: { width: 32, height: 25 },
-            features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both },
+            features: { edge: EdgeType.wall, fogOfWar: FogOfWar.none },
             onGameStart: (arena) => (`Game Started. It's worth knowing that ${getMapEdgeMessage(EdgeType.wall)}`),
             onGameOver: (arena) => {
                 const winners = findWinners(arena, (player => Object.values(player.units).some(unit => unit.type === UnitType.barrack)));

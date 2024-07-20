@@ -59,13 +59,13 @@ const spriteMap: { [action: string]: { [direction: string]: HTMLImageElement } }
 }
 const SEQ_LENGTH = 6;
 const CELL_SIZE = 16;
+const FRAME_WIDTH = 64;
 let frameCount = 0;
 
 function drawPawn(ctx: CanvasRenderingContext2D, position: Position, action: UnitAction, direction: Direction, color: string) {
   const x = position.x * CELL_SIZE;
   const y = position.y * CELL_SIZE;
-  const frameWidth = 64;
-
+  
   if (!action) {
     console.error('pawn with no action');
     action = UnitAction.idle;
@@ -76,7 +76,7 @@ function drawPawn(ctx: CanvasRenderingContext2D, position: Position, action: Uni
   }
 
   drawEllipse(ctx, x + CELL_SIZE / 2, y + CELL_SIZE * 0.9, CELL_SIZE / 3, CELL_SIZE / 8, color);
-  ctx.drawImage(spriteMap[action][direction], frameWidth * getFrame(), 0, 64, 64, x - CELL_SIZE / 2, y - CELL_SIZE / 2, CELL_SIZE * 2, CELL_SIZE * 2);
+  ctx.drawImage(spriteMap[action][direction], FRAME_WIDTH * getFrame(), 0, 64, 64, x - CELL_SIZE / 2, y - CELL_SIZE / 2, CELL_SIZE * 2, CELL_SIZE * 2);
 }
 
 function getFrame() {

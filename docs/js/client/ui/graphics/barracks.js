@@ -1,19 +1,23 @@
 import getImage from './canvas-image.js';
-import { drawRectangle } from './shapes.js';
-const barracks = [
-    getImage('barracks/spr_boulder1.png'),
-    getImage('barracks/spr_boulder2.png'),
-    getImage('barracks/spr_boulder3.png'),
-    getImage('barracks/spr_boulder4.png')
-];
+const image = getImage('barracks.png');
+const SEQ_LENGTH = 4;
 const CELL_SIZE = 16;
+let frameCount = 0;
 function drawBarracks(ctx, barracks, colors) {
     barracks.forEach((barrack, i) => drawBarrack(ctx, barrack.position, i, colors[barrack.owner]));
 }
 function drawBarrack(ctx, position, i, color) {
     const x = position.x * CELL_SIZE;
     const y = position.y * CELL_SIZE;
-    drawRectangle(ctx, x, y, CELL_SIZE, CELL_SIZE, color);
-    ctx.drawImage(barracks[i % barracks.length], 0, 0, 64, 64, x, y, CELL_SIZE * 2, CELL_SIZE * 2);
+    ctx.drawImage(image, CELL_SIZE * getFrame(), CELL_SIZE * i, // offset in source
+    CELL_SIZE, CELL_SIZE, // crop section in target
+    x, y, // position in output
+    CELL_SIZE, CELL_SIZE); // size on output
+}
+function getFrame() {
+    if (frameCount === SEQ_LENGTH * 100) {
+        frameCount = 0;
+    }
+    return (Math.floor(frameCount++ / 100) % SEQ_LENGTH);
 }
 export { drawBarracks, drawBarrack };

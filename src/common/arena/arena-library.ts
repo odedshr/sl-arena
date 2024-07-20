@@ -8,7 +8,7 @@ const templates: { [name:string]: ArenaTemplate} = {
       maxPlayers: 4,
       resourceProbability: 0.1,
       dimensions: { width: 32, height: 25 },
-      features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both },
+      features: { edge: EdgeType.wall, fogOfWar: FogOfWar.none },
       onGameStart: (arena:Arena) => (`Game Started. It's worth knowing that ${getMapEdgeMessage(EdgeType.wall)}`),
       onGameOver: (arena:Arena) => {
         const winners = findWinners(

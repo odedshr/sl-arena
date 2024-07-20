@@ -53,11 +53,10 @@ function updateFog() {
     }));
 }
 function isFogged(position) {
-    if (position.y >= fog.length) {
-        console.log('out of bounds', position.y);
-        return false; // out of bounds
+    if (!isFogEnabled || position.y >= fog.length) {
+        return false;
     }
-    return isFogEnabled && fog[position.y][position.x];
+    return fog[position.y][position.x];
 }
 function getCell(position) {
     const { x, y } = position;

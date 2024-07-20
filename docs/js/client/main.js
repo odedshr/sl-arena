@@ -20,9 +20,7 @@ function connectToServer(url) {
         const { setMessageHandler, sendInstruction, setCloseHandler } = yield connect();
         //@ts-ignore
         window.sl = getControls(sendInstruction);
-        inform(`
-Connected to server, please check \`sl\` namespace for new options
-First time? run \`sl.createArena('MyName','tutorial_01');\` for your first tutorial`);
+        inform('Connected to server, please check `sl` namespace for new options');
         setMessageHandler((event) => handle((typeof (event.data) === 'string' ? JSON.parse(event.data) : event.data), sendInstruction));
         setCloseHandler(() => {
             console.log('Disconnected from the server');
