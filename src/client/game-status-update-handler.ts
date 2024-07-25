@@ -34,7 +34,7 @@ function handleGameStatusUpdate(statusUpdate: GameStateMessage, send: SendInstru
 
   if (status===ArenaStatus.started) {
     const commands = handle(units, playerId, resources, dimensions, features);
-    if (commands.length) {
+    if (commands && commands.length) {
       send({
         type: InstructionType.unit_command,
         commands

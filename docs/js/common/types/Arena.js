@@ -3,6 +3,7 @@ var ArenaName;
     ArenaName["default"] = "default";
     ArenaName["tutorial_01"] = "tutorial_01";
     ArenaName["tutorial_02"] = "tutorial_02";
+    ArenaName["tutorial_03"] = "tutorial_03";
 })(ArenaName || (ArenaName = {}));
 ;
 var ArenaStatus;

@@ -8,7 +8,7 @@ const templates: { [name:string]: ArenaTemplate} = {
       maxPlayers: 4,
       resourceProbability: 0.1,
       dimensions: { width: 32, height: 25 },
-      features: { edge: EdgeType.wall, fogOfWar: FogOfWar.none },
+      features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both },
       onGameStart: (arena:Arena) => (`Game Started. It's worth knowing that ${getMapEdgeMessage(EdgeType.wall)}`),
       onGameOver: (arena:Arena) => {
         const winners = findWinners(
@@ -39,7 +39,7 @@ const templates: { [name:string]: ArenaTemplate} = {
       startOnMaxPlayersReached: true,
       resourceProbability: 0,
       dimensions: { width: 5, height: 5 },
-      features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both },
+      features: { edge: EdgeType.wall, fogOfWar: FogOfWar.none },
       onGameStart: (arena) => (`
 Hello ${arena.players[0].name} and welcome to SL-Arena;
 Your first task is to produce a pawn.
@@ -63,7 +63,7 @@ In the next tutorial you'll learn how to move your pawn`),
       startOnMaxPlayersReached: true,
       resourceProbability: 0,
       dimensions: { width: 5, height: 5 },
-      features: { edge: EdgeType.wall, fogOfWar: FogOfWar.both },
+      features: { edge: EdgeType.wall, fogOfWar: FogOfWar.none },
       onGameStart: (arena) => (`
 Welcome back ${arena.players[0].name}. 
 Now that you have a unit, it's time to move it around.
@@ -78,6 +78,39 @@ In the next tutorial we'll learn to automate our commands`),
         }
 
         const position = arena.players[0].units['pawn-0-1'].position;
+        return position.x === 4 && position.y === 0;
+      },
+    },
+    initialSetup: {
+      barracks: [{ x: 1, y: 2 }],
+      startingResources: 1,
+      obstacles: []
+    }   
+  },
+  tutorial_03: {
+    spec: {
+      maxPlayers: 1,
+      startOnMaxPlayersReached: true,
+      resourceProbability: 0,
+      dimensions: { width: 5, height: 5 },
+      features: { edge: EdgeType.death, fogOfWar: FogOfWar.none },
+      onGameStart: (arena) => (`
+Hello ${arena.players[0].name}.
+This map looks very similar to the previous tutorial, however if previously the arena's edges were an impassible wall, now they're an edge you might fall from.
+Use the \`sl.onUpdate((units[], playerId, resources, dimensions, features)=>{ [...] return command[];})\`to update the pawn direction when it reaches the edge of the map.`),
+      onGameOver: (arena:Arena) => {
+        return !arena.players[0].units['pawn-0-1'] ? 
+`Oh dear, seems you have fallen off the map! try again by rejoining the arena.
+Note that \`onUpdate(...)\` doesn't reset when switching arenas`:
+`Excellent! you now know how to automate your pawns' action. Let's play with it some more`;
+      },
+      isGameOver: (arena:Arena)=> {
+        const player = arena.players[0];
+        if (!player.units['pawn-0-1']) {
+          return player.resources === 0;
+        }
+
+        const position = player.units['pawn-0-1'].position;
         return position.x === 4 && position.y === 0;
       },
     },

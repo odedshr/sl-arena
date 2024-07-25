@@ -6,6 +6,7 @@ enum ArenaName {
   default = 'default',
   tutorial_01 = 'tutorial_01',
   tutorial_02 = 'tutorial_02',
+  tutorial_03 = 'tutorial_03'
 };
 
 enum ArenaStatus {
