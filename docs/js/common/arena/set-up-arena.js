@@ -1,6 +1,6 @@
 import { getRandomArenaId } from '../generators.js';
 import { ArenaStatus } from '../types/Arena.js';
-import { Direction, UnitAction, UnitType } from '../types/Units.js';
+import { Direction, UnitAction } from '../types/Units.js';
 import { addUnit } from './arena.js';
 import { createGrid } from '../../common/util-grid.js';
 import templates from './arena-library.js';
@@ -35,7 +35,7 @@ function setupUnits(arena) {
     }
     players.forEach((player, i) => {
         player.resources = template.initialSetup.startingResources;
-        addUnit(arena, player.id, UnitType.barrack, template.initialSetup.barracks[i], UnitAction.idle, Direction.north);
+        template.initialSetup.units[i].forEach(unit => addUnit(arena, player.id, unit.type, { x: unit.x, y: unit.y }, UnitAction.idle, Direction.north));
     });
 }
 export { setupArena, setupUnits };

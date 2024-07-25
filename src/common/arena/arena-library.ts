@@ -23,7 +23,15 @@ const templates: { [name:string]: ArenaTemplate} = {
       }
     },
     initialSetup: {
-      barracks: [{ x: 2, y: 2 }, { x: 30, y: 22 }, { x: 30, y: 2 }, { x: 2, y: 22 }, { x: 16, y: 2 }, { x: 16, y: 22 }, { x: 2, y: 12 }, { x: 30, y: 12 }],
+      units: [
+        [{ type: UnitType.barrack, x: 2, y: 2 }],
+        [{ type: UnitType.barrack, x: 30, y: 22 }], 
+        [{ type: UnitType.barrack, x: 30, y: 2 }], 
+        [{ type: UnitType.barrack, x: 2, y: 22 }],
+        [{ type: UnitType.barrack, x: 16, y: 2 }],
+        [{ type: UnitType.barrack, x: 16, y: 22 }],
+        [{ type: UnitType.barrack, x: 2, y: 12 }], 
+        [{ type: UnitType.barrack, x: 30, y: 12 }]],
       startingResources: 8,
       obstacles: [
         wall({ x: 6, y: 10 }, { x: 6, y: 6 }, { x: 10, y: 6 }),
@@ -52,7 +60,7 @@ In the next tutorial you'll learn how to move your pawn`),
       isGameOver: (arena:Arena)=> (Object.values(arena.players[0].units).length > 1),
     },
     initialSetup: {
-      barracks: [{ x: 2, y: 2 }],
+      units: [[{type: UnitType.barrack, x: 2, y: 2 }]],
       startingResources: 1,
       obstacles: []
     }   
@@ -82,7 +90,7 @@ In the next tutorial we'll learn to automate our commands`),
       },
     },
     initialSetup: {
-      barracks: [{ x: 1, y: 2 }],
+      units: [[{type: UnitType.barrack, x: 2, y: 2 }]],
       startingResources: 1,
       obstacles: []
     }   
@@ -115,7 +123,7 @@ Note that \`onUpdate(...)\` doesn't reset when switching arenas`:
       },
     },
     initialSetup: {
-      barracks: [{ x: 1, y: 2 }],
+      units: [[{type: UnitType.barrack, x: 2, y: 2 }]],
       startingResources: 1,
       obstacles: []
     }   

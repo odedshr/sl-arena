@@ -1,6 +1,6 @@
 import { Grid } from './Grid.js';
 import { DetailedPlayer, PlayerType } from './Player.js';
-import { Position, Unit } from './Units.js';
+import { Position, Unit, UnitType } from './Units.js';
 
 enum ArenaName {
   default = 'default',
@@ -51,7 +51,7 @@ type ArenaSpec = {
 }
 
 type ArenaInitialSetup = {
-  barracks: Position[],
+  units: ({type:UnitType} & Position)[][],
   startingResources: number,
   obstacles: Unit[]
 };

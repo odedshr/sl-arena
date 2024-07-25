@@ -39,7 +39,7 @@ function setupArena(arenaName: ArenaName, owner: number): Arena {
   
     players.forEach((player, i) => {
       player.resources = template.initialSetup.startingResources;
-      addUnit(arena, player.id, UnitType.barrack, template.initialSetup.barracks[i], UnitAction.idle, Direction.north);
+      template.initialSetup.units[i].forEach(unit => addUnit(arena, player.id, unit.type, {x:unit.x, y:unit.y}, UnitAction.idle, Direction.north));
     });
   }
 
