@@ -1,7 +1,7 @@
 import { InstructionType, SendInstructionMethod, StatusUpdateHandler } from '../common/Instructions/Instruction.js';
 import { GameStateMessage } from '../common/Messages/Message.js';
 import { ArenaStatus, Dimensions, Features } from '../common/types/Arena.js';
-import { ActionableUnit, Unit } from '../common/types/Units.js';
+import { Unit } from '../common/types/Units.js';
 import { draw } from './ui/canvas.js';
 import { draw as drawMinimap } from './ui/minimap.js';
 import { draw as drawGraph } from './ui/graph.js';

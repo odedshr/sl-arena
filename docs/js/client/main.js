@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import connect from './shared-worker/client.js';
 import getControls from './ui/controls.js';
+import initDropCodeZone from './ui/drop-code-handler.js';
 import inform from './ui/inform.js';
 import handle from './message-handler.js';
 function initInterface() {
@@ -18,14 +19,17 @@ function initInterface() {
 function connectToServer(url) {
     return __awaiter(this, void 0, void 0, function* () {
         const { setMessageHandler, sendInstruction, setCloseHandler } = yield connect();
+        const controls = getControls(sendInstruction);
+        ;
         //@ts-ignore
-        window.sl = getControls(sendInstruction);
+        window.sl = controls;
         inform('Connected to server, please check `sl` namespace for new options');
         setMessageHandler((event) => handle((typeof (event.data) === 'string' ? JSON.parse(event.data) : event.data), sendInstruction));
         setCloseHandler(() => {
             console.log('Disconnected from the server');
             initInterface();
         });
+        initDropCodeZone(controls.onUpdate);
     });
 }
 function init() {

@@ -1,6 +1,6 @@
 import { SendInstructionMethod } from '../common/Instructions/Instruction.js';
 import { MessageType, Message, GameStateMessage, GameStartedMessage, PlayerJoinedMessage, ArenaCreatedMessage } from '../common/Messages/Message.js';
-import { EdgeType, FogOfWar } from '../common/types/Arena.js';
+import { FogOfWar } from '../common/types/Arena.js';
 import { setCanvasSize, setFactionColors as setCanvasColors} from './ui/canvas.js';
 import { handleGameStatusUpdate } from './game-status-update-handler.js';
 import inform from './ui/inform.js';
