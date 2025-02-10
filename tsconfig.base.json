@@ -2,7 +2,9 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "moduleResolution": "node",
+    "jsx": "react",
+    "jsxFactory": "jsx", 
+    "module": "ES6",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
