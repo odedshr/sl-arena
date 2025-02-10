@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node dist/server/main.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "dev-server": "tsc -w --project tsconfig.server.json",
     "build": "tsc -w --project tsconfig.server.json & tsc -w --project tsconfig.client.json &",
     "tunnel": "lt --port 3000"
   },

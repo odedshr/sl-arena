@@ -1,5 +1,5 @@
 import http from 'http';
-import { readFile } from 'fs';
+import { readFile, readFileSync, existsSync, writeFileSync } from 'fs';
 import { extname } from 'path';
 
 type Response = http.ServerResponse<http.IncomingMessage> & {
@@ -24,6 +24,8 @@ const mimeTypes: { [key: string]: string } = {
   '.otf': 'application/font-otf',
   '.svg': 'application/image/svg+xml'
 };
+
+let counter = 0;
 
 function startHttpServer(hostname: string, port: number): Promise<http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>> {
   return new Promise(resolve => {
@@ -60,13 +62,11 @@ function errorReadingFile(res: Response, error: NodeJS.ErrnoException) {
 
   res.writeHead(500);
   res.end('Sorry, there was an error: ' + error.code + ' ..\n');
-  res.end();
 }
 
 function getFile(res: Response, content: Buffer, contentType: string) {
   res.writeHead(200, { 'Content-Type': contentType });
   res.end(content, 'utf-8');
-
 }
 
 export default startHttpServer;

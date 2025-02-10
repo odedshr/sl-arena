@@ -19,11 +19,11 @@ body {
   display: grid;
   gap: 0px;
   grid-template-rows: 2rem 1fr 6rem;
-  grid-template-columns: 1fr 15rem;
+  grid-template-columns: 15rem 1fr 15rem;
   grid-template-areas:
-    'header header'
-    'main aside'
-    'footer footer';
+    'header header header'
+    'commanders main aside'
+    'footer footer footer';
   height: 100vh;
   margin: 0;
   padding: 0;
@@ -33,6 +33,12 @@ body {
 header {
   grid-area: header;
   background-color: #f8f8f8;
+  /* Optional: Add background color */
+}
+
+#commanders {
+  grid-area: commanders;
+  background-color: #e8e8e8;
   /* Optional: Add background color */
 }
 
