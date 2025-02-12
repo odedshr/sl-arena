@@ -1,3 +1,4 @@
+import { Server, IncomingMessage, ServerResponse } from 'http';
 
 import { Message, MessageType, PingMessage, SendMessageMethod } from '../common/Messages/Message.js';
 import { Instruction, InstructionType } from '../common/Instructions/Instruction.js';
@@ -12,9 +13,7 @@ const users: { [userId: number]: { send: SendMessageMethod, heartbeat: NodeJS.Ti
 const hostname = 'localhost';
 const port = 3000;
 
-async function setupServer(hostname: string, port: number) {
-  const httpServer = await startHttpServer(hostname, port);
-
+async function setupWSServer(httpServer: Server<typeof IncomingMessage, typeof ServerResponse>) {
   startWSServer(
     httpServer,
 
@@ -43,7 +42,11 @@ async function setupServer(hostname: string, port: number) {
   )
 }
 
-setInterval(updateState, INTERVAL);
-setupServer(hostname, port);  
 
-export default setupServer;
+async function init() {
+  const httpServer = await startHttpServer(hostname, port);
+  const wsServer = setupWSServer(httpServer);
+  setInterval(updateState, INTERVAL);
+}
+
+init();
