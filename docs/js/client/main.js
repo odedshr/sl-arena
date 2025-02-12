@@ -34,6 +34,11 @@ function connectToServer(url) {
 }
 function init() {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log('aaa');
+        const init = (yield import('./test.js'));
+        console.log('bbb');
+        init();
+        console.log('ccc');
         try {
             yield connectToServer(`${location.protocol.replace('/http/', 'ws')}://${location.hostname}:${location.port}`);
         }

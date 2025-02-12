@@ -30,6 +30,12 @@ async function connectToServer(url: string) {
 }
 
 async function init() {
+  console.log('aaa');
+  const init = (await import('./test.js')) as unknown as ()=>void;
+  console.log('bbb');
+  init();
+  console.log('ccc');
+
   try {
     await connectToServer(`${location.protocol.replace('/http/', 'ws')}://${location.hostname}:${location.port}`);
   }

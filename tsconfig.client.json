@@ -2,7 +2,7 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "module": "es6",
+    "module": "esnext",
     "outDir": "./docs/js",
     "rootDir": "./src",
     "lib": [
